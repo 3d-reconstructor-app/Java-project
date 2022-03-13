@@ -6,33 +6,28 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentManager;
 
 public class MyAdapter extends FragmentPagerAdapter {
+    final int PAGE_COUNT = 3;
+    private String tabTitles[] = new String[] { "Tab1", "Tab2", "Tab3" };
+    private Context context;
 
-    private final /*??*/ Context myContext;
-    int totalTabs;
-
-    public MyAdapter(Context context, FragmentManager fm, int totalTabs) {
+    public MyAdapter(FragmentManager fm, Context context) {
         super(fm);
-        this.myContext = context;
-        this.totalTabs = totalTabs;
+        this.context = context;
     }
 
-    // this is for fragment tabs
-    @Override
-    public Fragment getItem(int position) {
-        switch (position) {
-            case 0:
-                return new PlateWindowFragment();
-            case 1:
-                return new MainWindowFragment();
-            case 2:
-                return new PhotoWindowFragment();
-            default:
-                return null;
-        }
-    }
-    // this counts total number of tabs
     @Override
     public int getCount() {
-        return totalTabs;
+        return PAGE_COUNT;
+    }
+
+    @Override
+    public Fragment getItem(int position) {
+        return PageFragment.newInstance(position + 1);
+    }
+
+    @Override
+    public CharSequence getPageTitle(int position) {
+        // Generate title based on item position
+        return tabTitles[position];
     }
 }
