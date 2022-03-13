@@ -1,6 +1,7 @@
 package com.example.model;
 
-import androidx.appcompat.app.AppCompatActivity;
+//import androidx.appcompat.app.AppCompatActivity;
+import android.support.v7.app.AppCompatActivity;
 
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -8,6 +9,8 @@ import android.support.v4.view.ViewPager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+
+import androidx.fragment.app.FragmentActivity;
 import androidx.fragment.app.FragmentManager;
 
 public class MainActivity extends AppCompatActivity {

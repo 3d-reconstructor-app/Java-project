@@ -7,12 +7,12 @@ import android.support.v4.app.FragmentManager;
 
 public class MyAdapter extends FragmentPagerAdapter {
 
-    private Context myContext;
+    private final /*??*/ Context myContext;
     int totalTabs;
 
     public MyAdapter(Context context, FragmentManager fm, int totalTabs) {
         super(fm);
-        myContext = context;
+        this.myContext = context;
         this.totalTabs = totalTabs;
     }
 
@@ -21,14 +21,11 @@ public class MyAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                PhotoWindowFragment photoWindowFragment = new PhotoWindowFragment();
-                return photoWindowFragment;
+                return new PlateWindowFragment();
             case 1:
-                PlateWindowFragment plateWindowFragment = new PlateWindowFragment();
-                return plateWindowFragment;
+                return new MainWindowFragment();
             case 2:
-                 MainWindowFragment mainWindowFragment= new MainWindowFragment();
-                return mainWindowFragment;
+                return new PhotoWindowFragment();
             default:
                 return null;
         }
