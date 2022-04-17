@@ -16,6 +16,6 @@ public class tabMainMenu extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_main_menu, container,false);
+        return inflater.inflate(R.layout.fragment_tab_main_menu, container, false);
     }
 }
