@@ -1,0 +1,7 @@
+<resources>
+    <string name="app_name">3dModel</string>
+    <string name="tab_3d_plain">3D Plain</string>
+    <string name="tab_main">Main</string>
+    <string name="tab_photos">Photos</string>
+    <!-- TODO: Remove or change this placeholder text -->
+</resources>
