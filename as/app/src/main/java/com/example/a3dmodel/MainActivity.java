@@ -23,7 +23,6 @@ import com.example.a3dmodel.databinding.ActivityMainBinding;
 
 import java.util.ArrayList;
 
-
 public class MainActivity extends AppCompatActivity {
 
     private ActivityMainBinding binding;
@@ -41,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
         TabLayout tabs = binding.tabs;
         tabs.setupWithViewPager(viewPager);
         FloatingActionButton fab = binding.fab;
-
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -50,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
     }
+
+}
 
 
 //    @Override
@@ -70,4 +70,4 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //
 //    }
-}
+//}

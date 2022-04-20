@@ -1,28 +1,84 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+<RelativeLayout android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:orientation="vertical"
-    tools:context=".tabPhoto">
+    android:background="#ffffff"
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!--recycler view for displaying the list of images-->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/idRVImages"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
 
-    <TextView
+    <GridView
+        android:id="@+id/grid_folder"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:text="hello from tab photo"
-        android:textSize="30dp" />
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:numColumns="2" />
 
 </RelativeLayout>
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<RelativeLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:layout_gravity="center"-->
+<!--    android:gravity="center"-->
+<!--    android:orientation="vertical"-->
+<!--    tools:context=".MainActivity">-->
+
+<!--    &lt;!&ndash;recycler view for displaying the list of images&ndash;&gt;-->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/idRVImages"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent" />-->
+
+<!--</RelativeLayout>-->
+
+<!--<?xml version="1.0" encoding="utf-8"?>-->
+<!--<androidx.constraintlayout.widget.ConstraintLayout-->
+<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="match_parent"-->
+<!--    android:layout_gravity="center"-->
+<!--    android:gravity="center"-->
+<!--    android:orientation="vertical"-->
+<!--    tools:context=".tabPhoto">-->
+
+<!--    &lt;!&ndash;recycler view for displaying the list of images&ndash;&gt;-->
+
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/idRVImages"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        tools:layout_editor_absoluteX="0dp"-->
+<!--        tools:layout_editor_absoluteY="0dp" />-->
+
+<!--    <TextView-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent"-->
+<!--        android:layout_gravity="center"-->
+<!--        android:text="hello from tab photo"-->
+<!--        android:textSize="30dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/button"-->
+<!--        android:layout_width="116dp"-->
+<!--        android:layout_height="54dp"-->
+<!--        android:text="Camera"-->
+<!--        tools:ignore="MissingConstraints"-->
+<!--        tools:layout_editor_absoluteX="16dp"-->
+<!--        tools:layout_editor_absoluteY="16dp" />-->
+
+<!--    <Button-->
+<!--        android:id="@+id/button2"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="Get from gallery"-->
+<!--        tools:layout_editor_absoluteX="212dp"-->
+<!--        tools:layout_editor_absoluteY="16dp"-->
+<!--        tools:ignore="MissingConstraints" />-->
+
+<!--</androidx.constraintlayout.widget.ConstraintLayout>-->
 
 <!--<?xml version="1.0" encoding="utf-8"?>-->
 <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->

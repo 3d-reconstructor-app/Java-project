@@ -5,6 +5,11 @@
     tools:ignore="ExtraText">
     <!-- permissions for reading external storage -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -14,10 +19,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.3dModel">
         <activity
+            android:name=".tabPhoto2"
+            android:exported="false" />
+        <activity
             android:name=".ImageDetailActivity"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
+            android:screenOrientation="portrait"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.3dModel.NoActionBar">
@@ -28,5 +37,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>
