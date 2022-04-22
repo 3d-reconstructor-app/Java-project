@@ -26,9 +26,6 @@
             android:name=".tabPhoto2"
             android:exported="false" />
         <activity
-            android:name=".ImageDetailActivity"
-            android:exported="false" />
-        <activity
             android:name=".MainActivity"
             android:screenOrientation="fullSensor"
             android:exported="true"

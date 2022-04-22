@@ -32,11 +32,6 @@ import java.util.ArrayList;
 import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
 
 public class tabPhoto extends Fragment {
-    private static final int PERMISSION_REQUEST_CODE = 200;
-    private ArrayList<String> imagePaths;
-    private RecyclerView imagesRV;
-    private RecyclerViewAdapter imageRVAdapter;
-    private Context context;
 
     @Nullable
     @Override
@@ -45,15 +40,15 @@ public class tabPhoto extends Fragment {
         return view;
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager.beginTransaction()
-                .replace(R.id.SinglePhotoLayout, CardLayout.class, null)
-                .addToBackStack(null)
-                .commit();
-        super.onViewCreated(view, savedInstanceState);
-    }
+//    @Override
+//    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager.beginTransaction()
+//                .replace(R.id.SinglePhotoLayout, CardLayout.class, null)
+//                .addToBackStack(null)
+//                .commit();
+//        super.onViewCreated(view, savedInstanceState);
+//    }
 
 
 }
