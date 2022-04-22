@@ -47,16 +47,16 @@ public class MainActivity extends AppCompatActivity {
 
         });
 
-        if (savedInstanceState != null) {
-            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
-            // Return here to prevent adding additional GridFragments when changing orientation.
-            return;
-        }
-        FragmentManager fragmentManager = getSupportFragmentManager();
-        fragmentManager
-                .beginTransaction()
-                .add(R.id.fragment_photo, new GridFragment(), GridFragment.class.getSimpleName())
-                .commit();
+//        if (savedInstanceState != null) {
+//            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
+//            // Return here to prevent adding additional GridFragments when changing orientation.
+//            return;
+//        }
+//        FragmentManager fragmentManager = getSupportFragmentManager();
+//        fragmentManager
+//                .beginTransaction()
+//                .add(R.id.fragment_photo, new GridFragment(), GridFragment.class.getSimpleName())
+//                .commit();
     }
 
     @Override

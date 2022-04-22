@@ -117,14 +117,14 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
             ImageView transitioningView = view.findViewById(R.id.card_image);
             assert fragment.getFragmentManager() != null;
-            fragment.getParentFragment().getFragmentManager()
-                    .beginTransaction()
-                    .setReorderingAllowed(true) // Optimize for shared element transition
-                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
-                    .replace(R.id.fragment_container_view_photo, new ImagePagerFragment(), ImagePagerFragment.class
-                            .getSimpleName())
-                    .addToBackStack(null)
-                    .commit();
+//            fragment.getFragmentManager()
+//                    .beginTransaction()
+//                    .setReorderingAllowed(true) // Optimize for shared element transition
+//                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
+//                    .replace(R.id.fragment_photo, new ImagePagerFragment(), ImagePagerFragment.class
+//                            .getSimpleName())
+//                    .addToBackStack(null)
+//                    .commit();
         }
     }
 

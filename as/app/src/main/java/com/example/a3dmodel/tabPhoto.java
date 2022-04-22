@@ -26,33 +26,38 @@ import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.a3dmodel.photo_fragment.GridFragment;
-//import com.example.a3dmodel.fragment.GridFragment;
+import com.example.a3dmodel.photo_fragment.ImagePagerFragment;
+import com.example.a3dmodel.photo_fragment.GridFragment;
 
 public class tabPhoto extends Fragment {
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
+    private Fragment fragment;
 
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_tab_photos, container, false);
-        return view;
+        return inflater.inflate(R.layout.fragment_tab_photos, container, false);
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (savedInstanceState != null) {
-            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
-            // Return here to prevent adding additional GridFragments when changing orientation.
-            return;
-        }
-        FragmentManager fragmentManager = getFragmentManager();
-        fragmentManager
-                .beginTransaction()
-                .add(R.id.fragment_photo, new GridFragment(), GridFragment.class.getSimpleName())
-                .commit();
+//        if (savedInstanceState != null) {
+//            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
+//            // Return here to prevent adding additional GridFragments when changing orientation.
+//            return;
+//        }
+//
+//        FragmentManager fragmentManager = getFragmentManager();
+//        fragmentManager
+//                .beginTransaction()
+//                .setReorderingAllowed(true) // Optimize for shared element transition
+////                .addSharedElement(transitioningView, transitioningView.getTransitionName())
+//                .replace(R.id.fragment_photo, new GridFragment(), GridFragment.class.getSimpleName())
+//                .addToBackStack(null)
+//                .commit();
     }
 
     //    @Override
