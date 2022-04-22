@@ -2,14 +2,17 @@
 <androidx.cardview.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="3dp"
     android:elevation="8dp"
-    app:cardCornerRadius="8dp">
+    app:cardCornerRadius="8dp"
+    android:id="@+id/SinglePhotoLayout"
+    tools:context=".CardLayout">
 
-    <!--Image view for displaying the image
+<!--Image view for displaying the image
         in our card layout in recycler view-->
     <ImageView
         android:id="@+id/idIVImage"
@@ -17,6 +20,6 @@
         android:layout_height="100dp"
         android:layout_gravity="center"
         android:scaleType="centerCrop"
-        android:background="@color/purple_200"/>
+        android:background="@color/material_dynamic_tertiary90"/>
 
 </androidx.cardview.widget.CardView>
