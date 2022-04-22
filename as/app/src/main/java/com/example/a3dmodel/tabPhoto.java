@@ -1,5 +1,6 @@
 
 package com.example.a3dmodel;
+import androidx.fragment.app.FragmentManager;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -19,19 +20,18 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
 
+
+import androidx.annotation.NonNull;
+import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
-import androidx.core.content.ContextCompat;
-import androidx.loader.app.LoaderManager;
-import androidx.recyclerview.widget.GridLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
-
-
-import static android.Manifest.permission.READ_EXTERNAL_STORAGE;
+import com.example.a3dmodel.photo_fragment.GridFragment;
+//import com.example.a3dmodel.fragment.GridFragment;
 
 public class tabPhoto extends Fragment {
+    public static int currentPosition;
+    private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
+
 
     @Nullable
     @Override
@@ -40,7 +40,22 @@ public class tabPhoto extends Fragment {
         return view;
     }
 
-//    @Override
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
+            // Return here to prevent adding additional GridFragments when changing orientation.
+            return;
+        }
+        FragmentManager fragmentManager = getFragmentManager();
+        fragmentManager
+                .beginTransaction()
+                .add(R.id.fragment_photo, new GridFragment(), GridFragment.class.getSimpleName())
+                .commit();
+    }
+
+    //    @Override
 //    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
 //        FragmentManager fragmentManager = getFragmentManager();
 //        fragmentManager.beginTransaction()
