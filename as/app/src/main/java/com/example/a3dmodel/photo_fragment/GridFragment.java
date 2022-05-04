@@ -29,7 +29,6 @@ import java.util.Map;
 public class GridFragment extends Fragment {
 
     private RecyclerView recyclerView;
-    private RelativeLayout relativeLayout;
 
     @Nullable
     @Override
@@ -37,8 +36,7 @@ public class GridFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         recyclerView = (RecyclerView) inflater.inflate(R.layout.fragment_grid, container, false);
         recyclerView.setAdapter(new GridAdapter(this));
-        relativeLayout = (RelativeLayout) inflater.inflate(R.layout.fragment_grid, container, false);
-//        relativeLayout.
+
         prepareTransitions();
         postponeEnterTransition();
 

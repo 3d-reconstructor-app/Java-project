@@ -44,20 +44,21 @@ public class tabPhoto extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (savedInstanceState != null) {
-//            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
-//            // Return here to prevent adding additional GridFragments when changing orientation.
-//            return;
-//        }
-//
-//        FragmentManager fragmentManager = getFragmentManager();
-//        fragmentManager
-//                .beginTransaction()
-//                .setReorderingAllowed(true) // Optimize for shared element transition
-////                .addSharedElement(transitioningView, transitioningView.getTransitionName())
-//                .replace(R.id.fragment_photo, new GridFragment(), GridFragment.class.getSimpleName())
-//                .addToBackStack(null)
-//                .commit();
+        if (savedInstanceState != null) {
+            currentPosition = savedInstanceState.getInt(KEY_CURRENT_POSITION, 0);
+            // Return here to prevent adding additional GridFragments when changing orientation.
+            return;
+        }
+
+        FragmentManager fragmentManager = getFragmentManager();
+        assert fragmentManager != null;
+        fragmentManager
+                .beginTransaction()
+                .setReorderingAllowed(true) // Optimize for shared element transition
+//                .addSharedElement(transitioningView, transitioningView.getTransitionName())
+                .replace(R.id.fragment_photo, new GridFragment(), GridFragment.class.getSimpleName())
+                .addToBackStack(null)
+                .commit();
     }
 
     //    @Override

@@ -41,6 +41,7 @@ public class ImageFragment extends Fragment {
         final View view = inflater.inflate(R.layout.fragment_image, container, false);
 
         Bundle arguments = getArguments();
+        assert arguments != null;
         @DrawableRes int imageRes = arguments.getInt(KEY_IMAGE_RES);
 
         // Just like we do when binding views at the grid, we set the transition name to be the string
@@ -57,6 +58,7 @@ public class ImageFragment extends Fragment {
                         // The postponeEnterTransition is called on the parent ImagePagerFragment, so the
                         // startPostponedEnterTransition() should also be called on it to get the transition
                         // going in case of a failure.
+                        assert getParentFragment() != null;
                         getParentFragment().startPostponedEnterTransition();
                         return false;
                     }
@@ -67,6 +69,7 @@ public class ImageFragment extends Fragment {
                         // The postponeEnterTransition is called on the parent ImagePagerFragment, so the
                         // startPostponedEnterTransition() should also be called on it to get the transition
                         // going when the image is ready.
+                        assert getParentFragment() != null;
                         getParentFragment().startPostponedEnterTransition();
                         return false;
                     }
