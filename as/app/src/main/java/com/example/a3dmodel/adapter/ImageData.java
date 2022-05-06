@@ -12,7 +12,8 @@ abstract class ImageData {
     @DrawableRes
     static final int[] IMAGE_DRAWABLES = {
             R.drawable.ic_launcher_background,
-            R.drawable.ic_launcher_foreground
+            R.drawable.ic_launcher_foreground,
+            R.drawable.jaba
 //            R.drawable.animal_2024172,
 //            R.drawable.beetle_562035,
 //            R.drawable.bug_189903,

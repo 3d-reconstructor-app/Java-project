@@ -6,170 +6,21 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".tabPhoto">
+
+    <Button
+        android:id="@+id/button_camera"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Camera"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="20dp"/>
+
+    <Button
+        android:id="@+id/button_build_3dmodel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Build"
+        android:layout_marginTop="5dp"
+        android:layout_marginLeft="290dp"/>
 </FrameLayout>
-
-<!--<androidx.fragment.app.FragmentContainerView-->
-<!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
-<!--    android:id="@+id/fragment_container_view_photo"-->
-<!--    android:layout_width="match_parent"-->
-<!--    android:layout_height="match_parent">-->
-
-<!--    <FrameLayout-->
-<!--        xmlns:android="http://schemas.android.com/apk/res/android"-->
-<!--        xmlns:tools="http://schemas.android.com/tools"-->
-<!--        android:id="@+id/fragment_photo"-->
-<!--        android:layout_width="match_parent"-->
-<!--        android:layout_height="match_parent"-->
-<!--        tools:context=".tabPhoto">-->
-<!--    </FrameLayout>-->
-
-<!--</androidx.fragment.app.FragmentContainerView>-->
-
-
-    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    tools:context=".tabPhoto"-->
-    <!--    android:id="@+id/fragment_photo">-->
-
-    <!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
-    <!--    <TextView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:text="hello from tab photo"-->
-    <!--        android:textSize="30dp" />-->
-
-    <!--</FrameLayout>-->
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    android:id="@+id/photo_tab"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    tools:context=".tabPhoto"-->
-    <!--    tools:ignore="ExtraText">-->
-
-    <!--    <TextView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:text="hello from tab photo"-->
-    <!--        android:textSize="30dp" />-->
-
-    <!--    />-->
-    <!--</FrameLayout>-->
-
-
-    <!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-
-
-    <!--<RelativeLayout android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    android:background="#ffffff"-->
-    <!--    xmlns:android="http://schemas.android.com/apk/res/android">-->
-
-
-    <!--    // ???-->
-    <!--    &lt;!&ndash;        android:horizontalSpacing="5dp"&ndash;&gt;-->
-    <!--    &lt;!&ndash;        android:verticalSpacing="5dp"&ndash;&gt;-->
-    <!--    <GridView-->
-    <!--        android:id="@+id/grid_folder"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_marginLeft="10dp"-->
-    <!--        android:layout_marginRight="10dp"-->
-    <!--        android:background="@color/purple_200"-->
-    <!--        android:numColumns="2" />-->
-
-    <!--</RelativeLayout>-->
-
-
-    <!--&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;&#45;-->
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<RelativeLayout-->
-    <!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    android:layout_gravity="center"-->
-    <!--    android:gravity="center"-->
-    <!--    android:orientation="vertical"-->
-    <!--    tools:context=".MainActivity">-->
-
-    <!--    &lt;!&ndash;recycler view for displaying the list of images&ndash;&gt;-->
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/idRVImages"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent" />-->
-
-    <!--</RelativeLayout>-->
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<androidx.constraintlayout.widget.ConstraintLayout-->
-    <!--    xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    android:layout_gravity="center"-->
-    <!--    android:gravity="center"-->
-    <!--    android:orientation="vertical"-->
-    <!--    tools:context=".tabPhoto">-->
-
-    <!--    &lt;!&ndash;recycler view for displaying the list of images&ndash;&gt;-->
-
-    <!--    <androidx.recyclerview.widget.RecyclerView-->
-    <!--        android:id="@+id/idRVImages"-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        tools:layout_editor_absoluteX="0dp"-->
-    <!--        tools:layout_editor_absoluteY="0dp" />-->
-
-    <!--    <TextView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:text="hello from tab photo"-->
-    <!--        android:textSize="30dp" />-->
-
-    <!--    <Button-->
-    <!--        android:id="@+id/button"-->
-    <!--        android:layout_width="116dp"-->
-    <!--        android:layout_height="54dp"-->
-    <!--        android:text="Camera"-->
-    <!--        tools:ignore="MissingConstraints"-->
-    <!--        tools:layout_editor_absoluteX="16dp"-->
-    <!--        tools:layout_editor_absoluteY="16dp" />-->
-
-    <!--    <Button-->
-    <!--        android:id="@+id/button2"-->
-    <!--        android:layout_width="wrap_content"-->
-    <!--        android:layout_height="wrap_content"-->
-    <!--        android:text="Get from gallery"-->
-    <!--        tools:layout_editor_absoluteX="212dp"-->
-    <!--        tools:layout_editor_absoluteY="16dp"-->
-    <!--        tools:ignore="MissingConstraints" />-->
-
-    <!--</androidx.constraintlayout.widget.ConstraintLayout>-->
-
-    <!--<?xml version="1.0" encoding="utf-8"?>-->
-    <!--<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"-->
-    <!--    xmlns:tools="http://schemas.android.com/tools"-->
-    <!--    android:layout_width="match_parent"-->
-    <!--    android:layout_height="match_parent"-->
-    <!--    tools:context=".tabPhoto">-->
-
-    <!--    &lt;!&ndash; TODO: Update blank fragment layout &ndash;&gt;-->
-    <!--    <TextView-->
-    <!--        android:layout_width="match_parent"-->
-    <!--        android:layout_height="match_parent"-->
-    <!--        android:layout_gravity="center"-->
-    <!--        android:textSize="30dp"-->
-    <!--        android:text="hello from tab photo" />-->
-
-    <!--</FrameLayout>-->
-
 

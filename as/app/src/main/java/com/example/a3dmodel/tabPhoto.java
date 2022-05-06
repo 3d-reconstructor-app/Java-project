@@ -1,5 +1,6 @@
 
 package com.example.a3dmodel;
+
 import androidx.fragment.app.FragmentManager;
 
 import androidx.annotation.NonNull;
@@ -19,7 +20,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Toast;
-
+import android.widget.Button;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -38,7 +39,22 @@ public class tabPhoto extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_photos, container, false);
+        View view = inflater.inflate(R.layout.fragment_tab_photos, container, false);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        Button camera = (Button) getView().findViewById(R.id.button_camera);
+        View.OnClickListener CameraButtonOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toast.makeText(getContext(), "hello", Toast.LENGTH_SHORT).show();
+            }
+        };
+
+        camera.setOnClickListener(CameraButtonOnClickListener);
     }
 
     @Override
@@ -59,7 +75,10 @@ public class tabPhoto extends Fragment {
                 .replace(R.id.fragment_photo, new GridFragment(), GridFragment.class.getSimpleName())
                 .addToBackStack(null)
                 .commit();
+
+
     }
+
 
     //    @Override
 //    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
