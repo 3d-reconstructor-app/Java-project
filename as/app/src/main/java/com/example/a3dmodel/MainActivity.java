@@ -21,7 +21,7 @@ import com.example.a3dmodel.databinding.ActivityMainBinding;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
-import com.example.a3dmodel.photo_fragment.GridFragment;
+//import com.example.a3dmodel.photo_fragment.GridFragment;
 
 public class MainActivity extends AppCompatActivity {
 

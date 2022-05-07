@@ -4,4 +4,10 @@
     <string name="tab_main">Main</string>
     <string name="tab_photos">Photos</string>
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="new_memory_title_hint">Add Title</string>
+    <string name="new_memory_btn_cancel">Cancel</string>
+    <string name="new_memory_btn_save">Save</string>
+    <string name="activity_main_empty_view_text">Create your first photo with camera or add them from gallery.</string>
+    <string name="new_memory_btn_gallery">Add a photo from gallery</string>
+    <string name="new_memory_btn_camera">Add a photo from camera</string>
 </resources>
