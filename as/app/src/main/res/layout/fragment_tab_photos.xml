@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_photo"
     android:layout_width="match_parent"
@@ -11,16 +10,60 @@
         android:id="@+id/button_camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Camera"
+        android:layout_marginLeft="20dp"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="20dp"/>
+        android:text="Camera" />
 
     <Button
         android:id="@+id/button_build_3dmodel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Build"
+        android:layout_marginLeft="290dp"
         android:layout_marginTop="5dp"
-        android:layout_marginLeft="290dp"/>
+        android:text="Build" />
+
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="match_parent">-->
+
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab3"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="bottom|end"-->
+<!--            android:layout_margin="@dimen/fab_margin"-->
+<!--            android:contentDescription="TODO"-->
+<!--            android:src="@android:drawable/ic_dialog_info"-->
+<!--            tools:layout_editor_absoluteX="339dp"-->
+<!--            tools:layout_editor_absoluteY="519dp"-->
+<!--            tools:ignore="MissingConstraints" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab2"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="top|end"-->
+<!--            android:contentDescription="TODO"-->
+<!--            android:src="@android:drawable/ic_media_play"-->
+<!--            tools:layout_editor_absoluteX="339dp"-->
+<!--            tools:layout_editor_absoluteY="659dp"-->
+<!--            tools:ignore="MissingConstraints" />-->
+
+<!--        <com.google.android.material.floatingactionbutton.FloatingActionButton-->
+<!--            android:id="@+id/fab"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="bottom|end"-->
+<!--            android:layout_margin="@dimen/fab_margin"-->
+<!--            android:contentDescription="TODO"-->
+<!--            android:src="@android:drawable/ic_dialog_info"-->
+<!--            tools:layout_editor_absoluteX="339dp"-->
+<!--            tools:layout_editor_absoluteY="588dp"-->
+<!--            tools:ignore="MissingConstraints" />-->
+
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
+
+
 </FrameLayout>
 

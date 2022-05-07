@@ -23,7 +23,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.3dModel">
         <activity
-            android:name=".tabPhoto2"
+            android:name=".tabPhoto"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
