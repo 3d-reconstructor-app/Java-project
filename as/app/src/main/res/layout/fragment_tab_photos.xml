@@ -19,9 +19,15 @@
         android:paddingEnd="8dp"
         android:scrollbars="vertical"
         app:layoutManager="GridLayoutManager"
-        app:spanCount="3"
+        app:spanCount="4"
         android:layout_marginTop="50dp"/>
 
+
+    <ImageView
+        android:layout_marginTop="60dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView" />
 
     <TextView
         android:id="@+id/fragment_photo_empty_view"
@@ -43,7 +49,7 @@
             android:id="@+id/button_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="G"
+            android:text="C"
             tools:layout_editor_absoluteX="7dp"
             tools:layout_editor_absoluteY="0dp" />
 
@@ -51,7 +57,7 @@
             android:id="@+id/button_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="C"
+            android:text="G"
             app:layout_constraintEnd_toStartOf="@+id/button3"
             app:layout_constraintStart_toEndOf="@+id/button1"
             tools:layout_editor_absoluteY="0dp" />
@@ -61,7 +67,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
-            android:text="S"
+            android:text="D"
             app:layout_constraintEnd_toStartOf="@+id/button4"
             tools:layout_editor_absoluteY="0dp" />
 
@@ -69,7 +75,7 @@
             android:id="@+id/button_build"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="T"
+            android:text="B"
             tools:layout_editor_absoluteX="291dp"
             tools:layout_editor_absoluteY="0dp" />
 

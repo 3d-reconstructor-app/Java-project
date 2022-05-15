@@ -1,6 +1,7 @@
 package com.example.a3dmodel.adapter;
 
-
+import static com.example.a3dmodel.MainActivity.bundleALindex;
+import static com.example.a3dmodel.MainActivity.bundleArrayList;
 import static com.example.a3dmodel.adapter.ImageData.IMAGE_DRAWABLES;
 import android.graphics.drawable.Drawable;
 
@@ -19,11 +20,10 @@ import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
 import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.target.Target;
-
 import com.example.a3dmodel.MainActivity;
 import com.example.a3dmodel.R;
 import com.example.a3dmodel.adapter.GridAdapter.ImageViewHolder;
-import com.example.a3dmodel.photo_fragment.ImagePagerFragment;
+//import com.example.a3dmodel.photo_fragment.ImagePagerFragment;
 
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -69,7 +69,7 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
 
     @Override
     public int getItemCount() {
-        return IMAGE_DRAWABLES.length;
+        return bundleALindex;
     }
 
 
@@ -115,16 +115,16 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
             // instead of fading out with the rest to prevent an overlapping animation of fade and move).
             ((TransitionSet) fragment.getExitTransition()).excludeTarget(view, true);
 
-            ImageView transitioningView = view.findViewById(R.id.card_image);
-            assert fragment.getFragmentManager() != null;
-            fragment.getFragmentManager()
-                    .beginTransaction()
-                    .setReorderingAllowed(true) // Optimize for shared element transition
-                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
-                    .replace(R.id.fragment_photo, new ImagePagerFragment(), ImagePagerFragment.class
-                            .getSimpleName())
-                    .addToBackStack(null)
-                    .commit();
+//            ImageView transitioningView = view.findViewById(R.id.card_image);
+//            assert fragment.getFragmentManager() != null;
+//            fragment.getFragmentManager()
+//                    .beginTransaction()
+//                    .setReorderingAllowed(true) // Optimize for shared element transition
+//                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
+//                    .replace(R.id.fragment_photo, new ImagePagerFragment(), ImagePagerFragment.class
+//                            .getSimpleName())
+//                    .addToBackStack(null)
+//                    .commit();
         }
     }
 
@@ -142,6 +142,7 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
                         ViewHolderListener viewHolderListener) {
             super(itemView);
             this.image = itemView.findViewById(R.id.card_image);
+            this.image.setImageBitmap(bundleArrayList[bundleArrayList.length-1]);
             this.requestManager = requestManager;
             this.viewHolderListener = viewHolderListener;
             itemView.findViewById(R.id.card_view).setOnClickListener(this);
@@ -157,13 +158,13 @@ public class GridAdapter extends RecyclerView.Adapter<ImageViewHolder> {
             int adapterPosition = getAdapterPosition();
             setImage(adapterPosition);
             // Set the string value of the image resource as the unique transition name for the view.
-            image.setTransitionName(String.valueOf(IMAGE_DRAWABLES[adapterPosition]));
+            image.setTransitionName(String.valueOf(image));
         }
 
         void setImage(final int adapterPosition) {
             // Load the image with Glide to prevent OOM error when the image drawables are very large.
             requestManager
-                    .load(IMAGE_DRAWABLES[adapterPosition])
+                    .load(image)
                     .listener(new RequestListener<Drawable>() {
                         @Override
                         public boolean onLoadFailed(@Nullable GlideException e, Object model,
