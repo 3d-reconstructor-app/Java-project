@@ -10,15 +10,18 @@
     android:paddingEnd="16dp"
     android:id="@+id/fragment_photo">
 
-    <GridView
-        android:id="@+id/fragment_photo_grid_view"
-        android:numColumns="auto_fit"
-        android:verticalSpacing="4dp"
-        android:gravity="center"
-        android:horizontalSpacing="4dp"
-        android:layout_marginTop="55dp"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/fragment_photo_grid"
+        android:scrollbarStyle="outsideOverlay"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:paddingStart="8dp"
+        android:paddingEnd="8dp"
+        android:scrollbars="vertical"
+        app:layoutManager="GridLayoutManager"
+        app:spanCount="3"
+        android:layout_marginTop="50dp"/>
+
 
     <TextView
         android:id="@+id/fragment_photo_empty_view"
@@ -30,13 +33,14 @@
         android:layout_height="match_parent" />
 
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+<!--    <androidx.constraintlayout.widget.ConstraintLayout-->
+    <LinearLayout
         android:id="@+id/constraintL_fragment_photo"
-        android:layout_width="wrap_content"
+        android:layout_width="371dp"
         android:layout_height="wrap_content">
 
         <Button
-            android:id="@+id/button1"
+            android:id="@+id/button_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="G"
@@ -44,7 +48,7 @@
             tools:layout_editor_absoluteY="0dp" />
 
         <Button
-            android:id="@+id/button2"
+            android:id="@+id/button_gallery"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="C"
@@ -53,7 +57,7 @@
             tools:layout_editor_absoluteY="0dp" />
 
         <Button
-            android:id="@+id/button3"
+            android:id="@+id/button_delete"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="8dp"
@@ -62,15 +66,15 @@
             tools:layout_editor_absoluteY="0dp" />
 
         <Button
-            android:id="@+id/button4"
+            android:id="@+id/button_build"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="T"
             tools:layout_editor_absoluteX="291dp"
             tools:layout_editor_absoluteY="0dp" />
 
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
+<!--    </androidx.constraintlayout.widget.ConstraintLayout>-->
 
 
 </FrameLayout>

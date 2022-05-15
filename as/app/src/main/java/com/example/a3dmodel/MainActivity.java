@@ -1,5 +1,7 @@
 package com.example.a3dmodel;
 
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,9 +17,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ImageView;
 
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 import com.example.a3dmodel.databinding.ActivityMainBinding;
+
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -28,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
+    private static final int CAMERA_PIC_REQUEST = 100;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -65,4 +70,15 @@ public class MainActivity extends AppCompatActivity {
         outState.putInt(KEY_CURRENT_POSITION, currentPosition);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if (requestCode == CAMERA_PIC_REQUEST && resultCode == RESULT_OK && data != null){
+            Bundle bundle = data.getExtras();
+            Bitmap finalPhoto = (Bitmap) bundle.get("data");
+            ImageView imageView = null; //TODO
+            imageView.setImageBitmap(finalPhoto);
+        }
+    }
 }
