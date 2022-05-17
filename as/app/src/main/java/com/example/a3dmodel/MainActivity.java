@@ -31,8 +31,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    static public Bitmap[] bundleArrayList = new Bitmap[1000];
-    static public int  bundleALindex = 0;
+    static public Bitmap[] bitmapArrayList = new Bitmap[1000];
+    static public int  bitmapALindex = 0;
     private ActivityMainBinding binding;
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
@@ -40,7 +40,6 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
@@ -58,18 +57,22 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+//        if(requestCode != RESULT_OK) return;
+
         if (requestCode == CAMERA_PIC_REQUEST && resultCode == RESULT_OK) {
             assert data != null;
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
 //            ImageView imageView = findViewById(R.id.imageView);
 //            imageView.setImageBitmap(imageBitmap);
-            bundleArrayList[bundleALindex++] = imageBitmap;
-
+            bitmapArrayList[bitmapALindex++] = imageBitmap;
         }
 
 
         super.onActivityResult(requestCode, resultCode, data);
 
     }
+
+
+
 }

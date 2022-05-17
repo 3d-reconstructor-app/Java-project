@@ -1,6 +1,7 @@
 
 package com.example.a3dmodel;
-
+import static com.example.a3dmodel.MainActivity.bitmapALindex;
+import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.SharedElementCallback;
@@ -9,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import android.transition.TransitionInflater;
@@ -21,6 +24,7 @@ import android.widget.GridView;
 
 import com.example.a3dmodel.adapter.GridAdapter;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -60,7 +64,6 @@ public class tabPhoto extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        scrollToPosition();
 
         Button galleryButton = (Button) view.findViewById(R.id.button_gallery);
         View.OnClickListener galleryButtonOnClickListener = new View.OnClickListener() {
@@ -82,18 +85,24 @@ public class tabPhoto extends Fragment {
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 assert getActivity() != null;
                 getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+                Bitmap lastPhotoBitmap = bitmapArrayList[bitmapArrayList.length - 1];
                 // TODO make adapter draw new taken photo which saved as Bitmap
+                assert recyclerView.getAdapter() != null;
+//                recyclerView.getAdapter().notifyItemChanged(bitmapALindex);
+                recyclerView.getAdapter().notifyDataSetChanged();
+//                recyclerView.getAdapter().setNewTakenPhoto(); //TODO uncomment
 //                recyclerView.getAdapter().notifyItemChanged(0);
 //                recyclerView.setAdapter(new GridAdapter(tabPhoto.this));
 //                prepareTransitions();
 //                postponeEnterTransition();
-                recyclerView.getAdapter().onBindViewHolder(recyclerView.findContainingViewHolder(view),
-                        0);
+//                recyclerView.getAdapter().bindViewHolder(recyclerView.findContainingViewHolder(view), 0);
+//                recyclerView.getAdapter().onBindViewHolder(recyclerView.findContainingViewHolder(view),
+//                        0);
             }
+
         };
 
         cameraButton.setOnClickListener(cameraButtonOnClickListener);
-
 
 
         Button buildButton = (Button) view.findViewById(R.id.button_build);
@@ -117,8 +126,22 @@ public class tabPhoto extends Fragment {
         };
 
         deleteButton.setOnClickListener(deleteButtonOnClickListener);
+
+
+        scrollToPosition();
+
     }
 
+    // add photo to gallery
+//    private void galleryAddPic() {
+//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
+//        File f = new File(currentPhotoPath);
+//        Uri contentUri = Uri.fromFile(f);
+//        mediaScanIntent.setData(contentUri);
+//        this.sendBroadcast(mediaScanIntent);
+//    }
+
+    // TODO i guess it should be placed somewhere else (?) or called
     private void scrollToPosition() {
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
