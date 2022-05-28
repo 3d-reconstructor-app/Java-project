@@ -16,6 +16,7 @@ import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
+import android.provider.MediaStore;
 import android.transition.TransitionInflater;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -37,8 +38,8 @@ public class tabPhoto extends Fragment {
     static public List<ImageData> imageDataList = new ArrayList<>();
 
     private GridView gridView;
-    private static final int CAMERA_PIC_REQUEST = 1888; // ??
-
+    public static final int CAMERA_PIC_REQUEST = 1888; // ?
+    public static final int GALLERY_PIC_REQUEST = 1777; // ?
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -59,7 +60,7 @@ public class tabPhoto extends Fragment {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    private void updateImageBitmapListAndSendItToTheAdapter(){
+    public static void updateImageBitmapListAndSendItToTheAdapter(){
         Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
         assert recyclerView.getAdapter() != null;
         imageDataList.add(new ImageData(lastPhotoBitmap));
@@ -70,17 +71,6 @@ public class tabPhoto extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Button galleryButton = (Button) view.findViewById(R.id.button_gallery);
-        View.OnClickListener galleryButtonOnClickListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-            }
-        };
-
-        galleryButton.setOnClickListener(galleryButtonOnClickListener);
-
-
         // TODO need to store photo directly in the system and save path for them
         Button cameraButton = (Button) view.findViewById(R.id.button_camera);
         View.OnClickListener cameraButtonOnClickListener = new View.OnClickListener() {
@@ -90,24 +80,28 @@ public class tabPhoto extends Fragment {
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 assert getActivity() != null;
                 getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
-
-                int prevSizeOfBitmapList = bitmapArrayList.size();
-                System.out.println("size from fragment = " + bitmapArrayList.size());
-//                Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
-//                // TODO make adapter draw new taken photo which saved as Bitmap
-//                assert recyclerView.getAdapter() != null;
-//                GridAdapter gridAdapter = (GridAdapter) recyclerView.getAdapter();
-//                imageDataList.add(new ImageData(lastPhotoBitmap));
-////                GridAdapter.addBitmapToImageDataList(lastPhotoBitmap);
-//
-//                recyclerView.getAdapter().notifyDataSetChanged();
-//
             }
 
         };
 
         cameraButton.setOnClickListener(cameraButtonOnClickListener);
-//        updateImageBitmapListAndSendItToTheAdapter();
+
+
+        Button galleryButton = (Button) view.findViewById(R.id.button_gallery);
+        View.OnClickListener galleryButtonOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                assert getActivity() != null;
+                getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
+
+            }
+        };
+
+        galleryButton.setOnClickListener(galleryButtonOnClickListener);
+
+
 
         Button buildButton = (Button) view.findViewById(R.id.button_build);
         View.OnClickListener selectButtonOnClickListener = new View.OnClickListener() {

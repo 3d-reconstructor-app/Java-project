@@ -2,6 +2,7 @@ package com.example.a3dmodel;
 
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -15,6 +16,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.provider.MediaStore;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -27,6 +29,10 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 
+import static com.example.a3dmodel.tabPhoto.CAMERA_PIC_REQUEST;
+import static com.example.a3dmodel.tabPhoto.GALLERY_PIC_REQUEST;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -38,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
-    private static final int CAMERA_PIC_REQUEST = 1888;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -74,11 +79,35 @@ public class MainActivity extends AppCompatActivity {
 //            tabPhoto myFragment = (tabPhoto) getSupportFragmentManager().findFragmentById(R.id.fragment_photo);
 //            System.out.println(myFragment);
             Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
-            tabPhoto.imageDataList.add(new ImageData(lastPhotoBitmap));
-            tabPhoto.recyclerView.getAdapter().notifyDataSetChanged();
+            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+//            tabPhoto.imageDataList.add(new ImageData(lastPhotoBitmap));
+//            tabPhoto.recyclerView.getAdapter().notifyDataSetChanged();
 
 
         }
+
+        if (requestCode == GALLERY_PIC_REQUEST && resultCode == RESULT_OK) {
+//            assert data != null;
+//            Bundle extras = data.getExtras();
+//            Bitmap imageBitmap = (Bitmap) extras.get("data");
+//            bitmapArrayList.add(imageBitmap);
+//
+//            Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
+            Uri imageUri = data.getData(); // TODO SAVE IT
+            Bitmap bitmap = null;
+            try {
+                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            assert bitmap != null;
+            bitmapArrayList.add(bitmap);
+            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+
+
+
+        }
+
 
 
         super.onActivityResult(requestCode, resultCode, data);
