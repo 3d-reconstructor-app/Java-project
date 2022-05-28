@@ -10,6 +10,7 @@
     <color name="green">#45C12F</color>
     <color name="dark_green">#0B260D</color>
     <color name="dark_green2">#0A360D</color>
+    <color name="black_overlay">#66000000</color>
 
 
 </resources>

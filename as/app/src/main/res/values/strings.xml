@@ -3,5 +3,9 @@
     <string name="tab_3d_plain">3D Plain</string>
     <string name="tab_main">Main</string>
     <string name="tab_photos">Photos</string>
+    <string name="draw">Draw</string>
+    <string name="dummy_button">Reset View</string>
+    <string name="exit">Exit</string>
+    <string name="instructions">To rotate: Drag finger across screen \n To scale: move two fingers towards or away each other.</string>
     <!-- TODO: Remove or change this placeholder text -->
 </resources>

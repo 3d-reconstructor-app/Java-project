@@ -2,6 +2,7 @@ package com.example.a3dmodel;
 
 import android.os.Bundle;
 
+import com.example.a3dmodel.visualisation.GLView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -10,8 +11,6 @@ import androidx.annotation.Nullable;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
@@ -19,7 +18,7 @@ import com.example.a3dmodel.databinding.ActivityMainBinding;
 
 
 public class MainActivity extends AppCompatActivity {
-
+    GLView view;
     private ActivityMainBinding binding;
 
 //    @Override
@@ -45,10 +44,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //    }
 
-
-    @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    private void start() {
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -58,10 +54,28 @@ public class MainActivity extends AppCompatActivity {
         FloatingActionButton fab = findViewById(R.id.fab);
 
         fab.setOnClickListener(view -> {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-
+            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+                    .setAction("Action", null).show();
         });
+    }
 
+    @Override
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        start();
+    }
+
+    public void startVisualisation(View v) {
+        setContentView(R.layout.activity_fullscreen);
+        view = (GLView)findViewById(R.id.gl_view);
+    }
+
+    public void exitVisualisation(View v) {
+        System.out.println("wtf");
+        start();
+    }
+
+    public void Reset(View v) {
+        view.Reset();
     }
 }
