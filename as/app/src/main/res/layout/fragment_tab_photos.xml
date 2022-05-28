@@ -8,7 +8,8 @@
     android:orientation="vertical"
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
-    android:id="@+id/fragment_photo">
+    android:id="@+id/fragment_photo"
+    android:tag="TAB_PHOTO">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_photo_grid"

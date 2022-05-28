@@ -10,6 +10,7 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,12 +28,13 @@ import androidx.fragment.app.FragmentManager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 //import com.example.a3dmodel.photo_fragment.GridFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    static public Bitmap[] bitmapArrayList = new Bitmap[1000];
-    static public int  bitmapALindex = 0;
+    static public List<Bitmap> bitmapArrayList = new ArrayList<>();
     private ActivityMainBinding binding;
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
@@ -63,9 +65,18 @@ public class MainActivity extends AppCompatActivity {
             assert data != null;
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            ImageView imageView = findViewById(R.id.imageView);
-//            imageView.setImageBitmap(imageBitmap);
-            bitmapArrayList[bitmapALindex++] = imageBitmap;
+            bitmapArrayList.add(imageBitmap);
+
+
+//            assert bitmapArrayList.size() != 0;
+//            System.out.println(bitmapArrayList.get(0));
+//            System.out.println("size = " + bitmapArrayList.size());
+//            tabPhoto myFragment = (tabPhoto) getSupportFragmentManager().findFragmentByTag("TAB_PHOTO");
+//            if (myFragment != null && myFragment.isVisible()) {
+//                Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
+//                myFragment.imageDataList.add(new ImageData(lastPhotoBitmap));
+//                myFragment.recyclerView.getAdapter().notifyDataSetChanged();
+//            }
         }
 
 

@@ -1,16 +1,18 @@
 
 package com.example.a3dmodel;
-import static com.example.a3dmodel.MainActivity.bitmapALindex;
+//import static com.example.a3dmodel.MainActivity.bitmapALindex;
 import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.media.Image;
 import android.net.Uri;
 import android.os.Bundle;
 
@@ -25,15 +27,18 @@ import android.widget.GridView;
 import com.example.a3dmodel.adapter.GridAdapter;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 
 public class tabPhoto extends Fragment {
-    private RecyclerView recyclerView;
+    public RecyclerView recyclerView;
+    public List<ImageData> imageDataList = new ArrayList<>();
 
     private GridView gridView;
     private static final int CAMERA_PIC_REQUEST = 1888; // ??
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -46,19 +51,19 @@ public class tabPhoto extends Fragment {
         View view = inflater.inflate(R.layout.fragment_tab_photos, container, false);
         assert getActivity() != null;
         recyclerView = view.findViewById(R.id.fragment_photo_grid);
-        recyclerView.setAdapter(new GridAdapter(this));
-        prepareTransitions();
-        postponeEnterTransition();
-//        setContentView(R.layout.activity_main);
-//        System.out.println(1);
-//        this.gridView = (GridView) view.findViewById(R.id.fragment_photo_grid_view);
-//        this.dbHelper = new MemoryDbHelper(getContext());
-//        this.gridView.setAdapter(new MemoriesAdapter(getContext(), this.dbHelper.readAllMemories(), false));
-//        this.gridView.setEmptyView(view.findViewById(R.id.fragment_photo_empty_view));
-//        Intent intent = new Intent(getActivity(), PhotoTabActivity.class);
-//        startActivity(intent);
+
+        recyclerView.setAdapter(new GridAdapter(imageDataList));
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4)); // TODO ??
 
         return view;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    private void updateImageBitmapListAndSendItToTheAdapter(){
+        Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
+        assert recyclerView.getAdapter() != null;
+        imageDataList.add(new ImageData(lastPhotoBitmap));
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
@@ -85,25 +90,24 @@ public class tabPhoto extends Fragment {
                 Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
                 assert getActivity() != null;
                 getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
-                Bitmap lastPhotoBitmap = bitmapArrayList[bitmapArrayList.length - 1];
-                // TODO make adapter draw new taken photo which saved as Bitmap
-                assert recyclerView.getAdapter() != null;
-//                recyclerView.getAdapter().notifyItemChanged(bitmapALindex);
-                recyclerView.getAdapter().notifyDataSetChanged();
-//                recyclerView.getAdapter().setNewTakenPhoto(); //TODO uncomment
-//                recyclerView.getAdapter().notifyItemChanged(0);
-//                recyclerView.setAdapter(new GridAdapter(tabPhoto.this));
-//                prepareTransitions();
-//                postponeEnterTransition();
-//                recyclerView.getAdapter().bindViewHolder(recyclerView.findContainingViewHolder(view), 0);
-//                recyclerView.getAdapter().onBindViewHolder(recyclerView.findContainingViewHolder(view),
-//                        0);
+
+                int prevSizeOfBitmapList = bitmapArrayList.size();
+                System.out.println("size from fragment = " + bitmapArrayList.size());
+                Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
+//                // TODO make adapter draw new taken photo which saved as Bitmap
+//                assert recyclerView.getAdapter() != null;
+//                GridAdapter gridAdapter = (GridAdapter) recyclerView.getAdapter();
+//                imageDataList.add(new ImageData(lastPhotoBitmap));
+////                GridAdapter.addBitmapToImageDataList(lastPhotoBitmap);
+//
+//                recyclerView.getAdapter().notifyDataSetChanged();
+//
             }
 
         };
 
         cameraButton.setOnClickListener(cameraButtonOnClickListener);
-
+//        updateImageBitmapListAndSendItToTheAdapter();
 
         Button buildButton = (Button) view.findViewById(R.id.button_build);
         View.OnClickListener selectButtonOnClickListener = new View.OnClickListener() {
@@ -132,7 +136,7 @@ public class tabPhoto extends Fragment {
 
     }
 
-    // add photo to gallery
+    // TODO add photo to gallery
 //    private void galleryAddPic() {
 //        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
 //        File f = new File(currentPhotoPath);
