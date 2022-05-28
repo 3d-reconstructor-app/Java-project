@@ -9,7 +9,9 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     android:id="@+id/fragment_photo"
-    android:tag="TAB_PHOTO">
+    android:tag="TAB_PHOTO"
+    android:scrollbarStyle="outsideOverlay"
+    >
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/fragment_photo_grid"

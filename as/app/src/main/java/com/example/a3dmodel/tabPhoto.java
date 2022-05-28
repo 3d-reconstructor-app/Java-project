@@ -33,8 +33,8 @@ import java.util.Map;
 
 
 public class tabPhoto extends Fragment {
-    public RecyclerView recyclerView;
-    public List<ImageData> imageDataList = new ArrayList<>();
+    static public RecyclerView recyclerView;
+    static public List<ImageData> imageDataList = new ArrayList<>();
 
     private GridView gridView;
     private static final int CAMERA_PIC_REQUEST = 1888; // ??
@@ -53,7 +53,7 @@ public class tabPhoto extends Fragment {
         recyclerView = view.findViewById(R.id.fragment_photo_grid);
 
         recyclerView.setAdapter(new GridAdapter(imageDataList));
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 4)); // TODO ??
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3)); // TODO ??
 
         return view;
     }
@@ -93,7 +93,7 @@ public class tabPhoto extends Fragment {
 
                 int prevSizeOfBitmapList = bitmapArrayList.size();
                 System.out.println("size from fragment = " + bitmapArrayList.size());
-                Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
+//                Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
 //                // TODO make adapter draw new taken photo which saved as Bitmap
 //                assert recyclerView.getAdapter() != null;
 //                GridAdapter gridAdapter = (GridAdapter) recyclerView.getAdapter();

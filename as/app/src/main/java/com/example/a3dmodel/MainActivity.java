@@ -71,19 +71,19 @@ public class MainActivity extends AppCompatActivity {
 //            assert bitmapArrayList.size() != 0;
 //            System.out.println(bitmapArrayList.get(0));
 //            System.out.println("size = " + bitmapArrayList.size());
-//            tabPhoto myFragment = (tabPhoto) getSupportFragmentManager().findFragmentByTag("TAB_PHOTO");
-//            if (myFragment != null && myFragment.isVisible()) {
-//                Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
-//                myFragment.imageDataList.add(new ImageData(lastPhotoBitmap));
-//                myFragment.recyclerView.getAdapter().notifyDataSetChanged();
-//            }
+//            tabPhoto myFragment = (tabPhoto) getSupportFragmentManager().findFragmentById(R.id.fragment_photo);
+//            System.out.println(myFragment);
+            Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
+            tabPhoto.imageDataList.add(new ImageData(lastPhotoBitmap));
+            tabPhoto.recyclerView.getAdapter().notifyDataSetChanged();
+
+
         }
 
 
         super.onActivityResult(requestCode, resultCode, data);
 
     }
-
 
 
 }
