@@ -9,7 +9,9 @@ import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,6 +20,7 @@ import android.transition.TransitionSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -43,7 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
-
+import com.example.a3dmodel.tabPhoto;
 
 /**
  * A fragment for displaying a grid of images.
@@ -56,10 +59,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
     private List<ImageData> selectedImageDataItems = new ArrayList<>();
 
     public GridAdapter(List<ImageData> imageDataList){
-        this.imageDataList = imageDataList;
+        GridAdapter.imageDataList = imageDataList;
     }
 
     public GridAdapter(){
+
     }
 
     public static void addBitmapToImageDataList(Bitmap bitmap){
@@ -113,9 +117,12 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
             super(itemView);
             this.image = (ImageView) itemView.findViewById(R.id.card_image);
 
+
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
+
+
                     isSelectMode = true;
                     if(selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))){
                         itemView.setBackgroundColor(Color.TRANSPARENT);
@@ -125,8 +132,31 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                         selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
                     }
 
+                    if(selectedImageDataItems.size() != 0){
+                        Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
+                        Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
+                        buttonGallery.setVisibility(View.GONE);
+                        buttonCamera.setVisibility(View.GONE);
+
+                        Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
+                        Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
+                        buttonBuild3DModel.setVisibility(View.VISIBLE);
+                        buttonDelete.setVisibility(View.VISIBLE);
+                    } else {
+                        Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
+                        Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
+                        buttonGallery.setVisibility(View.VISIBLE);
+                        buttonCamera.setVisibility(View.VISIBLE);
+
+                        Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
+                        Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
+                        buttonBuild3DModel.setVisibility(View.GONE);
+                        buttonDelete.setVisibility(View.GONE);
+                    }
+
                     if(selectedImageDataItems.size() == 0){
                         isSelectMode = false;
+
                     }
                     return true;
                 }
@@ -143,6 +173,30 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                             itemView.setBackgroundResource(R.color.selectedItemInPhoto);
                             selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
                         }
+
+                        if(selectedImageDataItems.size() != 0){
+                            Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
+                            Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
+                            buttonGallery.setVisibility(View.GONE);
+                            buttonCamera.setVisibility(View.GONE);
+
+                            Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
+                            Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
+                            buttonBuild3DModel.setVisibility(View.VISIBLE);
+                            buttonDelete.setVisibility(View.VISIBLE);
+                        } else {
+
+                            Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
+                            Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
+                            buttonGallery.setVisibility(View.VISIBLE);
+                            buttonCamera.setVisibility(View.VISIBLE);
+
+                            Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
+                            Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
+                            buttonBuild3DModel.setVisibility(View.GONE);
+                            buttonDelete.setVisibility(View.GONE);
+                        }
+
 
                         if(selectedImageDataItems.size() == 0){
                             isSelectMode = false;

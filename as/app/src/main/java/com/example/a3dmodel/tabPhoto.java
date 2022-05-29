@@ -1,7 +1,9 @@
 
 package com.example.a3dmodel;
 //import static com.example.a3dmodel.MainActivity.bitmapALindex;
+
 import static com.example.a3dmodel.MainActivity.bitmapArrayList;
+
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.SharedElementCallback;
@@ -23,6 +25,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CursorAdapter;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 
 import com.example.a3dmodel.adapter.GridAdapter;
@@ -36,7 +39,7 @@ import java.util.Map;
 public class tabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
-
+    public static FrameLayout frameLayout;
 
     public static final int CAMERA_PIC_REQUEST = 1888; // ?
     public static final int GALLERY_PIC_REQUEST = 1777; // ?
@@ -51,6 +54,7 @@ public class tabPhoto extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_photos, container, false);
         assert getActivity() != null;
+        frameLayout = view.findViewById(R.id.fragment_photo);
         recyclerView = view.findViewById(R.id.fragment_photo_grid);
 
         recyclerView.setAdapter(new GridAdapter(imageDataList));
@@ -60,7 +64,7 @@ public class tabPhoto extends Fragment {
     }
 
     @SuppressLint("NotifyDataSetChanged")
-    public static void updateImageBitmapListAndSendItToTheAdapter(){
+    public static void updateImageBitmapListAndSendItToTheAdapter() {
         Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
         assert recyclerView.getAdapter() != null;
         imageDataList.add(new ImageData(lastPhotoBitmap));
@@ -102,7 +106,6 @@ public class tabPhoto extends Fragment {
         galleryButton.setOnClickListener(galleryButtonOnClickListener);
 
 
-
         Button buildButton = (Button) view.findViewById(R.id.button_build);
         View.OnClickListener selectButtonOnClickListener = new View.OnClickListener() {
             @Override
@@ -112,7 +115,6 @@ public class tabPhoto extends Fragment {
         };
 
         buildButton.setOnClickListener(selectButtonOnClickListener);
-
 
 
         Button deleteButton = (Button) view.findViewById(R.id.button_delete);
@@ -126,8 +128,16 @@ public class tabPhoto extends Fragment {
         deleteButton.setOnClickListener(deleteButtonOnClickListener);
 
 
+        makeTwoButtonsHide(buildButton, deleteButton);
+
         scrollToPosition();
 
+    }
+
+    public static void makeTwoButtonsHide(Button button1, Button button2) {
+
+        button1.setVisibility(View.GONE);
+        button2.setVisibility(View.GONE);
     }
 
     // TODO add photo to gallery
