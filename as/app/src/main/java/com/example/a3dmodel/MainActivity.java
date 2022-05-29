@@ -21,6 +21,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 import com.example.a3dmodel.databinding.ActivityMainBinding;
@@ -35,12 +36,17 @@ import static com.example.a3dmodel.tabPhoto.GALLERY_PIC_REQUEST;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 //import com.example.a3dmodel.photo_fragment.GridFragment;
 
 public class MainActivity extends AppCompatActivity {
 
-    static public List<Bitmap> bitmapArrayList = new ArrayList<>();
+    public static Map<Integer, Uri> positionUriMapForAllFilesInPhotoGrid = new HashMap<>();
+    public static List<Bitmap> bitmapArrayList = new ArrayList<>();
     private ActivityMainBinding binding;
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
@@ -64,36 +70,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-//        if(requestCode != RESULT_OK) return;
 
         if (requestCode == CAMERA_PIC_REQUEST && resultCode == RESULT_OK) {
             assert data != null;
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
+
+            assert imageBitmap != null;
+
             bitmapArrayList.add(imageBitmap);
-
-
-//            assert bitmapArrayList.size() != 0;
-//            System.out.println(bitmapArrayList.get(0));
-//            System.out.println("size = " + bitmapArrayList.size());
-//            tabPhoto myFragment = (tabPhoto) getSupportFragmentManager().findFragmentById(R.id.fragment_photo);
-//            System.out.println(myFragment);
-            Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
             tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
-//            tabPhoto.imageDataList.add(new ImageData(lastPhotoBitmap));
-//            tabPhoto.recyclerView.getAdapter().notifyDataSetChanged();
-
-
+            TextView textView = findViewById(R.id.fragment_photo_empty_view);
+            textView.setVisibility(View.GONE);
         }
 
         if (requestCode == GALLERY_PIC_REQUEST && resultCode == RESULT_OK) {
-//            assert data != null;
-//            Bundle extras = data.getExtras();
-//            Bitmap imageBitmap = (Bitmap) extras.get("data");
-//            bitmapArrayList.add(imageBitmap);
-//
-//            Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
+            assert data != null;
+
             Uri imageUri = data.getData(); // TODO SAVE IT
+
             Bitmap bitmap = null;
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
@@ -103,10 +98,10 @@ public class MainActivity extends AppCompatActivity {
             assert bitmap != null;
             bitmapArrayList.add(bitmap);
             tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
-
-
-
+            TextView textView = findViewById(R.id.fragment_photo_empty_view);
+            textView.setVisibility(View.GONE);
         }
+
 
 
 

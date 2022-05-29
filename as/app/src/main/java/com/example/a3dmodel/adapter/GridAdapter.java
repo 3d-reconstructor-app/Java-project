@@ -4,6 +4,7 @@ import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 
 import androidx.annotation.NonNull;
@@ -51,6 +52,8 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolder> {
 
     private static List<ImageData> imageDataList;
+    private static boolean isSelectMode = false;
+    private List<ImageData> selectedImageDataItems = new ArrayList<>();
 
     public GridAdapter(List<ImageData> imageDataList){
         this.imageDataList = imageDataList;
@@ -104,11 +107,55 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 
         // We also create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
-        public ImageViewHolder(View view) {
+        public ImageViewHolder(View itemView) {
             // Stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
-            super(view);
-            this.image = (ImageView) itemView.findViewById(R.id.card_image);        }
+            super(itemView);
+            this.image = (ImageView) itemView.findViewById(R.id.card_image);
+
+            itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+                    isSelectMode = true;
+                    if(selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))){
+                        itemView.setBackgroundColor(Color.TRANSPARENT);
+                        selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
+                    } else {
+                        itemView.setBackgroundResource(R.color.selectedItemInPhoto);
+                        selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
+                    }
+
+                    if(selectedImageDataItems.size() == 0){
+                        isSelectMode = false;
+                    }
+                    return true;
+                }
+            });
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(isSelectMode){
+                        if(selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))){
+                            itemView.setBackgroundColor(Color.TRANSPARENT);
+                            selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
+                        } else {
+                            itemView.setBackgroundResource(R.color.selectedItemInPhoto);
+                            selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
+                        }
+
+                        if(selectedImageDataItems.size() == 0){
+                            isSelectMode = false;
+                        }
+                    } else {
+
+                    }
+                }
+            });
+
+        }
+
+
     }
 
 }

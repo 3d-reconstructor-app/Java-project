@@ -37,7 +37,7 @@ public class tabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
 
-    private GridView gridView;
+
     public static final int CAMERA_PIC_REQUEST = 1888; // ?
     public static final int GALLERY_PIC_REQUEST = 1777; // ?
 
