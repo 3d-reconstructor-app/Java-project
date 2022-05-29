@@ -6,6 +6,7 @@ import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.SharedElementCallback;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
@@ -14,8 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.media.Image;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 
 import android.provider.MediaStore;
@@ -34,6 +37,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 
 public class tabPhoto extends Fragment {
@@ -119,9 +123,20 @@ public class tabPhoto extends Fragment {
 
         Button deleteButton = (Button) view.findViewById(R.id.button_delete);
         View.OnClickListener deleteButtonOnClickListener = new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
-
+                ArrayList<ImageData> selectedImages = new ArrayList<>(GridAdapter.selectedImageDataItems);
+                GridAdapter.imageDataList.removeAll(selectedImages);
+                GridAdapter.selectedImageDataItems.clear();
+                GridAdapter.isSelectMode = false;
+                GridAdapter.selectedImagesViewWithBackgroundColor
+                        .stream()
+                        .forEach(imageView -> imageView.setBackgroundColor(Color.TRANSPARENT));
+                GridAdapter.selectedImagesViewWithBackgroundColor.clear();
+                assert  recyclerView.getAdapter() != null;
+                recyclerView.getAdapter().notifyDataSetChanged();
             }
         };
 

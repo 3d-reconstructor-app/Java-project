@@ -46,6 +46,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
+
 import com.example.a3dmodel.tabPhoto;
 
 /**
@@ -55,18 +56,19 @@ import com.example.a3dmodel.tabPhoto;
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolder> {
 
     public static List<ImageData> imageDataList;
-    private static boolean isSelectMode = false;
-    private List<ImageData> selectedImageDataItems = new ArrayList<>();
+    public static List<ImageData> selectedImageDataItems = new ArrayList<>();
+    public static List<View> selectedImagesViewWithBackgroundColor = new ArrayList<>();
+    public static boolean isSelectMode = false;
 
-    public GridAdapter(List<ImageData> imageDataList){
+    public GridAdapter(List<ImageData> imageDataList) {
         GridAdapter.imageDataList = imageDataList;
     }
 
-    public GridAdapter(){
+    public GridAdapter() {
 
     }
 
-    public static void addBitmapToImageDataList(Bitmap bitmap){
+    public static void addBitmapToImageDataList(Bitmap bitmap) {
         imageDataList.add(new ImageData(bitmap));
     }
 
@@ -105,14 +107,14 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
-        // Your holder should contain a member variable
-        // for any view that will be set as you render a row
+        // holder should contain a member variable for any view
+        // that will be set as you render a row
         private final ImageView image;
 
-        // We also create a constructor that accepts the entire item row
+        // create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ImageViewHolder(View itemView) {
-            // Stores the itemView in a public final member variable that can be used
+            // stores the itemView in a public final member variable that can be used
             // to access the context from any ViewHolder instance.
             super(itemView);
             this.image = (ImageView) itemView.findViewById(R.id.card_image);
@@ -124,15 +126,16 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 
 
                     isSelectMode = true;
-                    if(selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))){
+                    if (selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))) {
                         itemView.setBackgroundColor(Color.TRANSPARENT);
                         selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
                     } else {
                         itemView.setBackgroundResource(R.color.selectedItemInPhoto);
                         selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
+                        selectedImagesViewWithBackgroundColor.add(itemView);
                     }
 
-                    if(selectedImageDataItems.size() != 0){
+                    if (selectedImageDataItems.size() != 0) {
                         Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
                         Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
                         buttonGallery.setVisibility(View.GONE);
@@ -154,7 +157,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                         buttonDelete.setVisibility(View.GONE);
                     }
 
-                    if(selectedImageDataItems.size() == 0){
+                    if (selectedImageDataItems.size() == 0) {
                         isSelectMode = false;
 
                     }
@@ -165,44 +168,43 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(isSelectMode){
-                        if(selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))){
+
+
+                    if (isSelectMode) {
+                        if (selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))) {
                             itemView.setBackgroundColor(Color.TRANSPARENT);
                             selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
                         } else {
                             itemView.setBackgroundResource(R.color.selectedItemInPhoto);
                             selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
+                            selectedImagesViewWithBackgroundColor.add(itemView);
                         }
 
-                        if(selectedImageDataItems.size() != 0){
-                            Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
-                            Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
+                        Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
+                        Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
+                        Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
+                        Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
+
+                        if (selectedImageDataItems.size() != 0) {
                             buttonGallery.setVisibility(View.GONE);
                             buttonCamera.setVisibility(View.GONE);
 
-                            Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
-                            Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
                             buttonBuild3DModel.setVisibility(View.VISIBLE);
                             buttonDelete.setVisibility(View.VISIBLE);
                         } else {
-
-                            Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
-                            Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
                             buttonGallery.setVisibility(View.VISIBLE);
                             buttonCamera.setVisibility(View.VISIBLE);
 
-                            Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
-                            Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
                             buttonBuild3DModel.setVisibility(View.GONE);
                             buttonDelete.setVisibility(View.GONE);
                         }
 
 
-                        if(selectedImageDataItems.size() == 0){
+                        if (selectedImageDataItems.size() == 0) {
                             isSelectMode = false;
                         }
                     } else {
-                        // TODO? what to do when just click on it -- open in another window
+                        // TODO what to do when just click on it -- open in another window
 
                     }
                 }
