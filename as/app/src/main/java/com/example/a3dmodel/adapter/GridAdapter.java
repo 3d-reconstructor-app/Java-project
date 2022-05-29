@@ -135,24 +135,22 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                         selectedImagesViewWithBackgroundColor.add(itemView);
                     }
 
+
+                    Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
+                    Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
+                    Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
+                    Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
+
                     if (selectedImageDataItems.size() != 0) {
-                        Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
-                        Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
                         buttonGallery.setVisibility(View.GONE);
                         buttonCamera.setVisibility(View.GONE);
 
-                        Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
-                        Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
                         buttonBuild3DModel.setVisibility(View.VISIBLE);
                         buttonDelete.setVisibility(View.VISIBLE);
                     } else {
-                        Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
-                        Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
                         buttonGallery.setVisibility(View.VISIBLE);
                         buttonCamera.setVisibility(View.VISIBLE);
 
-                        Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
-                        Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
                         buttonBuild3DModel.setVisibility(View.GONE);
                         buttonDelete.setVisibility(View.GONE);
                     }

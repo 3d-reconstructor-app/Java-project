@@ -2,6 +2,8 @@
 package com.example.a3dmodel;
 //import static com.example.a3dmodel.MainActivity.bitmapALindex;
 
+import org.apache.commons.lang3.RandomStringUtils;
+
 import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 
 import androidx.annotation.NonNull;
@@ -21,8 +23,10 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -34,6 +38,9 @@ import android.widget.GridView;
 import com.example.a3dmodel.adapter.GridAdapter;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -112,8 +119,42 @@ public class tabPhoto extends Fragment {
 
         Button buildButton = (Button) view.findViewById(R.id.button_build);
         View.OnClickListener selectButtonOnClickListener = new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
+                for (int i = 0; i < GridAdapter.selectedImageDataItems.size(); i++) {
+                    bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
+                }
+
+                File root = Environment.getExternalStorageDirectory();
+                // TODO
+                //  inside "jpegFiles" create dir with a name of current project, if we decide
+                //  to save snapshot of current project
+                //  it will be easier to recover version from storage
+                File dir = new File(root.getAbsolutePath() + "/jpegFiles/currentProject");
+                dir.mkdirs();
+
+                int length = 10;
+                boolean useLetters = true;
+                boolean useNumbers = false;
+                List<File> listOfJPEGFiles = new ArrayList<>();
+                for (int i = 0; i < GridAdapter.selectedImageDataItems.size(); i++) {
+
+                    String generatedFileNameForJPEGPhoto = RandomStringUtils.random(length, useLetters, useNumbers);
+                    boolean f = Files.exists(Path.of(dir +  generatedFileNameForJPEGPhoto));
+
+                    if(f == true){
+                        i--;
+                        continue;
+                    }
+
+                    File curJPEGFile = new File(dir.toString(), generatedFileNameForJPEGPhoto);
+//                    Log.i(TAG,)
+
+
+                }
+
 
             }
         };
@@ -135,7 +176,7 @@ public class tabPhoto extends Fragment {
                         .stream()
                         .forEach(imageView -> imageView.setBackgroundColor(Color.TRANSPARENT));
                 GridAdapter.selectedImagesViewWithBackgroundColor.clear();
-                assert  recyclerView.getAdapter() != null;
+                assert recyclerView.getAdapter() != null;
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         };
