@@ -10,4 +10,8 @@
     <string name="activity_main_empty_view_text">Create your first photo with camera or add them from gallery.</string>
     <string name="new_memory_btn_gallery">Add a photo from gallery</string>
     <string name="new_memory_btn_camera">Add a photo from camera</string>
+    <string name="gallery">Gallery</string>
+    <string name="camera">Camera</string>
+    <string name="delete">Delete</string>
+    <string name="build_3d_model">Build 3D model</string>
 </resources>
