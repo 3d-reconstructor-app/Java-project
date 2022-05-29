@@ -100,7 +100,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 //    }
 
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder {
+    public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         private final ImageView image;
@@ -156,6 +156,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
         }
 
 
+        @Override
+        public void onClick(View view) {
+
+        }
     }
 
 }
