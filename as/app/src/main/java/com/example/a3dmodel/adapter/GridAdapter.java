@@ -51,7 +51,7 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolder> {
 
-    private static List<ImageData> imageDataList;
+    public static List<ImageData> imageDataList;
     private static boolean isSelectMode = false;
     private List<ImageData> selectedImageDataItems = new ArrayList<>();
 
@@ -100,7 +100,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 //    }
 
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
         // Your holder should contain a member variable
         // for any view that will be set as you render a row
         private final ImageView image;
@@ -148,6 +148,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                             isSelectMode = false;
                         }
                     } else {
+                        // TODO? what to do when just click on it -- open in another window
 
                     }
                 }
@@ -156,10 +157,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
         }
 
 
-        @Override
-        public void onClick(View view) {
-
-        }
     }
 
 }
