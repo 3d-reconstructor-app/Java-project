@@ -34,10 +34,16 @@ import android.widget.Button;
 import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.example.a3dmodel.adapter.GridAdapter;
 
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -50,6 +56,7 @@ import java.util.stream.Collectors;
 public class tabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
+    @SuppressLint("StaticFieldLeak") // TODO make this not static to avoid mamory leak
     public static FrameLayout frameLayout;
 
     public static final int CAMERA_PIC_REQUEST = 1888; // ?
@@ -119,11 +126,13 @@ public class tabPhoto extends Fragment {
 
         Button buildButton = (Button) view.findViewById(R.id.button_build);
         View.OnClickListener selectButtonOnClickListener = new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
+                int filesCount = GridAdapter.selectedImageDataItems.size();
                 List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
-                for (int i = 0; i < GridAdapter.selectedImageDataItems.size(); i++) {
+                for (int i = 0; i < filesCount; i++) {
                     bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
                 }
 
@@ -132,28 +141,70 @@ public class tabPhoto extends Fragment {
                 //  inside "jpegFiles" create dir with a name of current project, if we decide
                 //  to save snapshot of current project
                 //  it will be easier to recover version from storage
-                File dir = new File(root.getAbsolutePath() + "/jpegFiles/currentProject");
-                dir.mkdirs();
+
+                System.out.println("root == " + root);
+
+                File dir = new File(root.getAbsolutePath() + "/jpegFiles/currentProject/");
+                if (!dir.exists() || !dir.isDirectory()) {
+                    Toast.makeText(getContext(), "Could not create directory for this project with JPEG files\n", Toast.LENGTH_SHORT).show();
+                } else {
+                    Toast.makeText(getContext(), "Directory for JPEG files has been created\n", Toast.LENGTH_SHORT).show();
+                }
 
                 int length = 10;
                 boolean useLetters = true;
                 boolean useNumbers = false;
                 List<File> listOfJPEGFiles = new ArrayList<>();
-                for (int i = 0; i < GridAdapter.selectedImageDataItems.size(); i++) {
+                for (int i = 0; i < filesCount; i++) {
 
-                    String generatedFileNameForJPEGPhoto = RandomStringUtils.random(length, useLetters, useNumbers);
-                    boolean f = Files.exists(Path.of(dir +  generatedFileNameForJPEGPhoto));
+                    String generatedFileNameForJPEGPhoto = RandomStringUtils.random(length, useLetters, useNumbers) + ".jpeg";
+                    // TODO check existence of the file
+//                    boolean f = Files.exists(Path.of(dir + generatedFileNameForJPEGPhoto));
+//                    if (f) {
+//                        i--;
+//                        continue;
+//                    }
 
-                    if(f == true){
-                        i--;
-                        continue;
+                    // TODO this file does not exits
+                    File curJPEGFile = new File(dir.toString(), generatedFileNameForJPEGPhoto);
+
+                    try {
+                        FileOutputStream fileOutputStream = new FileOutputStream(curJPEGFile);
+
+                        if (bitmapListOfSelectedImages.get(i).compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)) {
+                            fileOutputStream.flush();
+                            fileOutputStream.close();
+                        }
+
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
 
-                    File curJPEGFile = new File(dir.toString(), generatedFileNameForJPEGPhoto);
-//                    Log.i(TAG,)
 
+//                    assert curJPEGFile.exists();
+                    listOfJPEGFiles.add(curJPEGFile);
 
                 }
+
+
+                // TODO call function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
+
+
+                /*
+                 * stop highlight selected photos
+                 */
+                GridAdapter.selectedImageDataItems.clear();
+                GridAdapter.isSelectMode = false;
+//                GridAdapter.selectedImagesViewWithBackgroundColor
+//                        .stream()
+//                        .forEach(imageView -> imageView.setBackgroundColor(Color.TRANSPARENT));
+                for(View imageView : GridAdapter.selectedImagesViewWithBackgroundColor){
+                    imageView.setBackgroundColor(Color.TRANSPARENT);
+                }
+                GridAdapter.selectedImagesViewWithBackgroundColor.clear();
+                assert recyclerView.getAdapter() != null;
+                GridAdapter.checkButtonsVisibility();
+                recyclerView.getAdapter().notifyDataSetChanged();
 
 
             }
@@ -172,11 +223,15 @@ public class tabPhoto extends Fragment {
                 GridAdapter.imageDataList.removeAll(selectedImages);
                 GridAdapter.selectedImageDataItems.clear();
                 GridAdapter.isSelectMode = false;
-                GridAdapter.selectedImagesViewWithBackgroundColor
-                        .stream()
-                        .forEach(imageView -> imageView.setBackgroundColor(Color.TRANSPARENT));
+                for(View imageView : GridAdapter.selectedImagesViewWithBackgroundColor){
+                    imageView.setBackgroundColor(Color.TRANSPARENT);
+                }
+//                GridAdapter.selectedImagesViewWithBackgroundColor
+//                        .stream()
+//                        .forEach(imageView -> imageView.setBackgroundColor(Color.TRANSPARENT));
                 GridAdapter.selectedImagesViewWithBackgroundColor.clear();
                 assert recyclerView.getAdapter() != null;
+                GridAdapter.checkButtonsVisibility();
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         };
@@ -196,16 +251,7 @@ public class tabPhoto extends Fragment {
         button2.setVisibility(View.GONE);
     }
 
-    // TODO add photo to gallery
-//    private void galleryAddPic() {
-//        Intent mediaScanIntent = new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE);
-//        File f = new File(currentPhotoPath);
-//        Uri contentUri = Uri.fromFile(f);
-//        mediaScanIntent.setData(contentUri);
-//        this.sendBroadcast(mediaScanIntent);
-//    }
 
-    // TODO i guess it should be placed somewhere else (?) or called
     private void scrollToPosition() {
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override

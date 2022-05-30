@@ -105,6 +105,26 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 //        return new ImageViewHolder(view);
 //    }
 
+    public static void checkButtonsVisibility() {
+        Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
+        Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
+        Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
+        Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
+
+        if (selectedImageDataItems.size() != 0) {
+            buttonGallery.setVisibility(View.GONE);
+            buttonCamera.setVisibility(View.GONE);
+
+            buttonBuild3DModel.setVisibility(View.VISIBLE);
+            buttonDelete.setVisibility(View.VISIBLE);
+        } else {
+            buttonGallery.setVisibility(View.VISIBLE);
+            buttonCamera.setVisibility(View.VISIBLE);
+
+            buttonBuild3DModel.setVisibility(View.GONE);
+            buttonDelete.setVisibility(View.GONE);
+        }
+    }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
         // holder should contain a member variable for any view
@@ -136,24 +156,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                     }
 
 
-                    Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
-                    Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
-                    Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
-                    Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
-
-                    if (selectedImageDataItems.size() != 0) {
-                        buttonGallery.setVisibility(View.GONE);
-                        buttonCamera.setVisibility(View.GONE);
-
-                        buttonBuild3DModel.setVisibility(View.VISIBLE);
-                        buttonDelete.setVisibility(View.VISIBLE);
-                    } else {
-                        buttonGallery.setVisibility(View.VISIBLE);
-                        buttonCamera.setVisibility(View.VISIBLE);
-
-                        buttonBuild3DModel.setVisibility(View.GONE);
-                        buttonDelete.setVisibility(View.GONE);
-                    }
+                    checkButtonsVisibility();
 
                     if (selectedImageDataItems.size() == 0) {
                         isSelectMode = false;
@@ -178,25 +181,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                             selectedImagesViewWithBackgroundColor.add(itemView);
                         }
 
-                        Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
-                        Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
-                        Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
-                        Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
-
-                        if (selectedImageDataItems.size() != 0) {
-                            buttonGallery.setVisibility(View.GONE);
-                            buttonCamera.setVisibility(View.GONE);
-
-                            buttonBuild3DModel.setVisibility(View.VISIBLE);
-                            buttonDelete.setVisibility(View.VISIBLE);
-                        } else {
-                            buttonGallery.setVisibility(View.VISIBLE);
-                            buttonCamera.setVisibility(View.VISIBLE);
-
-                            buttonBuild3DModel.setVisibility(View.GONE);
-                            buttonDelete.setVisibility(View.GONE);
-                        }
-
+                        checkButtonsVisibility();
 
                         if (selectedImageDataItems.size() == 0) {
                             isSelectMode = false;
