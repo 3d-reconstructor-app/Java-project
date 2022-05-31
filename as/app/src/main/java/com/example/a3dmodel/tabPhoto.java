@@ -1,6 +1,4 @@
-
 package com.example.a3dmodel;
-//import static com.example.a3dmodel.MainActivity.bitmapALindex;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
@@ -21,39 +19,27 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.media.Image;
-import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.transition.TransitionInflater;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.CursorAdapter;
 import android.widget.FrameLayout;
-import android.widget.GridView;
-import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.example.a3dmodel.adapter.GridAdapter;
 
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.PrintWriter;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.example.a3dmodel.exeption.TabPhotoException;
 
@@ -183,7 +169,6 @@ public class tabPhoto extends Fragment {
                     GridAdapter.checkButtonsVisibility();
                     recyclerView.getAdapter().notifyDataSetChanged();
                 }
-
 
 
             }

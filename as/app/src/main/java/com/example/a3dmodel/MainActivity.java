@@ -6,31 +6,20 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 import com.example.a3dmodel.databinding.ActivityMainBinding;
-
-import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
-import androidx.appcompat.app.AppCompatActivity;
 
 import static com.example.a3dmodel.tabPhoto.CAMERA_PIC_REQUEST;
 import static com.example.a3dmodel.tabPhoto.GALLERY_PIC_REQUEST;
@@ -38,13 +27,9 @@ import static com.example.a3dmodel.tabPhoto.PERMISSION_REQUEST_CODE;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-//import com.example.a3dmodel.photo_fragment.GridFragment;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -105,15 +90,6 @@ public class MainActivity extends AppCompatActivity {
             textView.setVisibility(View.GONE);
         }
 
-//        if(requestCode == PERMISSION_REQUEST_CODE && resultCode == RESULT_OK){
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                Log.e("value", "Permission Granted, Now you can use local drive .");
-//            } else {
-//                Log.e("value", "Permission Denied, You cannot use local drive .");
-//            }
-//        }
-
-
         super.onActivityResult(requestCode, resultCode, data);
 
     }
@@ -128,6 +104,8 @@ public class MainActivity extends AppCompatActivity {
                 } else {
                     Log.e("value", "Permission Denied, You cannot use local drive .");
                 }
+                break;
+            default:
                 break;
         }
     }

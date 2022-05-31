@@ -21,13 +21,13 @@ public class ImageData {
         this.imagePathInSystem = imagePathInSystem;
     }
 
-    public Bitmap getImageBitmap(){
+    public Bitmap getImageBitmap() {
         return imageBitmap;
     }
 
-    public static List<ImageData> createImageDataList(List<Bitmap> bitmapList){
+    public static List<ImageData> createImageDataList(List<Bitmap> bitmapList) {
         List<ImageData> imageDataList = new ArrayList<>();
-        for(Bitmap bitmap : bitmapList){
+        for (Bitmap bitmap : bitmapList) {
             imageDataList.add(new ImageData(bitmap));
         }
         return imageDataList;
