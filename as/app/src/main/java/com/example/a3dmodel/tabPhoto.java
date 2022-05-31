@@ -9,13 +9,16 @@ import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.media.Image;
@@ -52,15 +55,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import com.example.a3dmodel.exeption.TabPhotoException;
 
 public class tabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
-    @SuppressLint("StaticFieldLeak") // TODO make this not static to avoid mamory leak
+    @SuppressLint("StaticFieldLeak") // TODO make this not static to avoid memory leak
     public static FrameLayout frameLayout;
 
-    public static final int CAMERA_PIC_REQUEST = 1888; // ?
-    public static final int GALLERY_PIC_REQUEST = 1777; // ?
+    public static final int PERMISSION_REQUEST_CODE = 100;
+    public static final int CAMERA_PIC_REQUEST = 1888;
+    public static final int GALLERY_PIC_REQUEST = 1777;
+    private static final int lengthOfRandomFileJPEGName = 10;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -76,7 +82,7 @@ public class tabPhoto extends Fragment {
         recyclerView = view.findViewById(R.id.fragment_photo_grid);
 
         recyclerView.setAdapter(new GridAdapter(imageDataList));
-        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3)); // TODO ??
+        recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
         return view;
     }
@@ -130,81 +136,54 @@ public class tabPhoto extends Fragment {
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                int filesCount = GridAdapter.selectedImageDataItems.size();
-                List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
-                for (int i = 0; i < filesCount; i++) {
-                    bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
-                }
+                try {
+                    int filesCount = GridAdapter.selectedImageDataItems.size();
+                    List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
+                    List<File> listOfJPEGFiles = new ArrayList<>();
 
-                File root = Environment.getExternalStorageDirectory();
-                // TODO
-                //  inside "jpegFiles" create dir with a name of current project, if we decide
-                //  to save snapshot of current project
-                //  it will be easier to recover version from storage
 
-                System.out.println("root == " + root);
-
-                File dir = new File(root.getAbsolutePath() + "/jpegFiles/currentProject/");
-                if (!dir.exists() || !dir.isDirectory()) {
-                    Toast.makeText(getContext(), "Could not create directory for this project with JPEG files\n", Toast.LENGTH_SHORT).show();
-                } else {
-                    Toast.makeText(getContext(), "Directory for JPEG files has been created\n", Toast.LENGTH_SHORT).show();
-                }
-
-                int length = 10;
-                boolean useLetters = true;
-                boolean useNumbers = false;
-                List<File> listOfJPEGFiles = new ArrayList<>();
-                for (int i = 0; i < filesCount; i++) {
-
-                    String generatedFileNameForJPEGPhoto = RandomStringUtils.random(length, useLetters, useNumbers) + ".jpeg";
-                    // TODO check existence of the file
-//                    boolean f = Files.exists(Path.of(dir + generatedFileNameForJPEGPhoto));
-//                    if (f) {
-//                        i--;
-//                        continue;
-//                    }
-
-                    // TODO this file does not exits
-                    File curJPEGFile = new File(dir.toString(), generatedFileNameForJPEGPhoto);
-
-                    try {
-                        FileOutputStream fileOutputStream = new FileOutputStream(curJPEGFile);
-
-                        if (bitmapListOfSelectedImages.get(i).compress(Bitmap.CompressFormat.JPEG, 100, fileOutputStream)) {
-                            fileOutputStream.flush();
-                            fileOutputStream.close();
-                        }
-
-                    } catch (IOException e) {
-                        e.printStackTrace();
+                    for (int i = 0; i < filesCount; i++) {
+                        bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
                     }
 
+                    String state = Environment.getExternalStorageState();
+                    if (Environment.MEDIA_MOUNTED.equals(state)) {
+                        if (Build.VERSION.SDK_INT >= 23) {
+                            if (checkPermission()) {
+                                File sdcard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                                sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
+                            } else {
+                                requestPermission();
+                            }
+                        } else {
+                            File sdcard = Environment.getExternalStorageDirectory();
+                            sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
+                        }
+                    }
 
-//                    assert curJPEGFile.exists();
-                    listOfJPEGFiles.add(curJPEGFile);
+                    Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show();
 
+                    // TODO @@@ANDREY
+                    //  call right over here function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
+
+
+                } catch (TabPhotoException e) {
+                    e.printStackTrace();
+                } finally {
+                    /*
+                     * stop highlight selected photos
+                     */
+                    GridAdapter.selectedImageDataItems.clear();
+                    GridAdapter.isSelectMode = false;
+                    for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
+                        imageView.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    GridAdapter.selectedImagesViewWithBackgroundColor.clear();
+                    assert recyclerView.getAdapter() != null;
+                    GridAdapter.checkButtonsVisibility();
+                    recyclerView.getAdapter().notifyDataSetChanged();
                 }
 
-
-                // TODO call function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
-
-
-                /*
-                 * stop highlight selected photos
-                 */
-                GridAdapter.selectedImageDataItems.clear();
-                GridAdapter.isSelectMode = false;
-//                GridAdapter.selectedImagesViewWithBackgroundColor
-//                        .stream()
-//                        .forEach(imageView -> imageView.setBackgroundColor(Color.TRANSPARENT));
-                for(View imageView : GridAdapter.selectedImagesViewWithBackgroundColor){
-                    imageView.setBackgroundColor(Color.TRANSPARENT);
-                }
-                GridAdapter.selectedImagesViewWithBackgroundColor.clear();
-                assert recyclerView.getAdapter() != null;
-                GridAdapter.checkButtonsVisibility();
-                recyclerView.getAdapter().notifyDataSetChanged();
 
 
             }
@@ -220,15 +199,13 @@ public class tabPhoto extends Fragment {
             @Override
             public void onClick(View v) {
                 ArrayList<ImageData> selectedImages = new ArrayList<>(GridAdapter.selectedImageDataItems);
+                Toast.makeText(getContext(), "Deleted " + selectedImages + " images", Toast.LENGTH_SHORT).show();
                 GridAdapter.imageDataList.removeAll(selectedImages);
                 GridAdapter.selectedImageDataItems.clear();
                 GridAdapter.isSelectMode = false;
-                for(View imageView : GridAdapter.selectedImagesViewWithBackgroundColor){
+                for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
                     imageView.setBackgroundColor(Color.TRANSPARENT);
                 }
-//                GridAdapter.selectedImagesViewWithBackgroundColor
-//                        .stream()
-//                        .forEach(imageView -> imageView.setBackgroundColor(Color.TRANSPARENT));
                 GridAdapter.selectedImagesViewWithBackgroundColor.clear();
                 assert recyclerView.getAdapter() != null;
                 GridAdapter.checkButtonsVisibility();
@@ -238,11 +215,86 @@ public class tabPhoto extends Fragment {
 
         deleteButton.setOnClickListener(deleteButtonOnClickListener);
 
-
         makeTwoButtonsHide(buildButton, deleteButton);
 
         scrollToPosition();
 
+    }
+
+    private void sendSelectedPhotosToServerToBuild3DModel(File sdcard,
+                                                          List<Bitmap> bitmapListOfSelectedImages,
+                                                          List<File> listOfJPEGFiles,
+                                                          int filesCount)
+            throws TabPhotoException {
+        // TODO  @@@ANDREY
+        //  inside "jpegFiles" create dir with a name of current project, if we decide
+        //  to save snapshot of current project
+        //  it will be easier to recover version from storage
+        //  .
+        //  maybe there is a point to create directory in a way -- CURRENT_PROJECT_NAME/JPEG_FILES/
+        //                                                         CURRENT_PROJECT_NAME/3DMODELFILE
+        //  if you decide so, change the path for "dir" File
+
+        File dir = new File(sdcard.getAbsoluteFile() + "/jpegFiles/currentProject/");
+
+        if (dir == null) {
+            throw new TabPhotoException("dir is null in checkPermission\n");
+        }
+
+        dir.mkdirs();
+        if (!dir.exists()) {
+            throw new TabPhotoException("dir does not exists in checkPermission\n");
+        }
+
+        if (!dir.isDirectory()) {
+            throw new TabPhotoException("dir does not a directory in checkPermission\\n");
+        }
+
+        for (int i = 0; i < filesCount; i++) {
+            String generatedFileNameForJPEGPhoto = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".jpg";
+            File jpegFile = new File(dir, generatedFileNameForJPEGPhoto);
+            FileOutputStream outputStream = null;
+            try {
+                outputStream = new FileOutputStream(jpegFile);
+                assert bitmapListOfSelectedImages.get(i) != null;
+
+                if (bitmapListOfSelectedImages.get(i).compress(Bitmap.CompressFormat.JPEG, 100, outputStream)) {
+                    outputStream.flush();
+                    outputStream.close();
+                } else {
+                    throw new TabPhotoException("Cannot compress Bitmap to Jpeg in checkPermission\n");
+                }
+            } catch (IOException e) {
+                throw new TabPhotoException("Caught exception in button build in checkPermission\\n");
+            }
+
+            listOfJPEGFiles.add(jpegFile);
+        }
+    }
+
+
+    private boolean checkPermission() {
+        assert getActivity() != null;
+        int result = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (result == PackageManager.PERMISSION_GRANTED) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    private void requestPermission() {
+        assert getActivity() != null;
+        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(
+                    getActivity(),
+                    "Write External Storage permission allows us to create files. Please allow this permission in App Settings.",
+                    Toast.LENGTH_LONG
+            )
+                    .show();
+        } else {
+            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
     }
 
     public static void makeTwoButtonsHide(Button button1, Button button2) {
