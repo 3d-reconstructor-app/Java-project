@@ -265,7 +265,7 @@ public class tabPhoto extends Fragment {
                     throw new TabPhotoException("Cannot compress Bitmap to Jpeg in checkPermission\n");
                 }
             } catch (IOException e) {
-                throw new TabPhotoException("Caught exception in button build in checkPermission\\n");
+                throw new TabPhotoException("Caught exception in button build in checkPermission\\n", e);
             }
 
             listOfJPEGFiles.add(jpegFile);
