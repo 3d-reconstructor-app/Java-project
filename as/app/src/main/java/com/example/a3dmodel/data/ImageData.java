@@ -1,8 +1,6 @@
-package com.example.a3dmodel;
+package com.example.a3dmodel.data;
 
 import android.graphics.Bitmap;
-import android.media.Image;
-import android.widget.ImageView;
 
 import java.util.ArrayList;
 import java.util.List;

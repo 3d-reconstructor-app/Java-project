@@ -26,10 +26,19 @@ import androidx.fragment.app.Fragment;
     and then he will be able to click on "new project" and create a new one, and the previous will be saved somehow
     and displayed in the RecycleView
     .
-    suggest to remember the date, time and maybe something else about every project and display it (this is easy part)
+    I would suggest to remember the date, time and maybe something else about every project and display it (this is easy part)
+
 
 
  */
+
+
+/*
+    ADVICE
+    you can see the "tabPhoto.java", "GridAdapter" and "ImageData" as examples
+ */
+
+
 public class tabMainMenu extends Fragment {
     @Nullable
     @Override

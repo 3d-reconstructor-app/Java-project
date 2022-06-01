@@ -41,12 +41,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.exeption.TabPhotoException;
 
 public class tabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
-    @SuppressLint("StaticFieldLeak") // TODO make this not static to avoid memory leak
+    @SuppressLint("StaticFieldLeak") // TODO @@@SHER make this not static to avoid memory leak
     public static FrameLayout frameLayout;
 
     public static final int PERMISSION_REQUEST_CODE = 100;
@@ -149,7 +150,7 @@ public class tabPhoto extends Fragment {
 
                     Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show();
 
-                    // TODO @@@ANDREY
+                    // TODO @@@SHER or @@@ANDREY
                     //  call right over here function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
 
 
@@ -211,7 +212,8 @@ public class tabPhoto extends Fragment {
                                                           List<File> listOfJPEGFiles,
                                                           int filesCount)
             throws TabPhotoException {
-        // TODO  @@@ANDREY
+
+        // TODO  @@@SHER or @@@ANDREY
         //  inside "jpegFiles" create dir with a name of current project, if we decide
         //  to save snapshot of current project
         //  it will be easier to recover version from storage
@@ -219,6 +221,8 @@ public class tabPhoto extends Fragment {
         //  maybe there is a point to create directory in a way -- CURRENT_PROJECT_NAME/JPEG_FILES/
         //                                                         CURRENT_PROJECT_NAME/3DMODELFILE
         //  if you decide so, change the path for "dir" File
+
+
 
         File dir = new File(sdcard.getAbsoluteFile() + "/jpegFiles/currentProject/");
 
