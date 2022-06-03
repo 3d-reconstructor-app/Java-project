@@ -8,18 +8,6 @@
     android:layout_height="match_parent"
     tools:context=".tabMainMenu">
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/recView_list_of_projects"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="50dp"
-        android:paddingStart="8dp"
-        android:paddingEnd="8dp"
-        android:scrollbarStyle="outsideOverlay"
-        android:scrollbars="vertical"
-        app:layoutManager="GridLayoutManager"
-        app:spanCount="1" />
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintL_fragment_photo"
         android:layout_width="match_parent"
@@ -41,5 +29,10 @@
             tools:layout_editor_absoluteY="0dp" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <ListView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/projectsListview" />
 
 </FrameLayout>

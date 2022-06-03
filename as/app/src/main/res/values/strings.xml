@@ -15,4 +15,5 @@
     <string name="delete">Delete</string>
     <string name="build_3d_model">Build 3D model</string>
     <string name="new_project">New project</string>
+    <string name="DefaultDate">01.01.2022</string>
 </resources>
