@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.a3dmodel">
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.a3dmodel"
+    tools:ignore="ExtraText"
+    android:installLocation="preferExternal">
+    >
+
+    <!-- permissions for reading external storage -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
+
+    <uses-feature
+        android:hardwareAccelerated="false"
+        android:largeHeap="true"
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
@@ -10,9 +25,13 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.3dModel">
         <activity
+            android:name=".tabPhoto"
+            android:exported="false"
+            tools:ignore="Instantiatable" />
+        <activity
             android:name=".MainActivity"
+            android:screenOrientation="fullSensor"
             android:exported="true"
-            android:label="@string/app_name"
             android:theme="@style/Theme.3dModel.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -21,5 +40,6 @@
             </intent-filter>
         </activity>
     </application>
+
 
 </manifest>

@@ -18,6 +18,13 @@
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
+<<<<<<< HEAD
+=======
+    
+    <style name="RoundedSquare">
+        <item name="cornerSize">10%</item>
+    </style>
+>>>>>>> cleaning
 
     <style name="Theme.3dModel.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
