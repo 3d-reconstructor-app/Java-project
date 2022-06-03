@@ -4,8 +4,6 @@
     <string name="tab_main">Main</string>
     <string name="tab_photos">Photos</string>
     <!-- TODO: Remove or change this placeholder text -->
-<<<<<<< HEAD
-=======
     <string name="new_memory_title_hint">Add Title</string>
     <string name="new_memory_btn_cancel">Cancel</string>
     <string name="new_memory_btn_save">Save</string>
@@ -16,5 +14,4 @@
     <string name="camera">Camera</string>
     <string name="delete">Delete</string>
     <string name="build_3d_model">Build 3D model</string>
->>>>>>> cleaning
 </resources>

@@ -36,12 +36,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @NonNull
     @Override
     public Fragment getItem(int position) {
-<<<<<<< HEAD
-        // getItem is called to instantiate the fragment for the given page.
-        // Return a PlaceholderFragment (defined as a static inner class below).
-//        return PlaceholderFragment.newInstance(position + 1);
-=======
->>>>>>> cleaning
         Fragment fragment = null;
         switch (position) {
             case 0:
@@ -67,10 +61,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
     @Override
     public int getCount() {
         // Show 3 total pages.
-<<<<<<< HEAD
-        return 3;
-=======
         return TAB_TITLES.length;
->>>>>>> cleaning
     }
 }

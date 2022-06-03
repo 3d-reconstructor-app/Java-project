@@ -1,23 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<<<<<<< HEAD
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".tabPhoto">
-
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center"
-        android:textSize="30dp"
-        android:text="hello from tab photo" />
-
-</FrameLayout>
-=======
-<FrameLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_photo"
@@ -39,13 +21,15 @@
         android:scrollbarStyle="outsideOverlay"
         android:scrollbars="vertical"
         app:layoutManager="GridLayoutManager"
-        app:spanCount="3" />
+        app:spanCount="4" />
+
 
     <ImageView
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="60dp" />
+        android:layout_marginTop="60dp"
+        android:contentDescription="TODO" />
 
     <TextView
         android:id="@+id/fragment_photo_empty_view"
@@ -122,4 +106,3 @@
 
 
 </FrameLayout>
->>>>>>> cleaning

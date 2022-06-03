@@ -10,13 +10,10 @@
     <color name="green">#45C12F</color>
     <color name="dark_green">#0B260D</color>
     <color name="dark_green2">#0A360D</color>
-<<<<<<< HEAD
 
-=======
     <color name="colorPrimary">#3F51B5</color>
     <color name="colorPrimaryDark">#303F9F</color>
     <color name="colorAccent">#FF4081</color>
     <color name="selectedItemInPhoto">#d9211b</color>
->>>>>>> cleaning
 
 </resources>

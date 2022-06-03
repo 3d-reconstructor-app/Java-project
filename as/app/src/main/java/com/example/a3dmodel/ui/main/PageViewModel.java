@@ -20,10 +20,7 @@ public class PageViewModel extends ViewModel {
         mIndex.setValue(index);
     }
 
-<<<<<<< HEAD
-=======
 
->>>>>>> cleaning
     public LiveData<String> getText() {
         return mText;
     }
