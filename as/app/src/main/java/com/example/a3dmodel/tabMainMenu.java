@@ -28,8 +28,6 @@ import androidx.fragment.app.Fragment;
     .
     I would suggest to remember the date, time and maybe something else about every project and display it (this is easy part)
 
-
-
  */
 
 
