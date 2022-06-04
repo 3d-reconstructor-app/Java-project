@@ -36,20 +36,30 @@ public class ProjectSnapshotAdapter extends ArrayAdapter<String> {
     @NonNull
     @Override
     public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+        ViewHolder snapshotViewHolder = new ViewHolder();
         if (convertView == null) {
             LayoutInflater inflater = (LayoutInflater) projectsContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-            // TODO : make a viewHolder
             convertView = inflater.inflate(R.layout.project_snapshot, parent, false);
-            ImageView projectImageView = (ImageView) convertView.findViewById(R.id.snapshotImageView);
-            TextView projectNameView = (TextView) convertView.findViewById(R.id.snapshotTextView);
-            EditText projectDate = (EditText) convertView.findViewById(R.id.snapshotDateView);
-
-            ProjectSnapshotData snapshot = projectsData.get(position);
-            projectImageView.setImageBitmap(snapshot.getProjectIcon());
-            projectNameView.setText(snapshot.getProjectName());
-            projectDate.setText(snapshot.getCreationTime());
+            snapshotViewHolder.projectIcon = (ImageView) convertView.findViewById(R.id.snapshotImageView);
+            snapshotViewHolder.projectName = (TextView) convertView.findViewById(R.id.snapshotTextView);
+            snapshotViewHolder.creationDate = (EditText) convertView.findViewById(R.id.snapshotDateView);
+            convertView.setTag(snapshotViewHolder);
         }
+        else {
+            snapshotViewHolder = (ViewHolder) convertView.getTag();
+        }
+            ProjectSnapshotData snapshot = projectsData.get(position);
+            snapshotViewHolder.projectIcon.setImageBitmap(snapshot.getProjectIcon());
+            snapshotViewHolder.projectName.setText(snapshot.getProjectName());
+            snapshotViewHolder.creationDate.setText(snapshot.getCreationTime());
+
         return convertView;
+    }
+
+    static class ViewHolder {
+        ImageView projectIcon;
+        TextView projectName;
+        EditText creationDate;
     }
 }
