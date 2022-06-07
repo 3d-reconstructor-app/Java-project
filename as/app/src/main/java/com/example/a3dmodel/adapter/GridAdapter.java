@@ -13,7 +13,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 
-import com.example.a3dmodel.ImageData;
+import com.example.a3dmodel.data.ImageData;
+
 import com.example.a3dmodel.R;
 
 import org.jetbrains.annotations.NotNull;
@@ -151,8 +152,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                             isSelectMode = false;
                         }
                     } else {
-                        // TODO what to do when just click on it -- open in another window
-
+                        // TODO @@@SHER
+                        //  what to do when just click on it -- open in another window
                     }
                 }
             });

@@ -6,10 +6,10 @@
     android:installLocation="preferExternal">
     >
 
-
     <!-- permissions for reading external storage -->
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <uses-feature
         android:hardwareAccelerated="false"
@@ -26,7 +26,8 @@
         android:theme="@style/Theme.3dModel">
         <activity
             android:name=".tabPhoto"
-            android:exported="false" />
+            android:exported="false"
+            tools:ignore="Instantiatable" />
         <activity
             android:name=".MainActivity"
             android:screenOrientation="fullSensor"

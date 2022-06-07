@@ -1,7 +1,0 @@
-To create Tabs ?? but probable the same as (https://www.javatpoint.com/android-tablayout#:~:text=Tabs%20are%20created%20using%20newTab,method%20addTab(Tab)%20method.)
-https://abhiandroid.com/materialdesign/tablayout-example-android-studio.html
-
-
-
-This one seems to be extremely useful
-https://guides.codepath.com/android/google-play-style-tabs-using-tablayout
