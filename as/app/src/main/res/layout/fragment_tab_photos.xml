@@ -28,12 +28,8 @@
         android:id="@+id/imageView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-<<<<<<< HEAD
-        android:layout_marginTop="60dp" />
-=======
         android:layout_marginTop="60dp"
         android:contentDescription="TODO" />
->>>>>>> androidStudio
 
     <TextView
         android:id="@+id/fragment_photo_empty_view"
