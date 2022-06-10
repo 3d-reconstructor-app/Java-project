@@ -1,5 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/view_3d"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#0099cc"
@@ -48,18 +49,17 @@
             tools:ignore="UselessParent">
 
             <Button
-                android:id="@+id/dummy_button"
+                android:id="@+id/reset_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:clickable="true"
                 android:nestedScrollingEnabled="true"
-                android:onClick="Reset"
                 android:text="@string/dummy_button" />
 
             <Button
-                android:id="@+id/button4"
+                android:id="@+id/exit_button"
                 style="?metaButtonBarButtonStyle"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"

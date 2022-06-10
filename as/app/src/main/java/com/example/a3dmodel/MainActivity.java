@@ -2,7 +2,6 @@ package com.example.a3dmodel;
 
 import android.os.Bundle;
 
-import com.example.a3dmodel.visualisation.GLView;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.Snackbar;
 import com.google.android.material.tabs.TabLayout;
@@ -18,7 +17,6 @@ import com.example.a3dmodel.databinding.ActivityMainBinding;
 
 
 public class MainActivity extends AppCompatActivity {
-    GLView view;
     private ActivityMainBinding binding;
 
 //    @Override
@@ -44,7 +42,7 @@ public class MainActivity extends AppCompatActivity {
 //        });
 //    }
 
-    private void start() {
+    protected void start() {
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -65,17 +63,7 @@ public class MainActivity extends AppCompatActivity {
         start();
     }
 
-    public void startVisualisation(View v) {
-        setContentView(R.layout.activity_fullscreen);
-        view = (GLView)findViewById(R.id.gl_view);
-    }
-
     public void exitVisualisation(View v) {
-        System.out.println("wtf");
         start();
-    }
-
-    public void Reset(View v) {
-        view.Reset();
     }
 }
