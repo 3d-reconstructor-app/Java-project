@@ -11,10 +11,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -37,6 +40,7 @@ import com.example.a3dmodel.adapter.GridAdapter;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -72,6 +76,10 @@ public class tabPhoto extends Fragment {
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
 
         return view;
+    }
+
+    public void loadImagesFromStorage() {
+
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -221,6 +229,33 @@ public class tabPhoto extends Fragment {
         //                                                         CURRENT_PROJECT_NAME/3DMODELFILE
         //  if you decide so, change the path for "dir" File
 
+        if (isAdded()) {
+            FragmentActivity activity = getActivity();
+            assert (activity != null);
+            Path root = Environment.getExternalStorageDirectory().toPath();
+            App applicationData = (App) activity.getApplicationContext();
+//            System.out.println("Dir: " + mainDir.toPath());
+            String curProjectName = applicationData.getCurrentProject().getProjectName();
+            File curProjectDir = new File(root.resolve(curProjectName).toString());
+            if (curProjectDir.mkdir()) {
+                System.out.println("Project Folder Created!");
+            }
+            File imageDir = curProjectDir.toPath().resolve("images").toFile();
+            imageDir.mkdir();
+
+            for (int i = 0; i < bitmapListOfSelectedImages.size(); i++) {
+                Path imgPath = imageDir.toPath().resolve("img" + i + ".jpeg");
+                try (FileOutputStream fos = new FileOutputStream(imgPath.toString())) {
+                    bitmapListOfSelectedImages.get(i).compress(Bitmap.CompressFormat.JPEG, 100, fos);
+                    fos.flush();
+                } catch (IOException e) {
+                    System.out.println("Couldn't open FileOutput");
+                }
+            }
+
+            // TODO : store 3dModel in CURRENT_PROJECT_NAME/model/
+        }
+
         File dir = new File(sdcard.getAbsoluteFile() + "/jpegFiles/currentProject/");
 
         if (dir == null) {
@@ -236,7 +271,9 @@ public class tabPhoto extends Fragment {
             throw new TabPhotoException("dir does not a directory in checkPermission\\n");
         }
 
-        for (int i = 0; i < filesCount; i++) {
+        for (
+                int i = 0;
+                i < filesCount; i++) {
             String generatedFileNameForJPEGPhoto = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".jpg";
             File jpegFile = new File(dir, generatedFileNameForJPEGPhoto);
             FileOutputStream outputStream = null;
@@ -256,6 +293,7 @@ public class tabPhoto extends Fragment {
 
             listOfJPEGFiles.add(jpegFile);
         }
+
     }
 
 
@@ -273,10 +311,10 @@ public class tabPhoto extends Fragment {
         assert getActivity() != null;
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(
-                    getActivity(),
-                    "Write External Storage permission allows us to create files. Please allow this permission in App Settings.",
-                    Toast.LENGTH_LONG
-            )
+                            getActivity(),
+                            "Write External Storage permission allows us to create files. Please allow this permission in App Settings.",
+                            Toast.LENGTH_LONG
+                    )
                     .show();
         } else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);

@@ -12,25 +12,26 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.R;
-import com.example.a3dmodel.data.ProjectSnapshotData;
 
+import java.util.ArrayList;
 import java.util.List;
 
 // TODO @@@ANDREY
 public class ProjectSnapshotAdapter extends ArrayAdapter<String> {
-    List<ProjectSnapshotData> projectsData;
+    List<ProjectSnapshot> projects = new ArrayList<>();
     Context projectsContext;
 
-    public ProjectSnapshotAdapter(@NonNull Context context, List<ProjectSnapshotData> snapshotData) {
+    public ProjectSnapshotAdapter(@NonNull Context context, List<ProjectSnapshot> snapshotData) {
         super(context, R.layout.project_snapshot);
-        this.projectsData = snapshotData;
+        this.projects = snapshotData;
         this.projectsContext = context;
     }
 
     @Override
     public int getCount() {
-        return projectsData.size();
+        return projects.size();
     }
 
     @NonNull
@@ -49,10 +50,10 @@ public class ProjectSnapshotAdapter extends ArrayAdapter<String> {
         else {
             snapshotViewHolder = (ViewHolder) convertView.getTag();
         }
-            ProjectSnapshotData snapshot = projectsData.get(position);
-            snapshotViewHolder.projectIcon.setImageBitmap(snapshot.getProjectIcon());
+            ProjectSnapshot snapshot = projects.get(position);
+            snapshotViewHolder.projectIcon.setImageResource(snapshot.getProjectIcon());
             snapshotViewHolder.projectName.setText(snapshot.getProjectName());
-            snapshotViewHolder.creationDate.setText(snapshot.getCreationTime());
+            snapshotViewHolder.creationDate.setText(snapshot.getModTime());
 
         return convertView;
     }

@@ -1,20 +1,18 @@
 package com.example.a3dmodel;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import androidx.annotation.CallSuper;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import com.example.a3dmodel.adapter.ProjectSnapshotAdapter;
-import com.example.a3dmodel.data.ProjectSnapshotData;
+import com.example.a3dmodel.data.ProjectSnapshot;
+import com.example.a3dmodel.project.Project;
 
 import java.util.List;
 
@@ -48,7 +46,7 @@ import java.util.List;
 
 public class tabMainMenu extends Fragment {
     private ListView projectsListView;
-    private List<ProjectSnapshotData> projectsData;
+    private final List<ProjectSnapshot> projectsData = Project.getAllProjects();
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_main_menu, container, false);
