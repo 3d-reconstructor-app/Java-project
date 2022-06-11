@@ -46,7 +46,9 @@ import java.util.List;
 import java.util.Map;
 
 import com.example.a3dmodel.data.ImageData;
+import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.exeption.TabPhotoException;
+import com.example.a3dmodel.project.ProjectStorage;
 
 public class tabPhoto extends Fragment {
     static public RecyclerView recyclerView;
@@ -162,7 +164,7 @@ public class tabPhoto extends Fragment {
                     //  call right over here function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
 
 
-                } catch (TabPhotoException e) {
+                } catch (TabPhotoException | ProjectException e) {
                     e.printStackTrace();
                 } finally {
                     /*
@@ -219,7 +221,7 @@ public class tabPhoto extends Fragment {
                                                           List<Bitmap> bitmapListOfSelectedImages,
                                                           List<File> listOfJPEGFiles,
                                                           int filesCount)
-            throws TabPhotoException {
+            throws TabPhotoException, ProjectException {
         // TODO  @@@ANDREY
         //  inside "jpegFiles" create dir with a name of current project, if we decide
         //  to save snapshot of current project
@@ -229,32 +231,12 @@ public class tabPhoto extends Fragment {
         //                                                         CURRENT_PROJECT_NAME/3DMODELFILE
         //  if you decide so, change the path for "dir" File
 
-        if (isAdded()) {
-            FragmentActivity activity = getActivity();
-            assert (activity != null);
-            Path root = Environment.getExternalStorageDirectory().toPath();
-            App applicationData = (App) activity.getApplicationContext();
-//            System.out.println("Dir: " + mainDir.toPath());
-            String curProjectName = applicationData.getCurrentProject().getProjectName();
-            File curProjectDir = new File(root.resolve(curProjectName).toString());
-            if (curProjectDir.mkdir()) {
-                System.out.println("Project Folder Created!");
-            }
-            File imageDir = curProjectDir.toPath().resolve("images").toFile();
-            imageDir.mkdir();
 
-            for (int i = 0; i < bitmapListOfSelectedImages.size(); i++) {
-                Path imgPath = imageDir.toPath().resolve("img" + i + ".jpeg");
-                try (FileOutputStream fos = new FileOutputStream(imgPath.toString())) {
-                    bitmapListOfSelectedImages.get(i).compress(Bitmap.CompressFormat.JPEG, 100, fos);
-                    fos.flush();
-                } catch (IOException e) {
-                    System.out.println("Couldn't open FileOutput");
-                }
-            }
-
+        ProjectStorage storage = App.getProjectStorage();
+        storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
+        storage.saveProject();
             // TODO : store 3dModel in CURRENT_PROJECT_NAME/model/
-        }
+
 
         File dir = new File(sdcard.getAbsoluteFile() + "/jpegFiles/currentProject/");
 

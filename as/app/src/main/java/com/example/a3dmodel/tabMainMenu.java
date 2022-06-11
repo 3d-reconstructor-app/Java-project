@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import com.example.a3dmodel.adapter.ProjectSnapshotAdapter;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.project.Project;
+import com.example.a3dmodel.project.ProjectStorage;
 
 import java.util.List;
 
@@ -45,8 +46,9 @@ import java.util.List;
 
 
 public class tabMainMenu extends Fragment {
-    private ListView projectsListView;
-    private final List<ProjectSnapshot> projectsData = Project.getAllProjects();
+    static private final ProjectStorage storage = App.getProjectStorage();
+    static private ListView projectsListView;
+    static private List<ProjectSnapshot> projectsData = storage.getAllSnapshots();
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_main_menu, container, false);
@@ -56,5 +58,9 @@ public class tabMainMenu extends Fragment {
             projectsListView.setAdapter(snapshotAdapter);
         }
         return view;
+    }
+
+    public static void updateProjectListAndSendItToAdapter() {
+
     }
 }

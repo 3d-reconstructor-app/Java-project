@@ -17,7 +17,8 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ProjectFileManager {
-    public static String MAIN_FOLDER = "3dModelApp";
+    public static final String STORAGE_FILE = "Storage.data";
+    public static final String MAIN_FOLDER = "3dModelApp";
     @NonNull
     public static Path getRootPath() {
         return App.getContext().getFilesDir().toPath();

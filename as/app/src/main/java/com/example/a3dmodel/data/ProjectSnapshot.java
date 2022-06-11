@@ -8,7 +8,7 @@ import java.time.format.DateTimeFormatter;
 public class ProjectSnapshot {
     private final String projectName;
     private final LocalDateTime modTime;
-    private final int projectIcon = R.drawable.defaulticon;
+    private final int projectIcon = R.drawable.icon_plus;
 
     public String getProjectName() {
         return projectName;
