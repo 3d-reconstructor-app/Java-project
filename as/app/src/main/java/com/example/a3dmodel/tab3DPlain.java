@@ -4,9 +4,11 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -25,6 +27,7 @@ public class tab3DPlain extends Fragment {
     GLView glView;
     List<String> models = new ArrayList<>();
     ListView listView;
+    TextView selectedView;
 
     @Nullable
     @Override
@@ -37,17 +40,23 @@ public class tab3DPlain extends Fragment {
 
         drawButton = (Button) view.findViewById(R.id.draw_button);
         View.OnClickListener drawButtonOnClickListener = v -> {
-            System.out.println("wtf");
-            assert getActivity() != null;
-            getActivity().setContentView(R.layout.activity_fullscreen);
+            if (selectedView == null) {
+                //TODO write message
+            } else {
+                System.out.println(selectedView.getText().toString());
+                assert getActivity() != null;
+                getActivity().setContentView(R.layout.activity_fullscreen);
 
-            setGlView((GLView) getActivity().findViewById(R.id.gl_view));
+                setGlView((GLView) getActivity().findViewById(R.id.gl_view));
+                glView.makeRenderer(selectedView.getText().toString());
 
-            View view_3d = (View) getActivity().findViewById(R.id.view_3d);
+                View view_3d = (View) getActivity().findViewById(R.id.view_3d);
 
-            resetButton = (Button) view_3d.findViewById(R.id.reset_button);
-            View.OnClickListener resetButtonOnClickListener = this::Reset;
-            resetButton.setOnClickListener(resetButtonOnClickListener);
+                resetButton = (Button) view_3d.findViewById(R.id.reset_button);
+                View.OnClickListener resetButtonOnClickListener = this::Reset;
+                resetButton.setOnClickListener(resetButtonOnClickListener);
+            }
+
         };
         drawButton.setOnClickListener(drawButtonOnClickListener);
         try {
@@ -56,7 +65,14 @@ public class tab3DPlain extends Fragment {
             e.printStackTrace();
         }
         listView = view.findViewById(R.id.model_list);
+        listView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
         listView.setAdapter(new ArrayAdapter<>(getContext(), R.layout.list_text_view, models));
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view,
+                                    int position, long id) {
+                selectedView = (TextView) view;
+            }
+        });
     }
 
     public void setGlView(GLView v) {
