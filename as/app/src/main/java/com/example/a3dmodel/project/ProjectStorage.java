@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 
 import com.example.a3dmodel.App;
 import com.example.a3dmodel.data.ProjectSnapshot;
+import com.example.a3dmodel.exeption.AmbiguousProjectNameException;
 import com.example.a3dmodel.exeption.ProjectException;
 
 import java.io.File;
@@ -24,17 +25,17 @@ import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class ProjectStorage implements Serializable {
-    private final TreeSet<Project> projects;
+    private final List<Project> projects;
     private final Map<String, Project> nameToProject;
     private Project currentProject;
 
     private ProjectStorage() {
-        projects = new TreeSet<>();
+        projects = new ArrayList<>();
         nameToProject = new HashMap<>();
     }
 
     private ProjectStorage(List<Project> projectList) {
-        projects = new TreeSet<>();
+        projects = new ArrayList<>();
         projects.addAll(projectList);
         nameToProject = new HashMap<>();
         projectList.forEach(p -> nameToProject.put(p.getProjectName(), p));
@@ -69,9 +70,9 @@ public class ProjectStorage implements Serializable {
 
     public Project getLastOrCreate() {
         if (projects.isEmpty()) {
-            return Project.create("Unnamed Project");
+            return createNewProject("Unnamed Project");
         }
-        return projects.last();
+        return projects.get(projects.size() - 1);
     }
 
     public void addProject(Project project) {
@@ -80,19 +81,20 @@ public class ProjectStorage implements Serializable {
         com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
     }
 
-    public void renameCurrentProject(String name) {
+    public void renameCurrentProject(String name) throws AmbiguousProjectNameException {
         if (nameToProject.containsKey(name)) {
             Log.d("ProjectStorage", "Project with given name already exists");
-            return;
+            throw new AmbiguousProjectNameException("Project with given name already exists");
         }
         getCurrentProject().rename(name);
     }
 
-    public void createNewProject(String projectName) {
+    public Project createNewProject(String projectName) {
         Project newProject = Project.create(projectName);
         projects.add(newProject);
         nameToProject.put(projectName, newProject);
         com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+        return newProject;
     }
 
     public void openExistingProject(String projectName) throws ProjectException {

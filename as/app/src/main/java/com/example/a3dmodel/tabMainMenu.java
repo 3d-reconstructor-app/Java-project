@@ -1,12 +1,19 @@
 package com.example.a3dmodel;
 
 import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -22,6 +29,7 @@ import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.project.Project;
 import com.example.a3dmodel.project.ProjectStorage;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -93,12 +101,7 @@ public class tabMainMenu extends Fragment {
         View.OnClickListener saveButtonOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                try {
-                    App.getProjectStorage().saveProject();
-                } catch (ProjectException e) {
-                    Log.d("onClickSaveButton", e.getMessage());
-                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-                }
+                showDialog();
             }
         };
         saveButton.setOnClickListener(saveButtonOnClickListener);
@@ -129,5 +132,33 @@ public class tabMainMenu extends Fragment {
                 }
             }
         });
+    }
+
+    private void showDialog() {
+        final Dialog dialog = new Dialog(this.getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_save_project);
+
+        final EditText projectName = dialog.findViewById(R.id.editTextProjectName);
+        Button submitButton = dialog.findViewById(R.id.save_submit);
+
+        submitButton.setOnClickListener((v) -> {
+            String name = projectName.getText().toString();
+            processSaving(name);
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    private void processSaving(String name) {
+        try {
+            storage.renameCurrentProject(name);
+            storage.saveProject();
+        }
+        catch(ProjectException e) {
+            Toast.makeText(this.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }

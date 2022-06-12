@@ -36,7 +36,6 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
         LayoutInflater inflater = LayoutInflater.from(context);
 
         View view = inflater.inflate(R.layout.project_snapshot, parent, false);
-        Log.d("SnapshotViewHolder", "AmIHere?");
         SnapshotViewHolder snapshotViewHolder = new SnapshotViewHolder(view);
         return snapshotViewHolder;
     }
@@ -59,13 +58,13 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
     public static class SnapshotViewHolder extends RecyclerView.ViewHolder {
         public ImageView projectIcon;
         public TextView projectName;
-        public EditText creationDate;
+        public TextView creationDate;
 
         public SnapshotViewHolder(View v) {
             super(v);
             projectName = (TextView) v.findViewById(R.id.snapshotTextView);
             projectIcon = (ImageView) v.findViewById(R.id.snapshotImageView);
-            creationDate = (EditText) v.findViewById(R.id.snapshotDateView);
+            creationDate = (TextView) v.findViewById(R.id.snapshotDateView);
 
             // Define click listener for the ViewHolder's View.
             v.setOnClickListener(new View.OnClickListener() {

@@ -63,6 +63,6 @@ public class Project implements Comparable<Project>, Serializable {
     }
     @Override
     public int compareTo(@NonNull Project other) {
-        return modTime.compareTo(other.modTime);
+        return projectName.compareTo(other.projectName);
     }
 }
