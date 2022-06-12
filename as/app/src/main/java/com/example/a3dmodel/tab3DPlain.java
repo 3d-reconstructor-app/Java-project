@@ -9,6 +9,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -41,26 +42,26 @@ public class tab3DPlain extends Fragment {
         drawButton = (Button) view.findViewById(R.id.draw_button);
         View.OnClickListener drawButtonOnClickListener = v -> {
             if (selectedView == null) {
-                //TODO write message
-            } else {
-                System.out.println(selectedView.getText().toString());
-                assert getActivity() != null;
-                getActivity().setContentView(R.layout.activity_fullscreen);
-
-                setGlView((GLView) getActivity().findViewById(R.id.gl_view));
-                glView.makeRenderer(selectedView.getText().toString());
-
-                View view_3d = (View) getActivity().findViewById(R.id.view_3d);
-
-                resetButton = (Button) view_3d.findViewById(R.id.reset_button);
-                View.OnClickListener resetButtonOnClickListener = this::Reset;
-                resetButton.setOnClickListener(resetButtonOnClickListener);
+                Toast.makeText(getContext(), "File has not been selected, please select model to draw it\n", Toast.LENGTH_SHORT).show();
+                return;
             }
 
+            assert getActivity() != null;
+            getActivity().setContentView(R.layout.activity_fullscreen);
+
+            setGlView((GLView) getActivity().findViewById(R.id.gl_view));
+            selectedView = null;
+
+            View view_3d = (View) getActivity().findViewById(R.id.view_3d);
+
+            resetButton = (Button) view_3d.findViewById(R.id.reset_button);
+            View.OnClickListener resetButtonOnClickListener = this::Reset;
+            resetButton.setOnClickListener(resetButtonOnClickListener);
+            listView.setItemChecked(-1, true);
         };
         drawButton.setOnClickListener(drawButtonOnClickListener);
         try {
-            listModels();
+            addModels();
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -70,22 +71,31 @@ public class tab3DPlain extends Fragment {
         listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
+                if (selectedView != null && selectedView.equals((TextView) view)) {
+                    listView.setItemChecked(-1, true);
+                    selectedView = null;
+                    return;
+                }
                 selectedView = (TextView) view;
             }
         });
+        //TODO drop selection in tabs
+//        listView.setItemChecked(-1, true);
     }
 
     public void setGlView(GLView v) {
         glView = v;
+        glView.makeRenderer(selectedView.getText().toString());
     }
 
     public void Reset(View v) {
         glView.Reset();
     }
 
-    private void listModels() throws IOException {
+    public void addModels() throws IOException {
         //TODO get real models
         models.clear();
         models.addAll(Arrays.asList(getResources().getAssets().list("models")));
     }
+
 }

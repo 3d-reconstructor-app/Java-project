@@ -13,11 +13,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.view.View;
 
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
-import com.example.a3dmodel.databinding.ActivityMainBinding;
+//import com.example.a3dmodel.databinding.ActivityMainBinding;
 
 
 public class MainActivity extends AppCompatActivity {
-    private ActivityMainBinding binding;
+//    private ActivityMainBinding binding;
 
 //    @Override
 //    protected void onCreate(Bundle savedInstanceState) {
@@ -49,12 +49,12 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = findViewById(R.id.tabs);
         tabs.setupWithViewPager(viewPager);
-        FloatingActionButton fab = findViewById(R.id.fab);
-
-        fab.setOnClickListener(view -> {
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                    .setAction("Action", null).show();
-        });
+//        FloatingActionButton fab = findViewById(R.id.fab);
+//
+//        fab.setOnClickListener(view -> {
+//            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
+//                    .setAction("Action", null).show();
+//        });
     }
 
     @Override
