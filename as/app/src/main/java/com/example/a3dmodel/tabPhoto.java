@@ -80,10 +80,6 @@ public class tabPhoto extends Fragment {
         return view;
     }
 
-    public void loadImagesFromStorage() {
-
-    }
-
     @SuppressLint("NotifyDataSetChanged")
     public static void updateImageBitmapListAndSendItToTheAdapter() {
         Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);

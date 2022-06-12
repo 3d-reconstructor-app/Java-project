@@ -46,6 +46,10 @@ public class Project implements Comparable<Project>, Serializable {
         return projectName;
     }
 
+    public void rename(String name) {
+        projectName = name;
+    }
+
     public void addImages(@NonNull List<Bitmap> imgs) {
         List<SerialBitmap> newImgs = imgs.stream().map(SerialBitmap::new).collect(Collectors.toList());
         images.addAll(newImgs);

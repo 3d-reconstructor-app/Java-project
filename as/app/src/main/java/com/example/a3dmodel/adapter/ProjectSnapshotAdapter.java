@@ -1,66 +1,79 @@
 package com.example.a3dmodel.adapter;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.R;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // TODO @@@ANDREY
-public class ProjectSnapshotAdapter extends ArrayAdapter<String> {
-    List<ProjectSnapshot> projects = new ArrayList<>();
-    Context projectsContext;
+public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshotAdapter.SnapshotViewHolder> {
+    private List<ProjectSnapshot> projects = new ArrayList<>();
+    public Context projectsContext;
 
-    public ProjectSnapshotAdapter(@NonNull Context context, List<ProjectSnapshot> snapshotData) {
-        super(context, R.layout.project_snapshot);
-        this.projects = snapshotData;
-        this.projectsContext = context;
-    }
-
-    @Override
-    public int getCount() {
-        return projects.size();
+    public ProjectSnapshotAdapter(List<ProjectSnapshot> snapshotList) {
+       projects = snapshotList;
     }
 
     @NonNull
     @Override
-    public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
-        ViewHolder snapshotViewHolder = new ViewHolder();
-        if (convertView == null) {
-            LayoutInflater inflater = (LayoutInflater) projectsContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public SnapshotViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        Context context = parent.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
 
-            convertView = inflater.inflate(R.layout.project_snapshot, parent, false);
-            snapshotViewHolder.projectIcon = (ImageView) convertView.findViewById(R.id.snapshotImageView);
-            snapshotViewHolder.projectName = (TextView) convertView.findViewById(R.id.snapshotTextView);
-            snapshotViewHolder.creationDate = (EditText) convertView.findViewById(R.id.snapshotDateView);
-            convertView.setTag(snapshotViewHolder);
-        }
-        else {
-            snapshotViewHolder = (ViewHolder) convertView.getTag();
-        }
-            ProjectSnapshot snapshot = projects.get(position);
-            snapshotViewHolder.projectIcon.setImageResource(snapshot.getProjectIcon());
-            snapshotViewHolder.projectName.setText(snapshot.getProjectName());
-            snapshotViewHolder.creationDate.setText(snapshot.getModTime());
-
-        return convertView;
+        View view = inflater.inflate(R.layout.project_snapshot, parent, false);
+        Log.d("SnapshotViewHolder", "AmIHere?");
+        SnapshotViewHolder snapshotViewHolder = new SnapshotViewHolder(view);
+        return snapshotViewHolder;
     }
 
-    static class ViewHolder {
-        ImageView projectIcon;
-        TextView projectName;
-        EditText creationDate;
+    @Override
+    public void onBindViewHolder(@NonNull SnapshotViewHolder holder, int position) {
+        ProjectSnapshot projectSnapshot = projects.get(position);
+
+        holder.projectIcon.setImageResource(projectSnapshot.getProjectIcon());
+        holder.projectName.setText(projectSnapshot.getProjectName());
+        holder.creationDate.setText(projectSnapshot.getModTime());
+    }
+
+    @Override
+    public int getItemCount() {
+        Log.d("SnapshotAdapter", "getItemSize returned " + projects.size());
+        return projects.size();
+    }
+
+    public static class SnapshotViewHolder extends RecyclerView.ViewHolder {
+        public ImageView projectIcon;
+        public TextView projectName;
+        public EditText creationDate;
+
+        public SnapshotViewHolder(View v) {
+            super(v);
+            projectName = (TextView) v.findViewById(R.id.snapshotTextView);
+            projectIcon = (ImageView) v.findViewById(R.id.snapshotImageView);
+            creationDate = (EditText) v.findViewById(R.id.snapshotDateView);
+
+            // Define click listener for the ViewHolder's View.
+            v.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+//                    Log.d(TAG, "Element " + getAdapterPosition() + " clicked.");
+                }
+            });
+        }
     }
 }

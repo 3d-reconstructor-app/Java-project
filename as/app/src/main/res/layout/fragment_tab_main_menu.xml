@@ -11,9 +11,16 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraintL_fragment_photo"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="match_parent"
         android:orientation="horizontal"
         app:layout_constraintHorizontal_chainStyle="spread">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/projectsView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/button_create_new_project" />
 
         <Button
             android:id="@+id/button_create_new_project"
@@ -21,19 +28,22 @@
             android:layout_width="125dp"
             android:layout_height="wrap_content"
             android:layout_gravity="start"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="168dp"
             android:text="@string/new_project"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintEnd_toStartOf="@+id/button_save_project"
             app:layout_constraintStart_toStartOf="parent"
             tools:ignore="MissingConstraints"
             tools:layout_editor_absoluteY="0dp" />
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        <Button
+            android:id="@+id/button_save_project"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="168dp"
+            android:text="SAVE"
+            app:layout_constraintStart_toEndOf="@+id/button_create_new_project" />
 
-    <ListView
-        android:id="@+id/projectsListview"
-        android:layout_width="match_parent"
-        android:layout_height="670dp"
-        android:layout_gravity="bottom" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

@@ -1,6 +1,7 @@
 package com.example.a3dmodel.project;
 
 import android.content.Context;
+import android.util.Log;
 
 import androidx.annotation.NonNull;
 
@@ -15,6 +16,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -31,20 +33,27 @@ public class ProjectStorage implements Serializable {
         nameToProject = new HashMap<>();
     }
 
+    private ProjectStorage(List<Project> projectList) {
+        projects = new TreeSet<>();
+        projects.addAll(projectList);
+        nameToProject = new HashMap<>();
+        projectList.forEach(p -> nameToProject.put(p.getProjectName(), p));
+    }
+
     @NonNull
     public static ProjectStorage build() {
-        ProjectStorage storage = new ProjectStorage();
         File resources = App.getContext().getFilesDir();
+        List<Project> projects = new ArrayList<>();
         for (File projectFile : resources.listFiles()) {
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(projectFile))) {
                 Project proj = (Project) in.readObject();
-                storage.addProject(proj);
+                projects.add(proj);
             }
             catch(IOException | ClassNotFoundException e) {
                 System.out.println("Unable to load project : " + projectFile);
             }
         }
-        return storage;
+        return new ProjectStorage(projects);
     }
 
     public Project getCurrentProject() {
@@ -68,12 +77,22 @@ public class ProjectStorage implements Serializable {
     public void addProject(Project project) {
         projects.add(project);
         nameToProject.put(project.getProjectName(), project);
+        com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+    }
+
+    public void renameCurrentProject(String name) {
+        if (nameToProject.containsKey(name)) {
+            Log.d("ProjectStorage", "Project with given name already exists");
+            return;
+        }
+        getCurrentProject().rename(name);
     }
 
     public void createNewProject(String projectName) {
         Project newProject = Project.create(projectName);
         projects.add(newProject);
         nameToProject.put(projectName, newProject);
+        com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
     }
 
     public void openExistingProject(String projectName) throws ProjectException {
@@ -91,5 +110,6 @@ public class ProjectStorage implements Serializable {
         catch(IOException e) {
             throw new ProjectException("Couldn't write project file for " + currentProjectName);
         }
+        com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
     }
 }

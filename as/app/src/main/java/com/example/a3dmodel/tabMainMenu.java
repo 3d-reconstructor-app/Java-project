@@ -1,17 +1,24 @@
 package com.example.a3dmodel;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.a3dmodel.adapter.ProjectSnapshotAdapter;
 import com.example.a3dmodel.data.ProjectSnapshot;
+import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.project.Project;
 import com.example.a3dmodel.project.ProjectStorage;
 
@@ -47,20 +54,80 @@ import java.util.List;
 
 public class tabMainMenu extends Fragment {
     static private final ProjectStorage storage = App.getProjectStorage();
-    static private ListView projectsListView;
+    static private RecyclerView recyclerView;
     static private List<ProjectSnapshot> projectsData = storage.getAllSnapshots();
 
+    @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_main_menu, container, false);
-        projectsListView = (ListView) view.findViewById(R.id.projectsListview);
-        if (isAdded()) {
-            ProjectSnapshotAdapter snapshotAdapter = new ProjectSnapshotAdapter(getActivity(), projectsData);
-            projectsListView.setAdapter(snapshotAdapter);
-        }
+        recyclerView = (RecyclerView) view.findViewById(R.id.projectsView);
+
+        recyclerView = view.findViewById(R.id.projectsView);
+        recyclerView.setAdapter(new ProjectSnapshotAdapter(projectsData));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
         return view;
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     public static void updateProjectListAndSendItToAdapter() {
+        projectsData = storage.getAllSnapshots();
+        assert recyclerView.getAdapter() != null;
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
 
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Button createButton = (Button) view.findViewById(R.id.button_create_new_project);
+        View.OnClickListener createButtonOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                App.getProjectStorage().createNewProject("Unnamed");
+            }
+        };
+        createButton.setOnClickListener(createButtonOnClickListener);
+
+        Button saveButton = (Button) view.findViewById(R.id.button_save_project);
+        View.OnClickListener saveButtonOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    App.getProjectStorage().saveProject();
+                } catch (ProjectException e) {
+                    Log.d("onClickSaveButton", e.getMessage());
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
+            }
+        };
+        saveButton.setOnClickListener(saveButtonOnClickListener);
+        scrollToPosition();
+    }
+
+    private void scrollToPosition() {
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v,
+                                       int left,
+                                       int top,
+                                       int right,
+                                       int bottom,
+                                       int oldLeft,
+                                       int oldTop,
+                                       int oldRight,
+                                       int oldBottom) {
+                recyclerView.removeOnLayoutChangeListener(this);
+                final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                assert layoutManager != null;
+                View viewAtPosition = layoutManager.findViewByPosition(MainActivity.currentPosition);
+                // Scroll to position if the view for the current position is null (not currently part of
+                // layout manager children), or it's not completely visible.
+                if (viewAtPosition == null || layoutManager
+                        .isViewPartiallyVisible(viewAtPosition, false, true)) {
+                    recyclerView.post(() -> layoutManager.scrollToPosition(MainActivity.currentPosition));
+                }
+            }
+        });
     }
 }
