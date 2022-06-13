@@ -12,6 +12,7 @@ import okhttp3.ResponseBody;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.TimeUnit;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -20,11 +21,12 @@ public class Client {
     private static final MediaType JSON = MediaType.get("application/json; charset=utf-8");
     private static final MediaType IMAGE = MediaType.get("image/png");
 
-    public static void httpClientRequest(List<File> files, File result) throws AppException {
+    public static void httpClientRequest(List<File> files, File result) throws AppException, IOException {
         String token = UUID.randomUUID().toString();
         String url = "http://127.0.0.1:8000/";
         System.out.println(token);
-        OkHttpClient client = new OkHttpClient();
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(7, TimeUnit.MINUTES).build();
         initializationHTTPPOSTRequest(client, url, token, files.size());
         for (File file : files) {
             sendFileHTTPPOSTRequest(client, url, token, file);
@@ -52,8 +54,6 @@ public class Client {
         try (Response response = client.newCall(requestIni).execute()) {
             if (response.isSuccessful()) {
                 System.out.println("Send initialization: Ok");
-            } else {
-                throw new AppException("Error response");
             }
         } catch (IOException e) {
             throw new AppException("Can't make initialization request", e);
@@ -61,7 +61,7 @@ public class Client {
 
     }
 
-    private static void sendFileHTTPPOSTRequest(OkHttpClient client, String url, String token, File file) throws AppException {
+    private static void sendFileHTTPPOSTRequest(OkHttpClient client, String url, String token, File file) throws AppException, IOException {
         RequestBody body = RequestBody.create(file, IMAGE);
         Request requestIni = new Request.Builder()
                 .url(HttpUrl.get(url + token + "/images/" + file.getName()))
@@ -71,8 +71,6 @@ public class Client {
         try (Response response = client.newCall(requestIni).execute()) {
             if (response.isSuccessful()) {
                 System.out.println("Send file " + file.getName() + " : Ok");
-            } else {
-                throw new AppException("Error response");
             }
         } catch (IOException e) {
             throw new AppException("Can't send file " + file.getName(), e);
@@ -94,18 +92,36 @@ public class Client {
                     }
                 }
             } else {
-                throw new AppException("Error response");
+                System.out.println("wtf");
             }
         } catch (IOException e) {
             throw new AppException("Can't get result", e);
         }
     }
 
-//    public static void main(String[] args) throws AppException, IOException {
+//    public static void main(String[] args) throws AppException, IOException, InterruptedException {
 //        File res = new File("test/res.png");
 //        List<File> files = new ArrayList<>();
 //        files.add(new File("test/im1.png"));
 //        files.add(new File("test/im2.png"));
-//        httpClientRequest(files, res);
+//        ArrayList<Thread> lst = new ArrayList<>();
+//        long start = System.currentTimeMillis();
+//        for (int i = 0; i < 1; i++) {
+//            Thread.sleep(1000);
+//            Thread thr = new Thread(() -> {
+//                try {
+//                    httpClientRequest(files, res);
+//                } catch (AppException | IOException e) {
+//                    e.printStackTrace();
+//                }
+//            });
+//            lst.add(thr);
+//            thr.start();
+//        }
+//        for (int i = 0; i < 1; i++) {
+//            lst.get(i).join();
+//        }
+//        long end = System.currentTimeMillis();
+//        System.out.println((end - start));
 //    }
 }
