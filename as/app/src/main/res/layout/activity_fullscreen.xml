@@ -3,7 +3,7 @@
     android:id="@+id/view_3d"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#0099cc"
+    android:background="@color/black"
     tools:context=".MainActivity">
 
     <LinearLayout
@@ -12,13 +12,14 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
+            android:id="@+id/text_view_instruction"
+            android:layout_width="410dp"
             android:layout_height="wrap_content"
             android:layout_gravity="center_horizontal|bottom"
+            android:background="@color/purple_700"
             android:padding="10dp"
             android:text="@string/instructions"
-            android:textColor="#212121"
+            android:textColor="@color/black"
             android:textSize="15sp" />
 
         <com.example.a3dmodel.visualisation.GLView

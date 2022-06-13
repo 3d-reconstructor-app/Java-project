@@ -23,12 +23,11 @@ import java.util.Arrays;
 import java.util.List;
 
 public class tab3DPlain extends Fragment {
-    Button drawButton;
-    Button resetButton;
-    GLView glView;
-    List<String> models = new ArrayList<>();
-    ListView listView;
-    TextView selectedView;
+    private Button resetButton;
+    private GLView glView;
+    private final List<String> models = new ArrayList<>();
+    private ListView listView;
+    private TextView selectedView;
 
     @Nullable
     @Override
@@ -39,10 +38,10 @@ public class tab3DPlain extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        drawButton = (Button) view.findViewById(R.id.draw_button);
+        Button drawButton = (Button) view.findViewById(R.id.draw_button);
         View.OnClickListener drawButtonOnClickListener = v -> {
             if (selectedView == null) {
-                Toast.makeText(getContext(), "File has not been selected, please select model to draw it\n", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(), "File has not been selected, please select model to draw it", Toast.LENGTH_SHORT).show();
                 return;
             }
 

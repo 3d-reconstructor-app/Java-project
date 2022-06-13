@@ -3,8 +3,7 @@
     android:id="@+id/list_text_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/list_selector"
     android:clickable="false"
     android:textAlignment="viewStart"
-    android:textSize="20sp"
-    android:background="@drawable/list_selector">
-</TextView>
+    android:textSize="20sp"></TextView>
