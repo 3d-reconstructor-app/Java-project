@@ -2,18 +2,14 @@ package com.example.a3dmodel;
 
 import java.io.*;
 
-import okhttp3.HttpUrl;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-import okhttp3.ResponseBody;
+import okhttp3.*;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -23,10 +19,22 @@ public class Client {
 
     public static void httpClientRequest(List<File> files, File result) throws AppException, IOException {
         String token = UUID.randomUUID().toString();
-        String url = "http://127.0.0.1:8000/";
+        String url = "https://c7df-78-140-249-142.eu.ngrok.io/";
+//        String url = "http://127.0.0.1:8000/";
         System.out.println(token);
-        OkHttpClient client = new OkHttpClient.Builder()
-                .readTimeout(7, TimeUnit.MINUTES).build();
+        OkHttpClient client = new OkHttpClient.Builder().readTimeout(300, TimeUnit.MINUTES)
+                .addInterceptor(new Interceptor() {
+                    @NotNull
+                    @Override
+                    public Response intercept(@NotNull Chain chain) throws IOException {
+                        String credential = Credentials.basic("username", "password");
+                        Request request = chain.request();
+                        Request authenticatedRequest = request.newBuilder()
+                                .header("Authorization", credential).build();
+                        return chain.proceed(authenticatedRequest);
+                    }
+                })
+                .build();
         initializationHTTPPOSTRequest(client, url, token, files.size());
         for (File file : files) {
             sendFileHTTPPOSTRequest(client, url, token, file);
@@ -79,8 +87,8 @@ public class Client {
 
     private static void getFileHTTPGETRequest(OkHttpClient client, String url, String token, File result) throws AppException {
         Request requestGet = new Request.Builder()
-//                .url(HttpUrl.get(url + "resources/" + token + "/res.png"))
-                .url(HttpUrl.get(url + "resources/" + token + "/reconstruction_sequential/PMVS/models/pmvs_options.txt.ply"))
+                .url(HttpUrl.get(url + "resources/" + token + "/res.png"))
+//                .url(HttpUrl.get(url + "resources/" + token + "/reconstruction_sequential/PMVS/models/pmvs_options.txt.ply"))
                 .get()
                 .build();
         try (Response response = client.newCall(requestGet).execute()) {
@@ -99,7 +107,7 @@ public class Client {
         }
     }
 
-//    public static void main(String[] args) throws AppException, IOException, InterruptedException {
+//    public static void main(String[] args) throws InterruptedException {
 //        File res = new File("test/res.png");
 //        List<File> files = new ArrayList<>();
 //        files.add(new File("test/im1.png"));
