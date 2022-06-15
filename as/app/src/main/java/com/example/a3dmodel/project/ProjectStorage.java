@@ -9,6 +9,7 @@ import com.example.a3dmodel.App;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.exeption.AmbiguousProjectNameException;
 import com.example.a3dmodel.exeption.ProjectException;
+import com.example.a3dmodel.tabPhoto;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -34,15 +35,16 @@ public class ProjectStorage implements Serializable {
         nameToProject = new HashMap<>();
     }
 
-    private ProjectStorage(List<Project> projectList) {
-        projects = new ArrayList<>();
+    private ProjectStorage(List<Project> projectList) throws ProjectException {
+        this();
         projects.addAll(projectList);
-        nameToProject = new HashMap<>();
         projectList.forEach(p -> nameToProject.put(p.getProjectName(), p));
+
+
     }
 
     @NonNull
-    public static ProjectStorage build() {
+    public static ProjectStorage build() throws ProjectException {
         File resources = App.getContext().getFilesDir();
         List<Project> projects = new ArrayList<>();
         for (File projectFile : resources.listFiles()) {
@@ -54,7 +56,17 @@ public class ProjectStorage implements Serializable {
                 System.out.println("Unable to load project : " + projectFile);
             }
         }
+        ProjectStorage storage = new ProjectStorage(projects);
+        storage.currentProject = storage.getLastOrCreate();
         return new ProjectStorage(projects);
+    }
+
+    public void loadProject() throws ProjectException {
+        loadProject(getCurrentProject());
+    }
+
+    private void loadProject(Project project) throws ProjectException {
+        openExistingProject(project.getProjectName());
     }
 
     public Project getCurrentProject() {
@@ -70,7 +82,7 @@ public class ProjectStorage implements Serializable {
 
     public Project getLastOrCreate() {
         if (projects.isEmpty()) {
-            return createNewProject("Unnamed Project");
+            return createNewProject("Unnamed Project", false);
         }
         return projects.get(projects.size() - 1);
     }
@@ -86,14 +98,22 @@ public class ProjectStorage implements Serializable {
             Log.d("ProjectStorage", "Project with given name already exists");
             throw new AmbiguousProjectNameException("Project with given name already exists");
         }
+        nameToProject.remove(getCurrentProject().getProjectName());
+        nameToProject.put(name, getCurrentProject());
         getCurrentProject().rename(name);
     }
 
     public Project createNewProject(String projectName) {
+        return createNewProject(projectName, true);
+    }
+
+    private Project createNewProject(String projectName, boolean notifyAdapter) {
         Project newProject = Project.create(projectName);
         projects.add(newProject);
         nameToProject.put(projectName, newProject);
-        com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+        if (notifyAdapter) {
+            com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+        }
         return newProject;
     }
 
@@ -102,6 +122,11 @@ public class ProjectStorage implements Serializable {
             throw new ProjectException("Project doesn't exist");
         }
         currentProject = nameToProject.get(projectName);
+        tabPhoto.imageDataList.clear();
+        tabPhoto.imageDataList.addAll(currentProject.getImageData());
+        if (!tabPhoto.imageDataList.isEmpty()) {
+            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+        }
     }
 
     public void saveProject() throws ProjectException {

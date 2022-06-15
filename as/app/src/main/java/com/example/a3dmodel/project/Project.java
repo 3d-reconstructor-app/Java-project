@@ -6,6 +6,7 @@ import android.graphics.BitmapFactory;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.R;
 
@@ -53,6 +54,10 @@ public class Project implements Comparable<Project>, Serializable {
     public void addImages(@NonNull List<Bitmap> imgs) {
         List<SerialBitmap> newImgs = imgs.stream().map(SerialBitmap::new).collect(Collectors.toList());
         images.addAll(newImgs);
+    }
+
+    public List<ImageData> getImageData() {
+        return images.stream().map(SerialBitmap::getBitmap).map(ImageData::new).collect(Collectors.toList());
     }
 
     @NonNull

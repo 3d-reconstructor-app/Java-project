@@ -8,12 +8,16 @@ import java.io.IOException;
 import java.io.Serializable;
 
 public class SerialBitmap implements Serializable {
-    public Bitmap bitmap;
+    private Bitmap bitmap;
 
     // TODO: Finish this constructor
     SerialBitmap(Bitmap bmap) {
         // Take your existing call to BitmapFactory and put it here
         bitmap = bmap;
+    }
+
+    public Bitmap getBitmap() {
+        return bitmap;
     }
 
     // Converts the Bitmap into a byte array for serialization

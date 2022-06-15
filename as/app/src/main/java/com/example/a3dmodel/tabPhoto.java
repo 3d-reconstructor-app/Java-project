@@ -82,6 +82,9 @@ public class tabPhoto extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     public static void updateImageBitmapListAndSendItToTheAdapter() {
+        if (bitmapArrayList.isEmpty()) {
+            return;
+        }
         Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
         assert recyclerView.getAdapter() != null;
         imageDataList.add(new ImageData(lastPhotoBitmap));
@@ -91,6 +94,13 @@ public class tabPhoto extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        try {
+            App.getProjectStorage().loadProject();
+        }
+        catch(ProjectException e) {
+            Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
 
         // TODO need to store photo directly in the system and save path for them
         Button cameraButton = (Button) view.findViewById(R.id.button_camera);
