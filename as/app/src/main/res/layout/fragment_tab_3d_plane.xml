@@ -1,13 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_3d"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".tab3DPlain">
 
     <TextView
+        android:id="@+id/textView2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:text="3d plain" />
 
-</LinearLayout>
+    <Button
+        android:id="@+id/draw_button"
+        android:layout_width="181dp"
+        android:layout_height="wrap_content"
+        android:text="@string/draw"
+        app:layout_anchor="@+id/textView2"
+        app:layout_anchorGravity="bottom|center" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
