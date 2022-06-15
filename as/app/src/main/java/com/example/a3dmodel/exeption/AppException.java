@@ -1,4 +1,4 @@
-package com.example.a3dmodel;
+package com.example.a3dmodel.exeption;
 
 public class AppException extends Exception {
     public AppException() {

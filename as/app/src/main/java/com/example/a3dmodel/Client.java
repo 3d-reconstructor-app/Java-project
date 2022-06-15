@@ -15,6 +15,7 @@ import java.util.zip.ZipOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+import com.example.a3dmodel.exeption.AppException;
 
 public class Client {
     private static final String IMAGE_STRING = "image/png";

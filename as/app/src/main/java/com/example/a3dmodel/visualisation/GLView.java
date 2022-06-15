@@ -108,7 +108,7 @@ public class GLView extends GLSurfaceView {
       current_context = context;
       // Just in case we don't use the PLY in the future,
       // we need to give the user the option of switching out.
-      plyInput = context.getResources().openRawResource(R.raw.new_giraffe);
+//      plyInput = context.getResources().openRawResource(R.raw.new_giraffe);
     }
 
     public void onSurfaceCreated(GL10 gl,EGLConfig config) {
