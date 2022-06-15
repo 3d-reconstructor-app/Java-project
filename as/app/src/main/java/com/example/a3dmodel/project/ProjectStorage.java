@@ -39,8 +39,6 @@ public class ProjectStorage implements Serializable {
         this();
         projects.addAll(projectList);
         projectList.forEach(p -> nameToProject.put(p.getProjectName(), p));
-
-
     }
 
     @NonNull
@@ -122,11 +120,7 @@ public class ProjectStorage implements Serializable {
             throw new ProjectException("Project doesn't exist");
         }
         currentProject = nameToProject.get(projectName);
-        tabPhoto.imageDataList.clear();
-        tabPhoto.imageDataList.addAll(currentProject.getImageData());
-        if (!tabPhoto.imageDataList.isEmpty()) {
-            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
-        }
+        tabPhoto.loadImagesFromCurrentProject();
     }
 
     public void saveProject() throws ProjectException {

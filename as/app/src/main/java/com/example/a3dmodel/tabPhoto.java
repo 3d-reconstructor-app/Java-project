@@ -365,4 +365,14 @@ public class tabPhoto extends Fragment {
                 });
     }
 
+    public static void addImage(Bitmap bitmap) {
+        bitmapArrayList.add(bitmap);
+        updateImageBitmapListAndSendItToTheAdapter();
+    }
+
+    public static void loadImagesFromCurrentProject() {
+        bitmapArrayList.clear();
+        bitmapArrayList.addAll(App.getProjectStorage().getCurrentProject().getImages());
+        updateImageBitmapListAndSendItToTheAdapter();
+    }
 }

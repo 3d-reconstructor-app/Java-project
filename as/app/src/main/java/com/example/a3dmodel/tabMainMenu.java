@@ -61,7 +61,7 @@ import java.util.List;
 
 
 public class tabMainMenu extends Fragment {
-    static private final ProjectStorage storage = App.getProjectStorage();
+    static private ProjectStorage storage = App.getProjectStorage();
     static private RecyclerView recyclerView;
     static private List<ProjectSnapshot> projectsData = storage.getAllSnapshots();
 
@@ -81,6 +81,7 @@ public class tabMainMenu extends Fragment {
     public static void updateProjectListAndSendItToAdapter() {
         projectsData = storage.getAllSnapshots();
         assert recyclerView.getAdapter() != null;
+
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 

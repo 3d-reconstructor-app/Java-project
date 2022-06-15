@@ -60,6 +60,10 @@ public class Project implements Comparable<Project>, Serializable {
         return images.stream().map(SerialBitmap::getBitmap).map(ImageData::new).collect(Collectors.toList());
     }
 
+    public List<Bitmap> getImages() {
+        return images.stream().map(SerialBitmap::getBitmap).collect(Collectors.toList());
+    }
+
     @NonNull
     public static Project create(String name) {
         Project proj = new Project(name);
