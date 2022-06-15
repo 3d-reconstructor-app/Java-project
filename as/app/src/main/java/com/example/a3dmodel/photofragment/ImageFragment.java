@@ -28,7 +28,7 @@
 //
 //    private static final String KEY_IMAGE_RES = "com.google.samples.gridtopager.key.imageRes";
 //
-//    public static ImageFragment newInstance(Bitmap bitmap) {
+//    public static ImageFragment newInstance(@DrawableRes int drawableRes) {
 //        ImageFragment fragment = new ImageFragment();
 //        Bundle argument = new Bundle();
 //        argument.putInt(KEY_IMAGE_RES, drawableRes);
