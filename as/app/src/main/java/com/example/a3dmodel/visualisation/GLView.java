@@ -17,7 +17,6 @@ import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
-import com.example.a3dmodel.R;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -26,8 +25,7 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class GLView extends GLSurfaceView {
-//  private String model;
-  private Context c;
+  private final Context c;
   private Renderer renderer;
   ScaleGestureDetector SGD;
   private float mPreviousX;
@@ -42,10 +40,6 @@ public class GLView extends GLSurfaceView {
     c = context;
     // Set the Renderer for drawing on the GLSurfaceView
   }
-
-//  public void setModel(String model) {
-//    this.model = model;
-//  }
 
   public void makeRenderer(String model) {
     renderer = new Renderer(c, model);
@@ -68,8 +62,8 @@ public class GLView extends GLSurfaceView {
     // interested in events where the touch position changed.
     float x = e.getX();
     float y = e.getY();
-    int motionaction = e.getAction() & MotionEvent.ACTION_MASK;
-    switch (motionaction) {
+    int motionAction = e.getAction() & MotionEvent.ACTION_MASK;
+    switch (motionAction) {
       case MotionEvent.ACTION_DOWN:
         // Prevent jumping around.
         mPreviousX = x;
@@ -97,7 +91,6 @@ public class GLView extends GLSurfaceView {
   }
 
   public static class Renderer implements GLSurfaceView.Renderer {
-    private Cube cube;
     private Mesh mesh;
     // Intrinsic Matrices
     private final float[] mModelMatrix = new float[16];
@@ -121,6 +114,7 @@ public class GLView extends GLSurfaceView {
       // we need to give the user the option of switching out.
       try {
         System.out.println(model);
+        //TODO add real model
         plyInput = context.getAssets().open("models/" + model);
       } catch (IOException e) {
         e.printStackTrace();
@@ -131,8 +125,6 @@ public class GLView extends GLSurfaceView {
       GLES20.glClearColor(0.0f, 0.0f, 0.0f, 0.4f);
       // Initialize the accumulated rotation matrix
       Matrix.setIdentityM(mAccumulatedRotation, 0);
-      // TODO(bminortx): put in loader for mesh
-      cube = new Cube();
       try {
         mesh = new Mesh(plyInput);
       } catch (IOException e) {

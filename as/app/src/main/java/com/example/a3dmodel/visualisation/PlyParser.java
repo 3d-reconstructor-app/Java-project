@@ -9,7 +9,7 @@ package com.example.a3dmodel.visualisation;
 
 import android.util.Log;
 
-import androidx.lifecycle.ViewModelProvider;
+//import androidx.lifecycle.ViewModelProvider;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -20,14 +20,12 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
 public class PlyParser {
     // Parser mechanisms
-    private BufferedReader bufferedReader;
+    private final BufferedReader bufferedReader;
     private final int NO_INDEX = 100;
     private int vertexIndex = NO_INDEX;
     private int colorIndex = NO_INDEX;
@@ -68,7 +66,7 @@ public class PlyParser {
 
         // Check for ASCII format
         line = bufferedReader.readLine();
-        String words[] = line.split(" ");
+        String[] words = line.split(" ");
         if (!words[1].equals("ascii")) {
             Log.e("ReadHeader", "File is not ASCII format! Cannot read.");
             return false;
@@ -107,7 +105,7 @@ public class PlyParser {
 
     void ReadHeader(String line) {
         // Make into a list of words, yo.
-        String words[] = line.split(" ");
+        String[] words = line.split(" ");
         if (words[0].equals("comment")) {
             return;
         }
@@ -120,40 +118,43 @@ public class PlyParser {
             }
         }
         if (words[0].equals("property")) {
-            if (words[2].equals("x") ||
-                    words[2].equals("y") ||
-                    words[2].equals("z")) {
-                if (vertexIndex > elementCount) {
-                    vertexIndex = elementCount;
-                }
-                vertexSize++;
-            } else if (words[2].equals("nx") ||
-                    words[2].equals("ny") ||
-                    words[2].equals("nz")) {
-                if (normalIndex > elementCount) {
-                    normalIndex = elementCount;
-                }
-                normalSize++;
-            } else if (words[2].equals("red") ||
-                    words[2].equals("green") ||
-                    words[2].equals("blue") ||
-                    words[2].equals("alpha")) {
-                if (colorIndex > elementCount) {
-                    colorIndex = elementCount;
-                }
-                colorSize++;
+            switch (words[2]) {
+                case "x":
+                case "y":
+                case "z":
+                    if (vertexIndex > elementCount) {
+                        vertexIndex = elementCount;
+                    }
+                    vertexSize++;
+                    break;
+                case "nx":
+                case "ny":
+                case "nz":
+                    if (normalIndex > elementCount) {
+                        normalIndex = elementCount;
+                    }
+                    normalSize++;
+                    break;
+                case "red":
+                case "green":
+                case "blue":
+                case "alpha":
+                    if (colorIndex > elementCount) {
+                        colorIndex = elementCount;
+                    }
+                    colorSize++;
+                    break;
             }
             elementCount++;
         }
 
         if (words[0].equals("end_header")) {
             inHeader = false;
-            return;
         }
     }
 
     void ReadData(String line) {
-        String words[] = line.split(" ");
+        String[] words = line.split(" ");
         // Compensate for extra line read with (vertexCount - 1)
         if (currentElement < vertexCount) {
             for (int i = 0; i < vertexSize; i++) {
@@ -234,6 +235,7 @@ public class PlyParser {
 //                List.of(1.0, 1.0, -1.0), // 6
 //                List.of(1.0, 1.0, 1.0)  // 7
 //        );
+
         static final List<List<Double>> shifts = new ArrayList<>(8);
         static {
             List<Double> lst0 = new ArrayList<>(3);

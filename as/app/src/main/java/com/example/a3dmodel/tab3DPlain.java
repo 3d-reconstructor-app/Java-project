@@ -60,6 +60,7 @@ public class tab3DPlain extends Fragment {
         };
         drawButton.setOnClickListener(drawButtonOnClickListener);
         try {
+            //TODO add real models
             addModels();
         } catch (IOException e) {
             e.printStackTrace();
