@@ -25,7 +25,7 @@ import java.util.List;
 
 // TODO @@@ANDREY
 public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshotAdapter.SnapshotViewHolder> {
-    private static List<ProjectSnapshot> projects = new ArrayList<>();
+    public static List<ProjectSnapshot> projects = new ArrayList<>();
     public Context projectsContext;
 
     public ProjectSnapshotAdapter(List<ProjectSnapshot> snapshotList) {
