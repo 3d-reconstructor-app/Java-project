@@ -67,8 +67,12 @@ public class tabPhoto extends Fragment {
         frameLayout = view.findViewById(R.id.fragment_photo);
         recyclerView = view.findViewById(R.id.fragment_photo_grid);
 
-        recyclerView.setAdapter(new GridAdapter(imageDataList));
+        recyclerView.setAdapter(new GridAdapter(imageDataList, this));
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+
+        prepareTransitions();
+        postponeEnterTransition();
 
         return view;
     }
