@@ -64,7 +64,9 @@ public class Client {
 
         initializationHTTPPOSTRequest(client, url, token, 1, zipFile.getName());
         sendFileHTTPPOSTRequest(client, url, token, zipFile, ZIP);
-        getFileHTTPGETRequest(client, url, token, result);
+        File tempPlyFile = Files.createTempFile(null, ".ply").toFile();
+        getFileHTTPGETRequest(client, url, token, tempPlyFile);
+        PlyWriter.rewritePlyFile(tempPlyFile, result);
     }
 
     private static void initializationHTTPPOSTRequest(OkHttpClient client, String url, String token, long numberOfFiles, String zipFileName) throws AppException {
