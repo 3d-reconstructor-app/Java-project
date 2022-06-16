@@ -2,8 +2,6 @@ package com.example.a3dmodel;
 
 import org.apache.commons.lang3.RandomStringUtils;
 
-import static com.example.a3dmodel.MainActivity.bitmapArrayList;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -32,8 +30,6 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.Toast;
 
-import com.example.a3dmodel.adapter.GridAdapter;
-
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -41,8 +37,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+import com.example.a3dmodel.adapter.GridAdapter;
 import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.exeption.TabPhotoException;
+
+import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 
 public class tabPhoto extends Fragment {
     static public RecyclerView recyclerView;
@@ -273,10 +272,10 @@ public class tabPhoto extends Fragment {
         assert getActivity() != null;
         if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
             Toast.makeText(
-                    getActivity(),
-                    "Write External Storage permission allows us to create files. Please allow this permission in App Settings.",
-                    Toast.LENGTH_LONG
-            )
+                            getActivity(),
+                            "Write External Storage permission allows us to create files. Please allow this permission in App Settings.",
+                            Toast.LENGTH_LONG
+                    )
                     .show();
         } else {
             ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
