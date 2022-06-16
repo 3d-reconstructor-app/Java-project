@@ -3,11 +3,14 @@
 package com.example.a3dmodel.photofragment;
 
 import androidx.annotation.DrawableRes;
+import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
 
+import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 //import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
@@ -17,7 +20,9 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
@@ -90,6 +95,22 @@ public class ImageFragment extends Fragment {
                     }
                 })
                 .into((ImageView) view.findViewById(R.id.image));
+
+
+        Button getBackButton = (Button) view.findViewById(R.id.back_button_in_image_view_transition);
+        assert getBackButton != null;
+        View.OnClickListener getBackButtonClickListener = new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(View v) {
+//                Toast.makeText(getContext(), "clicking back", Toast.LENGTH_SHORT).show();
+                getActivity().onBackPressed();
+            }
+        };
+
+        getBackButton.setOnClickListener(getBackButtonClickListener);
+
         return view;
     }
 }

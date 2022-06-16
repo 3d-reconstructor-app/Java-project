@@ -47,8 +47,6 @@ import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 public class TabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
-    @SuppressLint("StaticFieldLeak") // TODO make this not static to avoid memory leak
-//    public static FrameLayout frameLayout;
     private FrameLayout frameLayout;
 
     public static final int PERMISSION_REQUEST_CODE = 100;
@@ -56,17 +54,9 @@ public class TabPhoto extends Fragment {
     public static final int GALLERY_PIC_REQUEST = 1777;
     private static final int lengthOfRandomFileJPEGName = 10;
 
-
-    // TODO
     public final FrameLayout getFrameLayout() {
         return frameLayout;
     }
-
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-////        checkTextSeenStatus(getView());
-//        super.onCreate(savedInstanceState);
-//    }
 
     private void checkTextSeenStatus(View view) {
         if (TabPhoto.imageDataList.size() != 0) {
@@ -226,6 +216,7 @@ public class TabPhoto extends Fragment {
         };
 
         deleteButton.setOnClickListener(deleteButtonOnClickListener);
+
 
         makeTwoButtonsHide(buildButton, deleteButton);
 
