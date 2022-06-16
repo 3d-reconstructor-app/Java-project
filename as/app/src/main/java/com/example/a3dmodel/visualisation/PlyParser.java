@@ -11,6 +11,9 @@ import android.util.Log;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -288,9 +291,9 @@ public class PlyParser {
         }
     }
 
-    public static void rewritePlyFile() throws IOException {
-        BufferedReader reader = new BufferedReader(new InputStreamReader(Files.newInputStream(Paths.get("ply_test/giraffe.ply"))));
-        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(Files.newOutputStream(Paths.get("ply_test/new_giraffe.ply"))));
+    public static void rewritePlyFile(File source, File result) throws IOException {
+        BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(source)));
+        BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(new FileOutputStream(result)));
         writeLine(writer, reader.readLine()); // ply
         writeLine(writer, reader.readLine()); // format
         String str = reader.readLine();
