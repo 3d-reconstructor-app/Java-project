@@ -28,6 +28,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -54,13 +55,25 @@ public class tabPhoto extends Fragment {
     public static final int GALLERY_PIC_REQUEST = 1777;
     private static final int lengthOfRandomFileJPEGName = 10;
 
+    // TODO
     public FrameLayout getFrameLayout(){
         return frameLayout;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+//        checkTextSeenStatus(getView());
         super.onCreate(savedInstanceState);
+    }
+
+    private void checkTextSeenStatus(View view){
+        if(tabPhoto.imageDataList.size() != 0){
+            TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+            textView.setVisibility(View.GONE);
+        } else {
+            TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+            textView.setVisibility(View.VISIBLE);
+        }
     }
 
     @Nullable
@@ -73,6 +86,8 @@ public class tabPhoto extends Fragment {
 
         recyclerView.setAdapter(new GridAdapter(imageDataList, this));
         recyclerView.setLayoutManager(new GridLayoutManager(getContext(), 3));
+
+        checkTextSeenStatus(view);
 
 
         prepareTransitions();
@@ -291,7 +306,6 @@ public class tabPhoto extends Fragment {
     }
 
     public static void makeTwoButtonsHide(Button button1, Button button2) {
-
         button1.setVisibility(View.GONE);
         button2.setVisibility(View.GONE);
     }
@@ -324,6 +338,7 @@ public class tabPhoto extends Fragment {
     }
 
     private void prepareTransitions() {
+        System.out.println("CALLED PREPARE TRANSITION EXIT");
         setExitTransition(TransitionInflater.from(getContext())
                 .inflateTransition(R.transition.grid_exit_transition));
 
