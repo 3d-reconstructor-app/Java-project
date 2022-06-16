@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public static List<Bitmap> bitmapArrayList = new ArrayList<>();
     private ActivityMainBinding binding;
     public static int currentPosition;
-    private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
+    private static final String KEY_CURRENT_POSITION = "key.currentPosition";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {

@@ -54,6 +54,10 @@ public class tabPhoto extends Fragment {
     public static final int GALLERY_PIC_REQUEST = 1777;
     private static final int lengthOfRandomFileJPEGName = 10;
 
+    public FrameLayout getFrameLayout(){
+        return frameLayout;
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

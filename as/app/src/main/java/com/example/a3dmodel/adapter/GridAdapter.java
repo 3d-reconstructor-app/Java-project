@@ -67,7 +67,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
         imageDataList.add(new ImageData(bitmap));
     }
 
-
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -120,12 +119,13 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
         }
     }
 
-    public class ImageViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
+    public class ImageViewHolder extends RecyclerView.ViewHolder {
         // holder should contain a member variable for any view
         // that will be set as you render a row
         private final ImageView image;
         private final RequestManager requestManager;
         private final ViewHolderListener viewHolderListener;
+
         // create a constructor that accepts the entire item row
         // and does the view lookups to find each subview
         public ImageViewHolder(View itemView,
@@ -137,6 +137,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
             this.image = (ImageView) itemView.findViewById(R.id.card_image);
             this.requestManager = requestManager;
             this.viewHolderListener = viewHolderListener;
+//            itemView.findViewById(R.id.card_view).setOnClickListener(this);
 
 
             itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -148,7 +149,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                         itemView.setBackgroundColor(Color.TRANSPARENT);
                         selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
                     } else {
-                        itemView.setBackgroundResource(R.color.selectedItemInPhoto);
+                        itemView.setBackgroundResource(R.color.purple_200);
                         selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
                         selectedImagesViewWithBackgroundColor.add(itemView);
                     }
@@ -173,7 +174,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                             itemView.setBackgroundColor(Color.TRANSPARENT);
                             selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
                         } else {
-                            itemView.setBackgroundResource(R.color.selectedItemInPhoto);
+                            itemView.setBackgroundResource(R.color.purple_200);
                             selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
                             selectedImagesViewWithBackgroundColor.add(itemView);
                         }
@@ -184,8 +185,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                             isSelectMode = false;
                         }
                     } else {
-                        System.out.println("CLICKED OF IMAGE IN GRID IN CLICK LISTENER");
-
                         // TODO @@@SHER
                         //  what to do when just click on it -- open in another window
 
@@ -195,8 +194,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
             });
 
         }
-
-
 
 
         void onBind() {
@@ -235,15 +232,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                     })
                     .into(image);
         }
-
-
-        @Override
-        public void onClick(View view) {
-            System.out.println("CLICKED OF IMAGE IN GRID");
-            // TODO @@@SHER
-            //  what to do when just click on it -- open in another window
-            viewHolderListener.onItemClicked(view, getAdapterPosition());
-        }
     }
 
 
@@ -262,8 +250,8 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 
     private static class ViewHolderListenerImpl implements ViewHolderListener {
 
-        private Fragment fragment;
-        private AtomicBoolean enterTransitionStarted;
+        private final Fragment fragment;
+        private final AtomicBoolean enterTransitionStarted;
 
         ViewHolderListenerImpl(Fragment fragment) {
             this.fragment = fragment;
@@ -297,9 +285,11 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 
             // Exclude the clicked card from the exit transition (e.g. the card will disappear immediately
             // instead of fading out with the rest to prevent an overlapping animation of fade and move).
+            assert fragment.getExitTransition() != null;
             ((TransitionSet) fragment.getExitTransition()).excludeTarget(view, true);
 
             ImageView transitioningView = view.findViewById(R.id.card_image);
+            assert fragment.getFragmentManager() != null;
             fragment.getFragmentManager()
                     .beginTransaction()
                     .setReorderingAllowed(true) // Optimize for shared element transition

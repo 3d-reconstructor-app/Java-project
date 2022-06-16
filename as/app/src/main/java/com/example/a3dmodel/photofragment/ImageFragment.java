@@ -6,16 +6,19 @@ import androidx.annotation.DrawableRes;
 import androidx.fragment.app.Fragment;
 
 import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 //import androidx.annotation.DrawableRes;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.engine.GlideException;
@@ -30,15 +33,13 @@ import org.jetbrains.annotations.NotNull;
  */
 public class ImageFragment extends Fragment {
 
-    private static final String KEY_IMAGE_RES = "com.google.samples.gridtopager.key.imageRes";
+    private static final String KEY_IMAGE_RES = "key.BitmapImage";
 
     public static ImageFragment newInstance(@NotNull Bitmap bitmap) {
         ImageFragment fragment = new ImageFragment();
         Bundle bundle = new Bundle();
-        bundle.putParcelable("BitmapImage", bitmap);
+        bundle.putParcelable(KEY_IMAGE_RES, bitmap);
         fragment.setArguments(bundle);
-//        argument.putInt(KEY_IMAGE_RES, bitmap);
-//        fragment.setArguments(argument);
         return fragment;
     }
 
@@ -51,9 +52,7 @@ public class ImageFragment extends Fragment {
 
         Bundle arguments = getArguments();
         assert arguments != null;
-        Bitmap bitmapOfSelectedImage = arguments.getParcelable("BitmapImage");
-
-//        @DrawableRes int imageRes = arguments.getInt(KEY_IMAGE_RES);
+        Bitmap bitmapOfSelectedImage = arguments.getParcelable(KEY_IMAGE_RES);
 
         // Just like we do when binding views at the grid, we set the transition name to be the string
         // value of the image res.
@@ -64,21 +63,28 @@ public class ImageFragment extends Fragment {
                 .load(bitmapOfSelectedImage)
                 .listener(new RequestListener<Drawable>() {
                     @Override
-                    public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable>
-                            target, boolean isFirstResource) {
+                    public boolean onLoadFailed(@Nullable GlideException e,
+                                                Object model,
+                                                Target<Drawable> target,
+                                                boolean isFirstResource) {
                         // The postponeEnterTransition is called on the parent ImagePagerFragment, so the
                         // startPostponedEnterTransition() should also be called on it to get the transition
                         // going in case of a failure.
+                        assert getParentFragment() != null;
                         getParentFragment().startPostponedEnterTransition();
                         return false;
                     }
 
                     @Override
-                    public boolean onResourceReady(Drawable resource, Object model, Target<Drawable>
-                            target, DataSource dataSource, boolean isFirstResource) {
+                    public boolean onResourceReady(Drawable resource,
+                                                   Object model,
+                                                   Target<Drawable> target,
+                                                   DataSource dataSource,
+                                                   boolean isFirstResource) {
                         // The postponeEnterTransition is called on the parent ImagePagerFragment, so the
                         // startPostponedEnterTransition() should also be called on it to get the transition
                         // going when the image is ready.
+                        assert getParentFragment() != null;
                         getParentFragment().startPostponedEnterTransition();
                         return false;
                     }

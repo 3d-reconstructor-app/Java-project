@@ -2,20 +2,6 @@
 
 package com.example.a3dmodel.photofragment;
 
-//import android.os.Bundle;
-//import android.view.LayoutInflater;
-//import android.view.View;
-//import android.view.ViewGroup;
-//
-//import androidx.fragment.app.Fragment;
-//import androidx.transition.Transition;
-//import androidx.transition.TransitionInflater;
-//import androidx.viewpager.widget.ViewPager;
-//
-//import com.example.a3dmodel.MainActivity;
-//import com.example.a3dmodel.adapter.ImagePagerAdapter;
-//
-//import org.jetbrains.annotations.Nullable;
 
 import android.os.Bundle;
 
