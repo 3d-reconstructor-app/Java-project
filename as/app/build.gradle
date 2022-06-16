@@ -11,12 +11,7 @@ android {
 
     defaultConfig {
         applicationId "com.example.a3dmodel"
-        minSdk 21
-//<<<<<<< HEAD
-//        minSdk 21
-//=======
-//        minSdk 30
-//>>>>>>> visualisation
+        minSdk 26 // was 21
         targetSdk 32
         versionCode 1
         versionName "1.0"

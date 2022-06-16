@@ -16,6 +16,7 @@ import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.example.a3dmodel.exeption.AppException;
+import com.example.a3dmodel.visualisation.PlyParser;
 
 public class Client {
     private static final String IMAGE_STRING = "image/png";
@@ -66,7 +67,7 @@ public class Client {
         sendFileHTTPPOSTRequest(client, url, token, zipFile, ZIP);
         File tempPlyFile = Files.createTempFile(null, ".ply").toFile();
         getFileHTTPGETRequest(client, url, token, tempPlyFile);
-        PlyWriter.rewritePlyFile(tempPlyFile, result);
+        PlyParser.rewritePlyFile(tempPlyFile, result);
     }
 
     private static void initializationHTTPPOSTRequest(OkHttpClient client, String url, String token, long numberOfFiles, String zipFileName) throws AppException {
