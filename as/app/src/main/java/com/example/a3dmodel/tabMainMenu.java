@@ -32,7 +32,7 @@ import androidx.fragment.app.Fragment;
 
 /*
     ADVICE
-    you can see the "tabPhoto.java", "GridAdapter" and "ImageData" as examples
+    you can see the "TabPhoto.java", "GridAdapter" and "ImageData" as examples
  */
 
 

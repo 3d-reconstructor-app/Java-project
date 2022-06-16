@@ -44,30 +44,32 @@ import com.example.a3dmodel.exeption.TabPhotoException;
 
 import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 
-public class tabPhoto extends Fragment {
+public class TabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
     @SuppressLint("StaticFieldLeak") // TODO make this not static to avoid memory leak
-    public static FrameLayout frameLayout;
+//    public static FrameLayout frameLayout;
+    private FrameLayout frameLayout;
 
     public static final int PERMISSION_REQUEST_CODE = 100;
     public static final int CAMERA_PIC_REQUEST = 1888;
     public static final int GALLERY_PIC_REQUEST = 1777;
     private static final int lengthOfRandomFileJPEGName = 10;
 
+
     // TODO
-    public FrameLayout getFrameLayout(){
+    public final FrameLayout getFrameLayout() {
         return frameLayout;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-//        checkTextSeenStatus(getView());
-        super.onCreate(savedInstanceState);
-    }
+//    @Override
+//    public void onCreate(Bundle savedInstanceState) {
+////        checkTextSeenStatus(getView());
+//        super.onCreate(savedInstanceState);
+//    }
 
-    private void checkTextSeenStatus(View view){
-        if(tabPhoto.imageDataList.size() != 0){
+    private void checkTextSeenStatus(View view) {
+        if (TabPhoto.imageDataList.size() != 0) {
             TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
             textView.setVisibility(View.GONE);
         } else {
@@ -91,7 +93,7 @@ public class tabPhoto extends Fragment {
 
 
         prepareTransitions();
-        postponeEnterTransition();
+//        postponeEnterTransition();
 
         return view;
     }
@@ -189,7 +191,8 @@ public class tabPhoto extends Fragment {
                     }
                     GridAdapter.selectedImagesViewWithBackgroundColor.clear();
                     assert recyclerView.getAdapter() != null;
-                    GridAdapter.checkButtonsVisibility();
+                    ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
+//                    GridAdapter.checkButtonsVisibility();
                     recyclerView.getAdapter().notifyDataSetChanged();
                 }
 
@@ -216,7 +219,8 @@ public class tabPhoto extends Fragment {
                 }
                 GridAdapter.selectedImagesViewWithBackgroundColor.clear();
                 assert recyclerView.getAdapter() != null;
-                GridAdapter.checkButtonsVisibility();
+//                recyclerView.getAdapter().checkButtonsVisibility();
+
                 recyclerView.getAdapter().notifyDataSetChanged();
             }
         };

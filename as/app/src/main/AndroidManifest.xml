@@ -25,7 +25,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.3dModel">
         <activity
-            android:name=".tabPhoto"
+            android:name=".TabPhoto"
             android:exported="false"
             tools:ignore="Instantiatable" />
         <activity

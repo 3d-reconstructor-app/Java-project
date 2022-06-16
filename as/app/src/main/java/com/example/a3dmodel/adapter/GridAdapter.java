@@ -7,7 +7,6 @@ import android.graphics.Color;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.graphics.drawable.BitmapDrawable;
@@ -17,6 +16,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.example.a3dmodel.photofragment.ImagePagerFragment;
-import com.example.a3dmodel.tabPhoto;
+import com.example.a3dmodel.TabPhoto;
 
 /**
  * A fragment for displaying a grid of images.
@@ -51,14 +51,20 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
     public static boolean isSelectMode = false;
     private final RequestManager requestManager;
     private final ViewHolderListener viewHolderListener;
+//    private Fragment tabPhotoFragment;
+    private FrameLayout frameLayout;
 
-    public GridAdapter(List<ImageData> imageDataList, Fragment fragment) {
+    public GridAdapter(List<ImageData> imageDataList, TabPhoto fragment) {
+        frameLayout = fragment.getFrameLayout();
+        assert frameLayout != null;
         GridAdapter.imageDataList = imageDataList;
         this.requestManager = Glide.with(fragment);
         this.viewHolderListener = new ViewHolderListenerImpl(fragment);
     }
 
-    public GridAdapter(Fragment fragment) {
+    public GridAdapter(TabPhoto fragment) {
+        frameLayout = fragment.getFrameLayout();
+        assert frameLayout != null;
         this.requestManager = Glide.with(fragment);
         this.viewHolderListener = new ViewHolderListenerImpl(fragment);
     }
@@ -98,11 +104,12 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
         return imageDataList.size();
     }
 
-    public static void checkButtonsVisibility() {
-        @NotNull Button buttonGallery = tabPhoto.frameLayout.findViewById(R.id.button_gallery);
-        @NotNull Button buttonCamera = tabPhoto.frameLayout.findViewById(R.id.button_camera);
-        @NotNull Button buttonBuild3DModel = tabPhoto.frameLayout.findViewById(R.id.button_build);
-        @NotNull Button buttonDelete = tabPhoto.frameLayout.findViewById(R.id.button_delete);
+    public void checkButtonsVisibility() {
+        @NotNull Button buttonGallery = frameLayout.findViewById(R.id.button_gallery);
+        @NotNull Button buttonCamera = frameLayout.findViewById(R.id.button_camera);
+        @NotNull Button buttonBuild3DModel = frameLayout.findViewById(R.id.button_build);
+        @NotNull Button buttonDelete = frameLayout.findViewById(R.id.button_delete);
+
 
         if (selectedImageDataItems.size() != 0) {
             buttonGallery.setVisibility(View.GONE);

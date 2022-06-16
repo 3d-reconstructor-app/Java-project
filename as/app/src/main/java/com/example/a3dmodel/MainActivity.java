@@ -21,9 +21,9 @@ import android.widget.TextView;
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 import com.example.a3dmodel.databinding.ActivityMainBinding;
 
-import static com.example.a3dmodel.tabPhoto.CAMERA_PIC_REQUEST;
-import static com.example.a3dmodel.tabPhoto.GALLERY_PIC_REQUEST;
-import static com.example.a3dmodel.tabPhoto.PERMISSION_REQUEST_CODE;
+import static com.example.a3dmodel.TabPhoto.CAMERA_PIC_REQUEST;
+import static com.example.a3dmodel.TabPhoto.GALLERY_PIC_REQUEST;
+import static com.example.a3dmodel.TabPhoto.PERMISSION_REQUEST_CODE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,7 +59,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-//        if(tabPhoto.imageDataList.size() != 0){
+//        if(TabPhoto.imageDataList.size() != 0){
 //            TextView textView = findViewById(R.id.fragment_photo_empty_view);
 //            textView.setVisibility(View.GONE);
 //        } else {
@@ -76,7 +76,7 @@ public class MainActivity extends AppCompatActivity {
             assert imageBitmap != null;
 
             bitmapArrayList.add(imageBitmap);
-            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+            TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
             TextView textView = findViewById(R.id.fragment_photo_empty_view);
             textView.setVisibility(View.GONE);
         }
@@ -94,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
             }
             assert bitmap != null;
             bitmapArrayList.add(bitmap);
-            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+            TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
             TextView textView = findViewById(R.id.fragment_photo_empty_view);
             textView.setVisibility(View.GONE);
         }
