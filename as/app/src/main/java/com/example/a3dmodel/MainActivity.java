@@ -19,7 +19,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
-//import com.example.a3dmodel.databinding.ActivityMainBinding;
+import com.example.a3dmodel.databinding.ActivityMainBinding;
 
 import static com.example.a3dmodel.tabPhoto.CAMERA_PIC_REQUEST;
 import static com.example.a3dmodel.tabPhoto.GALLERY_PIC_REQUEST;

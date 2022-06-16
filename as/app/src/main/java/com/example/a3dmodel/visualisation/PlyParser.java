@@ -9,6 +9,8 @@ package com.example.a3dmodel.visualisation;
 
 import android.util.Log;
 
+import androidx.lifecycle.ViewModelProvider;
+
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.File;
@@ -222,17 +224,43 @@ public class PlyParser {
         double x, y, z;
         double nx, ny, nz;
         String red, green, blue, alpha = "255";
-        //TODO fix List.of
-        static final List<List<Double>> shifts = List.of(
-                List.of(-1.0, -1.0, -1.0), // 0
-                List.of(-1.0, -1.0, 1.0), // 1
-                List.of(-1.0, 1.0, -1.0), // 2
-                List.of(-1.0, 1.0, 1.0), // 3
-                List.of(1.0, -1.0, -1.0), // 4
-                List.of(1.0, -1.0, 1.0), // 5
-                List.of(1.0, 1.0, -1.0), // 6
-                List.of(1.0, 1.0, 1.0)  // 7
-        );
+//        static final List<List<Double>> shifts = List.of(
+//                List.of(-1.0, -1.0, -1.0), // 0
+//                List.of(-1.0, -1.0, 1.0), // 1
+//                List.of(-1.0, 1.0, -1.0), // 2
+//                List.of(-1.0, 1.0, 1.0), // 3
+//                List.of(1.0, -1.0, -1.0), // 4
+//                List.of(1.0, -1.0, 1.0), // 5
+//                List.of(1.0, 1.0, -1.0), // 6
+//                List.of(1.0, 1.0, 1.0)  // 7
+//        );
+        static final List<List<Double>> shifts = new ArrayList<>(8);
+        static {
+            List<Double> lst0 = new ArrayList<>(3);
+            lst0.add(-1.0); lst0.add(-1.0); lst0.add(-1.0);
+            shifts.add(lst0);
+            List<Double> lst1 = new ArrayList<>(3);
+            lst1.add(-1.0); lst1.add(-1.0); lst1.add(1.0);
+            shifts.add(lst1);
+            List<Double> lst2 = new ArrayList<>(3);
+            lst2.add(-1.0); lst2.add(1.0); lst2.add(-1.0);
+            shifts.add(lst2);
+            List<Double> lst3 = new ArrayList<>(3);
+            lst3.add(-1.0); lst3.add(1.0); lst3.add(1.0);
+            shifts.add(lst3);
+            List<Double> lst4 = new ArrayList<>(3);
+            lst4.add(1.0); lst4.add(-1.0); lst4.add(-1.0);
+            shifts.add(lst4);
+            List<Double> lst5 = new ArrayList<>(3);
+            lst5.add(1.0); lst5.add(-1.0); lst5.add(1.0);
+            shifts.add(lst5);
+            List<Double> lst6 = new ArrayList<>(3);
+            lst6.add(1.0); lst6.add(1.0); lst6.add(-1.0);
+            shifts.add(lst6);
+            List<Double> lst7 = new ArrayList<>(3);
+            lst7.add(1.0); lst7.add(1.0); lst7.add(1.0);
+            shifts.add(lst7);
+        }
 
         static final int scale = 1;
         static final double delta = 0.0003 * scale;
