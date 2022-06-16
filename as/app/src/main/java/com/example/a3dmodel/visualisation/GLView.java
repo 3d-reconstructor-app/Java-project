@@ -26,20 +26,31 @@ import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;
 
 public class GLView extends GLSurfaceView {
+//  private String model;
+  private Context c;
   private Renderer renderer;
   ScaleGestureDetector SGD;
   private float mPreviousX;
   private float mPreviousY;
+
 
   //  Constructor
   public GLView(Context context, AttributeSet attributeSet) {
     super(context, attributeSet);
     // Create an OpenGL ES 2.0 context
     setEGLContextClientVersion(2);
+    c = context;
     // Set the Renderer for drawing on the GLSurfaceView
-    renderer = new Renderer(context);
+  }
+
+//  public void setModel(String model) {
+//    this.model = model;
+//  }
+
+  public void makeRenderer(String model) {
+    renderer = new Renderer(c, model);
     setRenderer(renderer);
-    SGD = new ScaleGestureDetector(context, new ScaleListener());
+    SGD = new ScaleGestureDetector(c, new ScaleListener());
   }
 
   private class ScaleListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
@@ -104,11 +115,16 @@ public class GLView extends GLSurfaceView {
     private InputStream plyInput;
 
 
-    public Renderer(Context context) {
+    public Renderer(Context context, String model) {
       current_context = context;
       // Just in case we don't use the PLY in the future,
       // we need to give the user the option of switching out.
-//      plyInput = context.getResources().openRawResource(R.raw.new_giraffe);
+      try {
+        System.out.println(model);
+        plyInput = context.getAssets().open("models/" + model);
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
 
     public void onSurfaceCreated(GL10 gl,EGLConfig config) {

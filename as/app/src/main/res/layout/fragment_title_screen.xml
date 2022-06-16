@@ -13,15 +13,14 @@
         tools:layout_editor_absoluteY="0dp">
 
         <TextView
-            android:id="@+id/textView"
+            android:id="@+id/text_view_instruction"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="100dp"
             android:layout_gravity="center"
             android:gravity="center_horizontal"
             android:text="@string/app_name"
             android:textColor="@color/green"
-            />
+            android:textSize="100sp" />
 
     </FrameLayout>
 
