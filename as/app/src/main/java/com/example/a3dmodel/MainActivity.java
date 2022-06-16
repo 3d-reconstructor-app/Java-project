@@ -59,15 +59,6 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
 
-//        if(TabPhoto.imageDataList.size() != 0){
-//            TextView textView = findViewById(R.id.fragment_photo_empty_view);
-//            textView.setVisibility(View.GONE);
-//        } else {
-//            TextView textView = findViewById(R.id.fragment_photo_empty_view);
-//            textView.setVisibility(View.VISIBLE);
-//        }
-
-
         if (requestCode == CAMERA_PIC_REQUEST && resultCode == RESULT_OK) {
             assert data != null;
             Bundle extras = data.getExtras();

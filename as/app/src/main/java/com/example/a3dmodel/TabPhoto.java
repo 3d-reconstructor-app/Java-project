@@ -100,8 +100,14 @@ public class TabPhoto extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // TODO need to store photo directly in the system and save path for them
         Button cameraButton = (Button) view.findViewById(R.id.button_camera);
+        Button galleryButton = (Button) view.findViewById(R.id.button_gallery);
+
+        Button deleteButton = (Button) view.findViewById(R.id.button_delete);
+        Button buildButton = (Button) view.findViewById(R.id.button_build);
+
+
+        // TODO need to store photo directly in the system and save path for them
         View.OnClickListener cameraButtonOnClickListener = new View.OnClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @Override
@@ -116,7 +122,6 @@ public class TabPhoto extends Fragment {
         cameraButton.setOnClickListener(cameraButtonOnClickListener);
 
 
-        Button galleryButton = (Button) view.findViewById(R.id.button_gallery);
         View.OnClickListener galleryButtonOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -131,7 +136,6 @@ public class TabPhoto extends Fragment {
         galleryButton.setOnClickListener(galleryButtonOnClickListener);
 
 
-        Button buildButton = (Button) view.findViewById(R.id.button_build);
         View.OnClickListener selectButtonOnClickListener = new View.OnClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @RequiresApi(api = Build.VERSION_CODES.O)
@@ -184,6 +188,18 @@ public class TabPhoto extends Fragment {
                     ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
 //                    GridAdapter.checkButtonsVisibility();
                     recyclerView.getAdapter().notifyDataSetChanged();
+
+                    makeTwoButtonsHide(buildButton, deleteButton);
+                    makeTwoButtonsVisible(cameraButton, galleryButton);
+
+                    if(TabPhoto.imageDataList.size() != 0){
+                        TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                        textView.setVisibility(View.GONE);
+                    } else {
+                        TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                        textView.setVisibility(View.VISIBLE);
+                    }
+
                 }
 
 
@@ -192,8 +208,6 @@ public class TabPhoto extends Fragment {
 
         buildButton.setOnClickListener(selectButtonOnClickListener);
 
-
-        Button deleteButton = (Button) view.findViewById(R.id.button_delete);
         View.OnClickListener deleteButtonOnClickListener = new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @SuppressLint("NotifyDataSetChanged")
@@ -212,13 +226,30 @@ public class TabPhoto extends Fragment {
 //                recyclerView.getAdapter().checkButtonsVisibility();
 
                 recyclerView.getAdapter().notifyDataSetChanged();
+
+                makeTwoButtonsHide(buildButton, deleteButton);
+                makeTwoButtonsVisible(cameraButton, galleryButton);
+
+                if(TabPhoto.imageDataList.size() != 0){
+                    TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                    textView.setVisibility(View.GONE);
+                } else {
+                    TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                    textView.setVisibility(View.VISIBLE);
+                }
+
             }
         };
 
         deleteButton.setOnClickListener(deleteButtonOnClickListener);
 
-
         makeTwoButtonsHide(buildButton, deleteButton);
+        // just making sure
+        makeTwoButtonsVisible(cameraButton, galleryButton);
+
+
+
+
 
         scrollToPosition();
 
@@ -304,6 +335,12 @@ public class TabPhoto extends Fragment {
         button1.setVisibility(View.GONE);
         button2.setVisibility(View.GONE);
     }
+
+    public static void makeTwoButtonsVisible(Button button1, Button button2) {
+        button1.setVisibility(View.VISIBLE);
+        button2.setVisibility(View.VISIBLE);
+    }
+
 
 
     private void scrollToPosition() {
