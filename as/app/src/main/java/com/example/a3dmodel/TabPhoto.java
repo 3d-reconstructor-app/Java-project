@@ -109,13 +109,21 @@ public class TabPhoto extends Fragment {
 
         // TODO need to store photo directly in the system and save path for them
         View.OnClickListener cameraButtonOnClickListener = new View.OnClickListener() {
+
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
-                Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                assert getActivity() != null;
-                getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+                getActivity().runOnUiThread(new Thread(new Runnable() {
+                    public void run() {
+                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        assert getActivity() != null;
+                        getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+                    }
+                }));
+
+
             }
+
 
         };
 
@@ -125,130 +133,144 @@ public class TabPhoto extends Fragment {
         View.OnClickListener galleryButtonOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-                galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                assert getActivity() != null;
-                getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
+                getActivity().runOnUiThread(new Thread(new Runnable() {
+                    public void run() {
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                        galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        assert getActivity() != null;
+                        getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
 
+                    }
+                }));
             }
+
         };
 
         galleryButton.setOnClickListener(galleryButtonOnClickListener);
 
 
-        View.OnClickListener selectButtonOnClickListener = new View.OnClickListener() {
+        View.OnClickListener buildButtonOnClickListener = new View.OnClickListener() {
             @SuppressLint("NotifyDataSetChanged")
             @RequiresApi(api = Build.VERSION_CODES.O)
             @Override
             public void onClick(View v) {
-                try {
-                    int filesCount = GridAdapter.selectedImageDataItems.size();
-                    List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
-                    List<File> listOfJPEGFiles = new ArrayList<>();
+
+                getActivity().runOnUiThread(new Thread(new Runnable() {
+                    public void run() {
 
 
-                    for (int i = 0; i < filesCount; i++) {
-                        bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
-                    }
+                        try {
+                            int filesCount = GridAdapter.selectedImageDataItems.size();
+                            List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
+                            List<File> listOfJPEGFiles = new ArrayList<>();
 
-                    String state = Environment.getExternalStorageState();
-                    if (Environment.MEDIA_MOUNTED.equals(state)) {
-                        if (Build.VERSION.SDK_INT >= 23) {
-                            if (checkPermission()) {
-                                File sdcard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                                sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
-                            } else {
-                                requestPermission();
+
+                            for (int i = 0; i < filesCount; i++) {
+                                bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
                             }
-                        } else {
-                            File sdcard = Environment.getExternalStorageDirectory();
-                            sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
+
+                            String state = Environment.getExternalStorageState();
+                            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                                if (Build.VERSION.SDK_INT >= 23) {
+                                    if (checkPermission()) {
+                                        File sdcard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+                                        sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
+                                    } else {
+                                        requestPermission();
+                                    }
+                                } else {
+                                    File sdcard = Environment.getExternalStorageDirectory();
+                                    sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
+                                }
+                            }
+
+                            Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show();
+
+                            // TODO @@@ANDREY
+                            //  call right over here function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
+
+
+                        } catch (TabPhotoException e) {
+                            e.printStackTrace();
+                        } finally {
+                            /*
+                             * stop highlight selected photos
+                             */
+                            GridAdapter.selectedImageDataItems.clear();
+                            GridAdapter.isSelectMode = false;
+                            for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
+                                imageView.setBackgroundColor(Color.TRANSPARENT);
+                            }
+                            GridAdapter.selectedImagesViewWithBackgroundColor.clear();
+                            assert recyclerView.getAdapter() != null;
+                            ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
+                            recyclerView.getAdapter().notifyDataSetChanged();
+
+                            makeTwoButtonsHide(buildButton, deleteButton);
+
+                            if (TabPhoto.imageDataList.size() != 0) {
+                                TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                                textView.setVisibility(View.GONE);
+                            } else {
+                                TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                                textView.setVisibility(View.VISIBLE);
+                            }
+
                         }
+
                     }
 
-                    Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show();
-
-                    // TODO @@@ANDREY
-                    //  call right over here function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
-
-
-                } catch (TabPhotoException e) {
-                    e.printStackTrace();
-                } finally {
-                    /*
-                     * stop highlight selected photos
-                     */
-                    GridAdapter.selectedImageDataItems.clear();
-                    GridAdapter.isSelectMode = false;
-                    for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
-                        imageView.setBackgroundColor(Color.TRANSPARENT);
-                    }
-                    GridAdapter.selectedImagesViewWithBackgroundColor.clear();
-                    assert recyclerView.getAdapter() != null;
-                    ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
-//                    GridAdapter.checkButtonsVisibility();
-                    recyclerView.getAdapter().notifyDataSetChanged();
-
-                    makeTwoButtonsHide(buildButton, deleteButton);
-                    makeTwoButtonsVisible(cameraButton, galleryButton);
-
-                    if(TabPhoto.imageDataList.size() != 0){
-                        TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
-                        textView.setVisibility(View.GONE);
-                    } else {
-                        TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
-                        textView.setVisibility(View.VISIBLE);
-                    }
-
-                }
-
+                }));
 
             }
+
         };
 
-        buildButton.setOnClickListener(selectButtonOnClickListener);
+        buildButton.setOnClickListener(buildButtonOnClickListener);
 
         View.OnClickListener deleteButtonOnClickListener = new View.OnClickListener() {
             @RequiresApi(api = Build.VERSION_CODES.N)
             @SuppressLint("NotifyDataSetChanged")
             @Override
             public void onClick(View v) {
-                ArrayList<ImageData> selectedImages = new ArrayList<>(GridAdapter.selectedImageDataItems);
-                Toast.makeText(getContext(), "Deleted " + selectedImages + " images", Toast.LENGTH_SHORT).show();
-                GridAdapter.imageDataList.removeAll(selectedImages);
-                GridAdapter.selectedImageDataItems.clear();
-                GridAdapter.isSelectMode = false;
-                for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
-                    imageView.setBackgroundColor(Color.TRANSPARENT);
-                }
-                GridAdapter.selectedImagesViewWithBackgroundColor.clear();
-                assert recyclerView.getAdapter() != null;
-//                recyclerView.getAdapter().checkButtonsVisibility();
 
-                recyclerView.getAdapter().notifyDataSetChanged();
+                getActivity().runOnUiThread(new Thread(new Runnable() {
+                    public void run() {
+                        ArrayList<ImageData> selectedImages = new ArrayList<>(GridAdapter.selectedImageDataItems);
+                        Toast.makeText(getContext(), "Deleted " + selectedImages + " images", Toast.LENGTH_SHORT).show();
+                        GridAdapter.imageDataList.removeAll(selectedImages);
+                        GridAdapter.selectedImageDataItems.clear();
+                        GridAdapter.isSelectMode = false;
+                        for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
+                            imageView.setBackgroundColor(Color.TRANSPARENT);
+                        }
+                        GridAdapter.selectedImagesViewWithBackgroundColor.clear();
+                        assert recyclerView.getAdapter() != null;
+                        ((GridAdapter)recyclerView.getAdapter()).checkButtonsVisibility();
 
-                makeTwoButtonsHide(buildButton, deleteButton);
-                makeTwoButtonsVisible(cameraButton, galleryButton);
+                        recyclerView.getAdapter().notifyDataSetChanged();
 
-                if(TabPhoto.imageDataList.size() != 0){
-                    TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
-                    textView.setVisibility(View.GONE);
-                } else {
-                    TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
-                    textView.setVisibility(View.VISIBLE);
-                }
+                        makeTwoButtonsHide(buildButton, deleteButton);
 
+                        if (TabPhoto.imageDataList.size() != 0) {
+                            TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                            textView.setVisibility(View.GONE);
+                        } else {
+                            TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                            textView.setVisibility(View.VISIBLE);
+                        }
+
+
+                    }
+                }));
             }
         };
 
         deleteButton.setOnClickListener(deleteButtonOnClickListener);
 
+
         makeTwoButtonsHide(buildButton, deleteButton);
-        // just making sure
         makeTwoButtonsVisible(cameraButton, galleryButton);
-
-
-
 
 
         scrollToPosition();
@@ -340,7 +362,6 @@ public class TabPhoto extends Fragment {
         button1.setVisibility(View.VISIBLE);
         button2.setVisibility(View.VISIBLE);
     }
-
 
 
     private void scrollToPosition() {
