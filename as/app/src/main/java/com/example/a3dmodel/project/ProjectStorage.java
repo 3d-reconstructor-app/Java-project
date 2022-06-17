@@ -6,10 +6,10 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 
 import com.example.a3dmodel.App;
+import com.example.a3dmodel.TabPhoto;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.exeption.AmbiguousProjectNameException;
 import com.example.a3dmodel.exeption.ProjectException;
-import com.example.a3dmodel.tabPhoto;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -120,7 +120,7 @@ public class ProjectStorage implements Serializable {
             throw new ProjectException("Project doesn't exist");
         }
         currentProject = nameToProject.get(projectName);
-        tabPhoto.loadImagesFromCurrentProject();
+        TabPhoto.loadImagesFromCurrentProject();
     }
 
     public void saveProject() throws ProjectException {
