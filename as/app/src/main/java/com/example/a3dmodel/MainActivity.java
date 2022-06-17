@@ -21,9 +21,9 @@ import android.widget.TextView;
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 import com.example.a3dmodel.databinding.ActivityMainBinding;
 
-import static com.example.a3dmodel.tabPhoto.CAMERA_PIC_REQUEST;
-import static com.example.a3dmodel.tabPhoto.GALLERY_PIC_REQUEST;
-import static com.example.a3dmodel.tabPhoto.PERMISSION_REQUEST_CODE;
+import static com.example.a3dmodel.TabPhoto.CAMERA_PIC_REQUEST;
+import static com.example.a3dmodel.TabPhoto.GALLERY_PIC_REQUEST;
+import static com.example.a3dmodel.TabPhoto.PERMISSION_REQUEST_CODE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity {
     public static List<Bitmap> bitmapArrayList = new ArrayList<>();
     private ActivityMainBinding binding;
     public static int currentPosition;
-    private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
+    private static final String KEY_CURRENT_POSITION = "key.currentPosition";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
             assert imageBitmap != null;
 
             bitmapArrayList.add(imageBitmap);
-            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+            TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
             TextView textView = findViewById(R.id.fragment_photo_empty_view);
             textView.setVisibility(View.GONE);
         }
@@ -99,7 +99,7 @@ public class MainActivity extends AppCompatActivity {
             }
             assert bitmap != null;
             bitmapArrayList.add(bitmap);
-            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+            TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
             TextView textView = findViewById(R.id.fragment_photo_empty_view);
             textView.setVisibility(View.GONE);
         }

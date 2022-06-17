@@ -10,9 +10,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.a3dmodel.R;
+import com.example.a3dmodel.TabPhoto;
 import com.example.a3dmodel.tab3DPlain;
 import com.example.a3dmodel.tabMainMenu;
-import com.example.a3dmodel.tabPhoto;
 
 /**
  * A [FragmentPagerAdapter] that returns a fragment corresponding to
@@ -45,7 +45,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = new tabMainMenu();
                 break;
             case 2:
-                fragment = new tabPhoto();
+                fragment = new TabPhoto();
                 break;
         }
         assert fragment != null;

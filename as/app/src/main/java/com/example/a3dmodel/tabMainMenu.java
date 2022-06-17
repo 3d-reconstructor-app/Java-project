@@ -1,9 +1,6 @@
 package com.example.a3dmodel;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
-import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -35,7 +32,7 @@ import androidx.fragment.app.Fragment;
 
 /*
     ADVICE
-    you can see the "tabPhoto.java", "GridAdapter" and "ImageData" as examples
+    you can see the "TabPhoto.java", "GridAdapter" and "ImageData" as examples
  */
 
 
@@ -43,6 +40,6 @@ public class tabMainMenu extends Fragment {
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_main_menu, container,false);
+        return inflater.inflate(R.layout.fragment_tab_main_menu, container, false);
     }
 }
