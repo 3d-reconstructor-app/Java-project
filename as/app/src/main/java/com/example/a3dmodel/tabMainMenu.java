@@ -79,7 +79,7 @@ public class tabMainMenu extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     public static void updateProjectListAndSendItToAdapter() {
-        projectsData = storage.getAllSnapshots();
+        ProjectSnapshotAdapter.projects = storage.getAllSnapshots();
         assert recyclerView.getAdapter() != null;
 
         recyclerView.getAdapter().notifyDataSetChanged();
