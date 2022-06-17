@@ -34,9 +34,10 @@
             android:layout_height="wrap_content"
             android:layout_gravity="start"
             android:text="New project"
-            app:layout_constraintEnd_toStartOf="@id/button_show_list_of_projects"
             app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/button_show_list_of_projects"
             tools:ignore="MissingConstraints"
+            tools:layout_editor_absoluteX="96dp"
             tools:layout_editor_absoluteY="0dp" />
 
         <Button
