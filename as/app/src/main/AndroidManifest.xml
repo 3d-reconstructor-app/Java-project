@@ -11,6 +11,8 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
 
+    <uses-sdk android:minSdkVersion="30" />
+
     <uses-feature
         android:hardwareAccelerated="false"
         android:largeHeap="true"
@@ -18,9 +20,11 @@
         android:required="true" />
 
     <application
+        android:requestLegacyExternalStorage="true"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
+        android:name=".App"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.3dModel">
@@ -39,7 +43,16 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-    </application>
 
+<!--        <provider-->
+<!--            android:name="androidx.startup.InitializationProvider"-->
+<!--            android:authorities="${applicationId}.androidx-startup"-->
+<!--            android:exported="false"-->
+<!--            tools:node="merge">-->
+<!--            &lt;!&ndash; This entry makes ExampleLoggerInitializer discoverable. &ndash;&gt;-->
+<!--            <meta-data  android:name="com.example.a3dmodel.project.ProjectStorageInitializer"-->
+<!--                android:value="androidx.startup" />-->
+<!--        </provider>-->
+    </application>
 
 </manifest>

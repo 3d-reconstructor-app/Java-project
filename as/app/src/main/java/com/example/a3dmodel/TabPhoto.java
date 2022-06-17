@@ -9,10 +9,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
+import android.app.Application;
+import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
@@ -34,13 +37,16 @@ import android.widget.Toast;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import com.example.a3dmodel.adapter.GridAdapter;
 import com.example.a3dmodel.data.ImageData;
+import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.exeption.TabPhotoException;
+import com.example.a3dmodel.project.ProjectStorage;
 
 import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 
@@ -90,6 +96,9 @@ public class TabPhoto extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     public static void updateImageBitmapListAndSendItToTheAdapter() {
+        if (bitmapArrayList.isEmpty()) {
+            return;
+        }
         Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
         assert recyclerView.getAdapter() != null;
         imageDataList.add(new ImageData(lastPhotoBitmap));
@@ -100,143 +109,157 @@ public class TabPhoto extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        try {
-            Button cameraButton = (Button) view.findViewById(R.id.button_camera);
-            Button galleryButton = (Button) view.findViewById(R.id.button_gallery);
+        try{
+        //<<<<<<< HEAD
+        Button cameraButton = (Button) view.findViewById(R.id.button_camera);
+        Button galleryButton = (Button) view.findViewById(R.id.button_gallery);
+        Button deleteButton = (Button) view.findViewById(R.id.button_delete);
+        Button buildButton = (Button) view.findViewById(R.id.button_build);
 
-            Button deleteButton = (Button) view.findViewById(R.id.button_delete);
-            Button buildButton = (Button) view.findViewById(R.id.button_build);
+
+        App.getProjectStorage().loadProject();
 
 
-            // TODO need to store photo directly in the system and save path for them
-            View.OnClickListener cameraButtonOnClickListener = new View.OnClickListener() {
+        // TODO need to store photo directly in the system and save path for them
+        View.OnClickListener cameraButtonOnClickListener = new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @Override
+            public void onClick(View v) {
+                new Thread() {
+                    public void run() {
+                        Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+                        assert getActivity() != null;
+                        getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+                    }
+                }.start();
 
-                @SuppressLint("NotifyDataSetChanged")
-                @Override
-                public void onClick(View v) {
+            }
+        };
+        cameraButton.setOnClickListener(cameraButtonOnClickListener);
+
+
+
+        View.OnClickListener galleryButtonOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                new Thread() {
+                    public void run() {
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                        galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        assert getActivity() != null;
+                        getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
+
+                    }
+                }.start();
+            }
+
+        };
+        galleryButton.setOnClickListener(galleryButtonOnClickListener);
+
+
+
+        View.OnClickListener buildButtonOnClickListener = new View.OnClickListener() {
+            @SuppressLint("NotifyDataSetChanged")
+            @RequiresApi(api = Build.VERSION_CODES.O)
+            @Override
+            public void onClick(View v) {
+                try {
                     new Thread() {
                         public void run() {
-                            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                            assert getActivity() != null;
-                            getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
-                        }
-                    }.start();
+                            int filesCount = GridAdapter.selectedImageDataItems.size();
+                            List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
+                            List<File> listOfJPEGFiles = new ArrayList<>();
 
 
-                }
+                            for (int i = 0; i < filesCount; i++) {
+                                bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
+                            }
 
-
-            };
-
-            cameraButton.setOnClickListener(cameraButtonOnClickListener);
-
-
-            View.OnClickListener galleryButtonOnClickListener = new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    new Thread() {
-                        public void run() {
-                            Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-                            galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            assert getActivity() != null;
-                            getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
-
-                        }
-                    }.start();
-                }
-
-            };
-
-            galleryButton.setOnClickListener(galleryButtonOnClickListener);
-
-
-            View.OnClickListener buildButtonOnClickListener = new View.OnClickListener() {
-                @SuppressLint("NotifyDataSetChanged")
-                @RequiresApi(api = Build.VERSION_CODES.O)
-                @Override
-                public void onClick(View v) {
-                    try {
-                        new Thread() {
-                            public void run() {
-                                int filesCount = GridAdapter.selectedImageDataItems.size();
-                                List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
-                                List<File> listOfJPEGFiles = new ArrayList<>();
-
-
-                                for (int i = 0; i < filesCount; i++) {
-                                    bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
-                                }
-
-                                String state = Environment.getExternalStorageState();
-                                if (Environment.MEDIA_MOUNTED.equals(state)) {
-                                    if (Build.VERSION.SDK_INT >= 23) {
-                                        if (checkPermission()) {
-                                            File sdcard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
-                                            try {
-                                                sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
-                                            } catch (TabPhotoException e) {
-                                                e.printStackTrace();
-                                            }
-                                        } else {
-                                            requestPermission();
-                                        }
-                                    } else {
-                                        File sdcard = Environment.getExternalStorageDirectory();
+                            String state = Environment.getExternalStorageState();
+                            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                                if (Build.VERSION.SDK_INT >= 23) {
+                                    if (checkPermission()) {
+                                        File sdcard = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
                                         try {
                                             sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
-                                        } catch (TabPhotoException e) {
+                                        } catch (TabPhotoException | ProjectException e) {
                                             e.printStackTrace();
                                         }
+                                    } else {
+                                        requestPermission();
+                                    }
+                                } else {
+                                    File sdcard = Environment.getExternalStorageDirectory();
+                                    try {
+                                        sendSelectedPhotosToServerToBuild3DModel(sdcard, bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
+                                    } catch (TabPhotoException | ProjectException e) {
+                                        e.printStackTrace();
                                     }
                                 }
-
                             }
-                        }.start();
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-
-                        // TODO @@@ANDREY
-                        //  call right over here function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
-
-
-                    } finally {
-                        /*
-                         * stop highlight selected photos
-                         */
-                        GridAdapter.selectedImageDataItems.clear();
-                        GridAdapter.isSelectMode = false;
-                        for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
-                            imageView.setBackgroundColor(Color.TRANSPARENT);
                         }
-                        GridAdapter.selectedImagesViewWithBackgroundColor.clear();
-                        assert recyclerView.getAdapter() != null;
+                    }.start();
 
-                        assert getActivity() != null;
+                    getActivity().runOnUiThread(new Runnable() {
+                        public void run() {
+                            Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show();
+                        }
+                    });
 
-                        ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
+
+                    // TODO @@@ANDREY
+                    //  call right over here function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
+
+
+                } finally {
+                    /*
+                     * stop highlight selected photos
+                     */
+                    GridAdapter.selectedImageDataItems.clear();
+                    GridAdapter.isSelectMode = false;
+                    for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
+                        imageView.setBackgroundColor(Color.TRANSPARENT);
+                    }
+                    GridAdapter.selectedImagesViewWithBackgroundColor.clear();
+                    assert recyclerView.getAdapter() != null;
+
+                    assert getActivity() != null;
+
+                    ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
 
 
 //                                ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
-                        recyclerView.getAdapter().notifyDataSetChanged();
+                    recyclerView.getAdapter().notifyDataSetChanged();
 
-                        makeTwoButtonsHide(buildButton, deleteButton);
+//<<<<<<<HEAD
+                    makeTwoButtonsHide(buildButton, deleteButton);
 
-                        if (TabPhoto.imageDataList.size() != 0) {
-                            TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
-                            textView.setVisibility(View.GONE);
-                        } else {
-                            TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
-                            textView.setVisibility(View.VISIBLE);
-                        }
+                    if (TabPhoto.imageDataList.size() != 0) {
+                        TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                        textView.setVisibility(View.GONE);
+                    } else {
+                        TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                        textView.setVisibility(View.VISIBLE);
+                    }
+//=======
+//                } catch(TabPhotoException | ProjectException e){
+//                    e.printStackTrace();
+//                } finally{
+//                    /*
+//                     * stop highlight selected photos
+//                     */
+//                    GridAdapter.selectedImageDataItems.clear();
+//                    GridAdapter.isSelectMode = false;
+//                    for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
+//                        imageView.setBackgroundColor(Color.TRANSPARENT);
+//>>>>>>>AS_MainTab
                     }
                 }
 
-            };
+            }
+
+            ;
 
             buildButton.setOnClickListener(buildButtonOnClickListener);
 
@@ -315,7 +338,8 @@ public class TabPhoto extends Fragment {
 
             scrollToPosition();
 
-        } catch (Exception e) {
+
+        } catch(Exception | AssertionError e){
             e.printStackTrace();
         }
 
@@ -325,7 +349,7 @@ public class TabPhoto extends Fragment {
                                                           List<Bitmap> bitmapListOfSelectedImages,
                                                           List<File> listOfJPEGFiles,
                                                           int filesCount)
-            throws TabPhotoException {
+            throws TabPhotoException, ProjectException {
         // TODO  @@@ANDREY
         //  inside "jpegFiles" create dir with a name of current project, if we decide
         //  to save snapshot of current project
@@ -334,6 +358,13 @@ public class TabPhoto extends Fragment {
         //  maybe there is a point to create directory in a way -- CURRENT_PROJECT_NAME/JPEG_FILES/
         //                                                         CURRENT_PROJECT_NAME/3DMODELFILE
         //  if you decide so, change the path for "dir" File
+
+
+        ProjectStorage storage = App.getProjectStorage();
+        storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
+        storage.saveProject();
+        // TODO : store 3dModel in CURRENT_PROJECT_NAME/model/
+
 
         File dir = new File(sdcard.getAbsoluteFile() + "/jpegFiles/currentProject/");
 
@@ -350,7 +381,9 @@ public class TabPhoto extends Fragment {
             throw new TabPhotoException("dir does not a directory in checkPermission\\n");
         }
 
-        for (int i = 0; i < filesCount; i++) {
+        for (
+                int i = 0;
+                i < filesCount; i++) {
             String generatedFileNameForJPEGPhoto = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".jpg";
             File jpegFile = new File(dir, generatedFileNameForJPEGPhoto);
             FileOutputStream outputStream = null;
@@ -370,6 +403,7 @@ public class TabPhoto extends Fragment {
 
             listOfJPEGFiles.add(jpegFile);
         }
+
     }
 
 
@@ -458,4 +492,14 @@ public class TabPhoto extends Fragment {
                 });
     }
 
+    public static void addImage(Bitmap bitmap) {
+        bitmapArrayList.add(bitmap);
+        updateImageBitmapListAndSendItToTheAdapter();
+    }
+
+    public static void loadImagesFromCurrentProject() {
+        bitmapArrayList.clear();
+        bitmapArrayList.addAll(App.getProjectStorage().getCurrentProject().getImages());
+        updateImageBitmapListAndSendItToTheAdapter();
+    }
 }
