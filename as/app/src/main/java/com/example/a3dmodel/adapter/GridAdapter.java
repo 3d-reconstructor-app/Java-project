@@ -33,7 +33,9 @@ import com.example.a3dmodel.R;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 import com.example.a3dmodel.photofragment.ImagePagerFragment;
@@ -49,10 +51,16 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
     public static List<ImageData> selectedImageDataItems = new ArrayList<>();
     public static List<View> selectedImagesViewWithBackgroundColor = new ArrayList<>();
     public static boolean isSelectMode = false;
+    private Set<Integer> selectedPositionsOfImagesViews = new HashSet<>();
     private final RequestManager requestManager;
     private final ViewHolderListener viewHolderListener;
+
 //    private Fragment tabPhotoFragment;
     private FrameLayout frameLayout;
+
+    public Set<Integer> getSelectedPositionsOfImagesViews() {
+        return selectedPositionsOfImagesViews;
+    }
 
     public GridAdapter(List<ImageData> imageDataList, TabPhoto fragment) {
         frameLayout = fragment.getFrameLayout();
@@ -146,57 +154,51 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
             this.viewHolderListener = viewHolderListener;
 //            itemView.findViewById(R.id.card_view).setOnClickListener(this);
 
+            itemView.setOnLongClickListener(view -> {
+                isSelectMode = true;
+                if (selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))) {
+                    itemView.setBackgroundColor(Color.TRANSPARENT);
+                    selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
+                    selectedPositionsOfImagesViews.remove(getAdapterPosition());
+                } else {
+                    itemView.setBackgroundResource(R.color.purple_200);
+                    selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
+                    selectedImagesViewWithBackgroundColor.add(itemView);
+                    selectedPositionsOfImagesViews.add(getAdapterPosition());
+                }
 
-            itemView.setOnLongClickListener(new View.OnLongClickListener() {
-                @Override
-                public boolean onLongClick(View view) {
+                checkButtonsVisibility();
 
-                    isSelectMode = true;
+                if (selectedImageDataItems.size() == 0) {
+                    isSelectMode = false;
+
+                }
+                return true;
+            });
+
+            itemView.setOnClickListener(view -> {
+                if (isSelectMode) {
                     if (selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))) {
                         itemView.setBackgroundColor(Color.TRANSPARENT);
                         selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
+                        selectedPositionsOfImagesViews.remove(getAdapterPosition());
+
                     } else {
                         itemView.setBackgroundResource(R.color.purple_200);
                         selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
                         selectedImagesViewWithBackgroundColor.add(itemView);
+                        selectedPositionsOfImagesViews.add(getAdapterPosition());
                     }
-
 
                     checkButtonsVisibility();
-
                     if (selectedImageDataItems.size() == 0) {
                         isSelectMode = false;
-
                     }
-                    return true;
-                }
-            });
+                } else {
+                    // TODO @@@SHER
+                    //  what to do when just click on it -- open in another window
 
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    if (isSelectMode) {
-                        if (selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))) {
-                            itemView.setBackgroundColor(Color.TRANSPARENT);
-                            selectedImageDataItems.remove(imageDataList.get(getAdapterPosition()));
-                        } else {
-                            itemView.setBackgroundResource(R.color.purple_200);
-                            selectedImageDataItems.add(imageDataList.get(getAdapterPosition()));
-                            selectedImagesViewWithBackgroundColor.add(itemView);
-                        }
-
-                        checkButtonsVisibility();
-
-                        if (selectedImageDataItems.size() == 0) {
-                            isSelectMode = false;
-                        }
-                    } else {
-                        // TODO @@@SHER
-                        //  what to do when just click on it -- open in another window
-
-                        viewHolderListener.onItemClicked(view, getAdapterPosition());
-                    }
+                    viewHolderListener.onItemClicked(view, getAdapterPosition());
                 }
             });
 
@@ -223,7 +225,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                                                     Target<Drawable> target,
                                                     boolean isFirstResource) {
                             viewHolderListener.onLoadCompleted(image, adapterPosition);
-
                             return false;
                         }
 
