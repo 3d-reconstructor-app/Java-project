@@ -194,7 +194,7 @@ public class TabPhoto extends Fragment {
 
 //                    ((GridAdapter)recyclerView.getAdapter()).notifyItemRangeInserted();
 
-                    ((GridAdapter) recyclerView.getAdapter()).notifyDataSetChanged();
+//                    ((GridAdapter) recyclerView.getAdapter()).notifyDataSetChanged(); // TODO ??? maybe this should be called -- think about it
 
                     makeTwoButtonsHide(buildButton, deleteButton);
 
