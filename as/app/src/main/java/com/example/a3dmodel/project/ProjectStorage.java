@@ -61,6 +61,9 @@ public class ProjectStorage implements Serializable {
 //            Log.d(TAG, "Error while cleaning resource folder");
 //        }
         for (File projectFile : resources.listFiles()) {
+            if (projectFile.isDirectory()) {
+                continue;
+            }
             try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(projectFile))) {
                 Project proj = Project.deserialize(in);
                 projects.add(proj);
@@ -92,7 +95,7 @@ public class ProjectStorage implements Serializable {
 
     public Project getLastOrCreate() {
         if (projects.isEmpty()) {
-            Project sampleProject = createNewProject("Unnamed Project", false);
+            Project sampleProject = createNewProject("Sample Project", false);
             try {
                 saveProject(sampleProject, false);
             } catch (ProjectException e) {
@@ -105,7 +108,7 @@ public class ProjectStorage implements Serializable {
     public void addProject(Project project) {
         projects.add(project);
         nameToProject.put(project.getProjectName(), project);
-        com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+        tabMainMenu.updateProjectListAndSendItToAdapter();
     }
 
     public void renameCurrentProject(String name) throws AmbiguousProjectNameException {

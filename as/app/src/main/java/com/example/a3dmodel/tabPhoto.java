@@ -44,10 +44,12 @@ import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.exeption.TabPhotoException;
+import com.example.a3dmodel.project.Project;
 import com.example.a3dmodel.project.ProjectStorage;
 
 public class tabPhoto extends Fragment {
@@ -90,6 +92,7 @@ public class tabPhoto extends Fragment {
         assert recyclerView.getAdapter() != null;
         imageDataList.add(new ImageData(lastPhotoBitmap));
         recyclerView.getAdapter().notifyDataSetChanged();
+        App.getProjectStorage().getCurrentProject().addImages(List.of(lastPhotoBitmap));
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -221,6 +224,8 @@ public class tabPhoto extends Fragment {
                 assert recyclerView.getAdapter() != null;
                 GridAdapter.checkButtonsVisibility();
                 recyclerView.getAdapter().notifyDataSetChanged();
+                Project project = App.getProjectStorage().getCurrentProject();
+                project.deleteImages(selectedImages.stream().map(ImageData::getImageBitmap).collect(Collectors.toList()));
             }
         };
 
@@ -248,7 +253,7 @@ public class tabPhoto extends Fragment {
 
 
         ProjectStorage storage = App.getProjectStorage();
-        storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
+//        storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
         storage.saveProject();
             // TODO : store 3dModel in CURRENT_PROJECT_NAME/model/
 

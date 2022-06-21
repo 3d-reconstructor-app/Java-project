@@ -108,7 +108,7 @@ public class tabMainMenu extends Fragment {
             public void onClick(View v) {
                 try {
                     storage.saveProject();
-                    Toast.makeText(getContext(), "Saved project " + storage.getCurrentProject(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Saved project " + storage.getCurrentProject().getProjectName(), Toast.LENGTH_SHORT).show();
                 }
                 catch(ProjectException e) {
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();

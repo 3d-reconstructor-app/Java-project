@@ -64,6 +64,10 @@ public class Project implements Comparable<Project>, Serializable {
         images.addAll(imgs);
     }
 
+    public void deleteImages(@NonNull List<Bitmap> imgs) {
+        images.removeAll(imgs);
+    }
+
     public List<ImageData> getImageData() {
         return images.stream().map(ImageData::new).collect(Collectors.toList());
     }
@@ -108,7 +112,7 @@ public class Project implements Comparable<Project>, Serializable {
         Project proj = (Project) in.readObject();
         File projectDataFile = ProjectFileManager.getProjectDataFile(proj.getProjectName());
         proj.images = new ArrayList<>();
-        Files.walk(projectDataFile.toPath()).forEach(imgFile -> proj.images.add(BitmapFactory.decodeFile(imgFile.toString())));
+        Files.list(projectDataFile.toPath()).forEach(imgFile -> proj.images.add(BitmapFactory.decodeFile(imgFile.toString())));
         return proj;
     }
 
