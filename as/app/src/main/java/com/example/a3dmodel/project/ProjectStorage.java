@@ -1,5 +1,7 @@
 package com.example.a3dmodel.project;
 
+import static android.content.ContentValues.TAG;
+
 import android.content.Context;
 import android.util.Log;
 
@@ -18,9 +20,11 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
+import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import com.example.a3dmodel.tabMainMenu;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -45,18 +49,31 @@ public class ProjectStorage implements Serializable {
     public static ProjectStorage build() throws ProjectException {
         File resources = App.getContext().getFilesDir();
         List<Project> projects = new ArrayList<>();
+//        try {
+//            Files.walk(resources.toPath()).forEach(f -> {
+//                try {
+//                    Files.delete(f.toAbsolutePath());
+//                } catch (IOException e) {
+//                    Log.d(TAG, "Unable to delete file " + f);
+//                }
+//            });
+//        } catch (IOException e) {
+//            Log.d(TAG, "Error while cleaning resource folder");
+//        }
         for (File projectFile : resources.listFiles()) {
-            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(projectFile))) {
-                Project proj = (Project) in.readObject();
-                projects.add(proj);
+            if (projectFile.isDirectory()) {
+                continue;
             }
-            catch(IOException | ClassNotFoundException e) {
+            try (ObjectInputStream in = new ObjectInputStream(new FileInputStream(projectFile))) {
+                Project proj = Project.deserialize(in);
+                projects.add(proj);
+            } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Unable to load project : " + projectFile);
             }
         }
         ProjectStorage storage = new ProjectStorage(projects);
         storage.currentProject = storage.getLastOrCreate();
-        return new ProjectStorage(projects);
+        return storage;
     }
 
     public void loadProject() throws ProjectException {
@@ -68,9 +85,7 @@ public class ProjectStorage implements Serializable {
     }
 
     public Project getCurrentProject() {
-        if (currentProject == null) {
-            currentProject = getLastOrCreate();
-        }
+        assert(currentProject != null);
         return currentProject;
     }
 
@@ -80,7 +95,12 @@ public class ProjectStorage implements Serializable {
 
     public Project getLastOrCreate() {
         if (projects.isEmpty()) {
-            return createNewProject("Unnamed Project", false);
+            Project sampleProject = createNewProject("Sample Project", false);
+            try {
+                saveProject(sampleProject, false);
+            } catch (ProjectException e) {
+                Log.d(TAG, "Error while saving sample project");
+            }
         }
         return projects.get(projects.size() - 1);
     }
@@ -88,7 +108,7 @@ public class ProjectStorage implements Serializable {
     public void addProject(Project project) {
         projects.add(project);
         nameToProject.put(project.getProjectName(), project);
-        com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+        tabMainMenu.updateProjectListAndSendItToAdapter();
     }
 
     public void renameCurrentProject(String name) throws AmbiguousProjectNameException {
@@ -124,13 +144,30 @@ public class ProjectStorage implements Serializable {
     }
 
     public void saveProject() throws ProjectException {
-        String currentProjectName = getCurrentProject().getProjectName();
-        try (FileOutputStream fileOut = App.getContext().openFileOutput(currentProjectName, Context.MODE_PRIVATE); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
-            out.writeObject(currentProject);
+        saveProject(getCurrentProject(), true);
+    }
+
+    private void saveProject(@NonNull Project projectToSave, boolean notify) throws ProjectException {
+        String projectName = projectToSave.getProjectName();
+        try (FileOutputStream fileOut = App.getContext().openFileOutput(projectName, Context.MODE_PRIVATE); ObjectOutputStream out = new ObjectOutputStream(fileOut)) {
+            projectToSave.serialize(out);
+        } catch (IOException e) {
+            throw new ProjectException("Couldn't write project file for " + projectName);
         }
-        catch(IOException e) {
-            throw new ProjectException("Couldn't write project file for " + currentProjectName);
+        if (notify) {
+            com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
         }
-        com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+    }
+
+    public void deleteProjectByName(String projectName) throws IOException {
+        Project projectToDelete = App.getProjectStorage().nameToProject.get(projectName);
+        deleteProject(projectToDelete);
+    }
+
+    public void deleteProject(Project projectToDelete) throws IOException {
+        projects.remove(projectToDelete);
+        nameToProject.remove(projectToDelete.getProjectName());
+        projectToDelete.clear();
+        tabMainMenu.updateProjectListAndSendItToAdapter();
     }
 }

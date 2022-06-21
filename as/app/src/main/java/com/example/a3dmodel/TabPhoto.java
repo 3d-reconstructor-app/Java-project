@@ -113,14 +113,6 @@ public class TabPhoto extends Fragment {
         } catch (TabPhotoException e) {
             e.printStackTrace();
         }
-
-//        Path projectDataDirPath = App.getContext()
-//                .getFilesDir()
-//                .toPath()
-//                .resolve(ProjectFileManager.getProjectDataDirName(projectName));
-//        File projectDataDir = new File(projectDataDirPath.toString());
-//        projectDataDir.mkdir();
-
     }
 
     @Nullable
@@ -151,11 +143,21 @@ public class TabPhoto extends Fragment {
         assert recyclerView.getAdapter() != null;
         imageDataList.add(new ImageData(lastPhotoBitmap));
         recyclerView.getAdapter().notifyDataSetChanged();
+        App.getProjectStorage().getCurrentProject().addImages(List.of(lastPhotoBitmap));
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public static void updateAllImagesAndSendItToAdapter() {
+        imageDataList.clear();
+        bitmapArrayList.forEach(i -> imageDataList.add(new ImageData(i)));
+        assert recyclerView.getAdapter() != null;
+        recyclerView.getAdapter().notifyDataSetChanged();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        checkTextSeenStatus(view);
 
         try {
             Button cameraButton = (Button) view.findViewById(R.id.button_camera);
@@ -164,21 +166,22 @@ public class TabPhoto extends Fragment {
             Button buildButton = (Button) view.findViewById(R.id.button_build);
 
 
-            App.getProjectStorage().loadProject();
-
+            try {
+                App.getProjectStorage().loadProject();
+            } catch (ProjectException e) {
+                Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
 
             // TODO need to store photo directly in the system and save path for them
             View.OnClickListener cameraButtonOnClickListener = new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
                 public void onClick(View v) {
-                    new Thread() {
-                        public void run() {
-                            Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-                            assert getActivity() != null;
-                            getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
-                        }
-                    }.start();
+                    new Thread(() -> {
+                        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        assert getActivity() != null;
+                        getActivity().startActivityForResult(cameraIntent, CAMERA_PIC_REQUEST);
+                    }).start();
 
                 }
             };
@@ -188,15 +191,13 @@ public class TabPhoto extends Fragment {
             View.OnClickListener galleryButtonOnClickListener = new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    new Thread() {
-                        public void run() {
-                            Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-                            galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                            assert getActivity() != null;
-                            getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
+                    new Thread(() -> {
+                        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+                        galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                        assert getActivity() != null;
+                        getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
 
-                        }
-                    }.start();
+                    }).start();
                 }
 
             };
@@ -209,8 +210,6 @@ public class TabPhoto extends Fragment {
                 @Override
                 public void onClick(View v) {
                     try {
-//                    new Thread() {
-//                        public void run() {
                         int filesCount = GridAdapter.selectedImageDataItems.size();
                         List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
 
@@ -219,39 +218,26 @@ public class TabPhoto extends Fragment {
                         }
 
                         String state = Environment.getExternalStorageState();
-                        if (Environment.MEDIA_MOUNTED.equals(state)) {
-                            if (Build.VERSION.SDK_INT >= 23) {
-                                if (checkPermission()) {
-                                    try {
+                        try {
+                            if (Environment.MEDIA_MOUNTED.equals(state)) {
+                                if (Build.VERSION.SDK_INT >= 23) {
+                                    if (checkPermission()) {
                                         sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, filesCount);
-                                    } catch (TabPhotoException | ProjectException | AppException | IOException e) {
-                                        e.printStackTrace();
+                                    } else {
+                                        requestPermission();
                                     }
                                 } else {
-                                    requestPermission();
-                                }
-                            } else {
-                                try {
                                     sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, filesCount);
-                                } catch (TabPhotoException | ProjectException | AppException | IOException e) {
-                                    e.printStackTrace();
+
                                 }
                             }
+                        } catch (TabPhotoException | ProjectException | AppException | IOException e) {
+                            e.printStackTrace();
                         }
 
-//                        }
-//                    }.start();
 
-                        getActivity().runOnUiThread(new Runnable() {
-                            public void run() {
-                                Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-
-                        // TODO @@@ANDREY
-                        //  call right over here function for building 3D-MODEL with args -- ( "listOfJPEGFiles" )
-
+                        assert getActivity() != null;
+                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show());
 
                     } finally {
                         /*
@@ -294,63 +280,53 @@ public class TabPhoto extends Fragment {
                 @RequiresApi(api = Build.VERSION_CODES.N)
                 @Override
                 public void onClick(View v) {
+                    new Thread(() -> {
+                        ArrayList<ImageData> selectedImages = new ArrayList<>(GridAdapter.selectedImageDataItems);
+                        assert getActivity() != null;
+                        getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Deleted " + selectedImages + " images", Toast.LENGTH_SHORT).show());
+                        GridAdapter.imageDataList.removeAll(selectedImages);
+                        GridAdapter.selectedImageDataItems.clear();
+                        GridAdapter.isSelectMode = false;
+                        assert getActivity() != null;
+
+                        getActivity().runOnUiThread(() -> {
+                            for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
+                                imageView.setBackgroundColor(Color.TRANSPARENT);
+                            }
+                            GridAdapter.selectedImagesViewWithBackgroundColor.clear();
+
+                        });
+
+                        assert recyclerView.getAdapter() != null;
+
+                        assert getActivity() != null;
+
+                        getActivity().runOnUiThread(() -> {
+                            ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
 
 
-                    new Thread() {
-                        public void run() {
-                            ArrayList<ImageData> selectedImages = new ArrayList<>(GridAdapter.selectedImageDataItems);
-                            assert getActivity() != null;
-                            getActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    Toast.makeText(getContext(), "Deleted " + selectedImages + " images", Toast.LENGTH_SHORT).show();
-                                }
-                            });
-                            GridAdapter.imageDataList.removeAll(selectedImages);
-                            GridAdapter.selectedImageDataItems.clear();
-                            GridAdapter.isSelectMode = false;
-                            assert getActivity() != null;
+                            recyclerView.getAdapter().notifyDataSetChanged();
 
-                            getActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
-                                        imageView.setBackgroundColor(Color.TRANSPARENT);
-                                    }
-                                    GridAdapter.selectedImagesViewWithBackgroundColor.clear();
-
-                                }
-                            });
-
-                            assert recyclerView.getAdapter() != null;
-
-                            assert getActivity() != null;
-
-                            getActivity().runOnUiThread(new Runnable() {
-                                public void run() {
-                                    ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
-
-                                    recyclerView.getAdapter().notifyDataSetChanged();
-
+                            // TODO
 //                                    for (Integer i : ((GridAdapter) recyclerView.getAdapter()).getSelectedPositionsOfImagesViews()) {
 //                                        recyclerView.getAdapter().notifyItemRemoved(i);
 //                                        ((GridAdapter) recyclerView.getAdapter()).getSelectedPositionsOfImagesViews().remove(i);
 //                                    }
 
-                                    makeTwoButtonsHide(buildButton, deleteButton);
+                            makeTwoButtonsHide(buildButton, deleteButton);
 
-                                    if (TabPhoto.imageDataList.size() != 0) {
-                                        TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
-                                        textView.setVisibility(View.GONE);
-                                    } else {
-                                        TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
-                                        textView.setVisibility(View.VISIBLE);
-                                    }
+                            if (TabPhoto.imageDataList.size() != 0) {
+                                TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                                textView.setVisibility(View.GONE);
+                            } else {
+                                TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
+                                textView.setVisibility(View.VISIBLE);
+                            }
 
-                                }
-                            });
+                        });
 
 
-                        }
-                    }.start();
+                    }).start();
                 }
             };
 
@@ -375,7 +351,7 @@ public class TabPhoto extends Fragment {
                                                           int filesCount)
             throws TabPhotoException, ProjectException, AppException, IOException {
         ProjectStorage storage = App.getProjectStorage();
-        storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
+//        storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
         storage.saveProject();
 
 
@@ -450,11 +426,7 @@ public class TabPhoto extends Fragment {
     private boolean checkPermission() {
         assert getActivity() != null;
         int result = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        if (result == PackageManager.PERMISSION_GRANTED) {
-            return true;
-        } else {
-            return false;
-        }
+        return result == PackageManager.PERMISSION_GRANTED;
     }
 
     private void requestPermission() {
@@ -540,6 +512,6 @@ public class TabPhoto extends Fragment {
     public static void loadImagesFromCurrentProject() {
         bitmapArrayList.clear();
         bitmapArrayList.addAll(App.getProjectStorage().getCurrentProject().getImages());
-        updateImageBitmapListAndSendItToTheAdapter();
+        updateAllImagesAndSendItToAdapter();
     }
 }
