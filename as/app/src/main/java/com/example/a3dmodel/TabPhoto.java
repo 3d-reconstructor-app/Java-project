@@ -184,8 +184,6 @@ public class TabPhoto extends Fragment {
 //                        public void run() {
                         int filesCount = GridAdapter.selectedImageDataItems.size();
                         List<Bitmap> bitmapListOfSelectedImages = new ArrayList<>();
-                        List<File> listOfJPEGFiles = new ArrayList<>();
-
 
                         for (int i = 0; i < filesCount; i++) {
                             bitmapListOfSelectedImages.add(GridAdapter.selectedImageDataItems.get(i).getImageBitmap());
@@ -196,7 +194,7 @@ public class TabPhoto extends Fragment {
                             if (Build.VERSION.SDK_INT >= 23) {
                                 if (checkPermission()) {
                                     try {
-                                        sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
+                                        sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, filesCount);
                                     } catch (TabPhotoException | ProjectException | AppException | IOException e ) {
                                         e.printStackTrace();
                                     }
@@ -205,7 +203,7 @@ public class TabPhoto extends Fragment {
                                 }
                             } else {
                                 try {
-                                    sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, listOfJPEGFiles, filesCount);
+                                    sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, filesCount);
                                 } catch (TabPhotoException | ProjectException | AppException | IOException e ) {
                                     e.printStackTrace();
                                 }
@@ -345,12 +343,12 @@ public class TabPhoto extends Fragment {
     }
 
     private void sendSelectedPhotosToServerToBuild3DModel(List<Bitmap> bitmapListOfSelectedImages,
-                                                          List<File> listOfJPEGFiles,
                                                           int filesCount)
             throws TabPhotoException, ProjectException, AppException, IOException {
         ProjectStorage storage = App.getProjectStorage();
         storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
         storage.saveProject();
+
 
 
         // TODO : store 3dModel in CURRENT_PROJECT_NAME/model/
@@ -366,6 +364,8 @@ public class TabPhoto extends Fragment {
 //        название проекта -- модель
 
 //        httpClientRequest
+
+        List<File> listOfJPEGFiles = new ArrayList<>();
 
 
         for (int i = 0; i < filesCount; i++) {
@@ -410,6 +410,7 @@ public class TabPhoto extends Fragment {
 
 
         clearDirectory(cacheTmpDirectory.toFile());
+
     }
 
     private void clearDirectory(File fileOrDirectory){
