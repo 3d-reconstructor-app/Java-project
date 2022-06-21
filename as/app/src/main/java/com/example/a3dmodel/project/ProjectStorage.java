@@ -40,7 +40,6 @@ public class ProjectStorage implements Serializable {
 
     private ProjectStorage(List<Project> projectList) throws ProjectException {
         this();
-        File resources = App.getContext().getFilesDir();
         projects.addAll(projectList);
         projectList.forEach(p -> nameToProject.put(p.getProjectName(), p));
     }
@@ -82,9 +81,7 @@ public class ProjectStorage implements Serializable {
     }
 
     public Project getCurrentProject() {
-        if (currentProject == null) {
-            currentProject = getLastOrCreate();
-        }
+        assert(currentProject != null);
         return currentProject;
     }
 
@@ -167,5 +164,6 @@ public class ProjectStorage implements Serializable {
         projects.remove(projectToDelete);
         nameToProject.remove(projectToDelete.getProjectName());
         projectToDelete.clear();
+
     }
 }

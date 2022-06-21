@@ -55,6 +55,7 @@ public class tabPhoto extends Fragment {
     static public List<ImageData> imageDataList = new ArrayList<>();
     @SuppressLint("StaticFieldLeak") // TODO make this not static to avoid memory leak
     public static FrameLayout frameLayout;
+    private ProjectStorage storage = App.getProjectStorage();
 
     public static final int PERMISSION_REQUEST_CODE = 100;
     public static final int CAMERA_PIC_REQUEST = 1888;
@@ -88,6 +89,14 @@ public class tabPhoto extends Fragment {
         Bitmap lastPhotoBitmap = bitmapArrayList.get(bitmapArrayList.size() - 1);
         assert recyclerView.getAdapter() != null;
         imageDataList.add(new ImageData(lastPhotoBitmap));
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public static void updateAllImagesAndSendItToAdapter() {
+        imageDataList.clear();
+        bitmapArrayList.forEach(i -> imageDataList.add(new ImageData(i)));
+        assert recyclerView.getAdapter() != null;
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 
@@ -220,7 +229,7 @@ public class tabPhoto extends Fragment {
         makeTwoButtonsHide(buildButton, deleteButton);
 
         scrollToPosition();
-
+        loadImagesFromCurrentProject();
     }
 
     private void sendSelectedPhotosToServerToBuild3DModel(File sdcard,
@@ -373,6 +382,6 @@ public class tabPhoto extends Fragment {
     public static void loadImagesFromCurrentProject() {
         bitmapArrayList.clear();
         bitmapArrayList.addAll(App.getProjectStorage().getCurrentProject().getImages());
-        updateImageBitmapListAndSendItToTheAdapter();
+        updateAllImagesAndSendItToAdapter();
     }
 }

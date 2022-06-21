@@ -88,11 +88,15 @@ public class Project implements Comparable<Project>, Serializable {
         out.writeObject(this);
         Path projectDataDirPath = App.getContext().getFilesDir().toPath().resolve(ProjectFileManager.getProjectDataDirName(projectName));
         File projectDataDir = new File(projectDataDirPath.toString());
-        FileUtils.deleteDirectory(projectDataDir);
+        if (projectDataDir.exists()) {
+            FileUtils.cleanDirectory(projectDataDir);
+            FileUtils.deleteDirectory(projectDataDir);
+        }
         projectDataDir.mkdir();
         for (int i = 0; i < images.size(); i++) {
             try (FileOutputStream fout = new FileOutputStream(new File(projectDataDir, "img" + i + ".jpeg")); ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
                 images.get(i).compress(Bitmap.CompressFormat.JPEG, 100, stream);
+                stream.flush();
                 fout.write(stream.toByteArray());
             }
         }
