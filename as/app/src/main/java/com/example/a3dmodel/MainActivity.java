@@ -91,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
             assert data != null;
 
             Uri imageUri = data.getData(); // TODO SAVE IT
-
             Bitmap bitmap = null;
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);

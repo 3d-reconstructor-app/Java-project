@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 
+import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.example.a3dmodel.R;
@@ -19,6 +20,7 @@ public class SaveProjectDialog extends DialogFragment {
     ArrayAdapter<CharSequence> adapter;
 //    final EditText editTextName = new EditText(SaveProjectDialog.this);
     EditText txt; // user input bar
+    @NonNull
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
