@@ -382,17 +382,6 @@ public class TabPhoto extends Fragment {
         // TODO : store 3dModel in CURRENT_PROJECT_NAME/model/
 
 
-        // project -- folder with
-//        File file = App.getContext().getFilesDir(); // папака в которйо хранятся все файловые проекты
-//
-//        App.getContext().openFileOutput();
-//        App.getContext().openFileInput();
-
-//        проекта -- проект + дата -- там фотографии --
-//        название проекта -- модель
-
-//        httpClientRequest
-
         List<File> listOfJPEGFiles = new ArrayList<>();
 
         if (this.cacheTmpDirectory == null || this.outputDirModels == null) {
@@ -402,12 +391,7 @@ public class TabPhoto extends Fragment {
         System.out.println(outputDirModels);
         for (int i = 0; i < filesCount; i++) {
             String generatedFileNameForJPEGPhoto = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".jpg";
-//            Path jpegFile = Files.createFile(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto));
             File jpegFile = new File(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto).toString());
-//            FileOutputStream outputStream = App.getContext().openFileOutput(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto).toString(), 0);
-
-
-//            File jpegFile = App.getContext().getFileStreamPath(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto).toString());
             FileOutputStream outputStream = null;
             try {
                 outputStream = new FileOutputStream(jpegFile);
@@ -432,21 +416,22 @@ public class TabPhoto extends Fragment {
         }
 
         String currentProjectName = storage.getCurrentProject().getProjectName();
-        Path path = Paths.get(currentProjectName, "model");
-//        if(!App.getContext().getFilesDir().exists(path.toFile())){
-        Files.createDirectory(path);
-//        }
 
 
-        String generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
-        while (Files.exists(path.resolve(generatedFileNameForMODEL))) {
+
+        String generatedFileNameForMODEL;
+        File resultFileFor3DModel;
+
+        do {
             generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
-        }
+            resultFileFor3DModel = new File(outputDirModels.resolve(generatedFileNameForMODEL).toString());
+        } while (Files.exists(outputDirModels.resolve(generatedFileNameForMODEL)));
 
 
-        Path resultFileFor3DModel = Files.createFile(path.resolve(generatedFileNameForMODEL));
+        System.out.println("Result model file --  " + resultFileFor3DModel.toString());
 
-        Client.httpClientRequest(listOfJPEGFiles, resultFileFor3DModel.toFile());
+
+        Client.httpClientRequest(listOfJPEGFiles, resultFileFor3DModel);
 
 
         clearDirectory(cacheTmpDirectory.toFile());
