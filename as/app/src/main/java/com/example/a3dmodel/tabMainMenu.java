@@ -1,13 +1,36 @@
 package com.example.a3dmodel;
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.ListView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.a3dmodel.adapter.ProjectSnapshotAdapter;
+import com.example.a3dmodel.data.ProjectSnapshot;
+import com.example.a3dmodel.exeption.ProjectException;
+import com.example.a3dmodel.project.Project;
+import com.example.a3dmodel.project.ProjectStorage;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /* TODO @@@ANDREY
@@ -30,6 +53,7 @@ import androidx.fragment.app.Fragment;
 
  */
 
+
 /*
     ADVICE
     you can see the "TabPhoto.java", "GridAdapter" and "ImageData" as examples
@@ -37,9 +61,105 @@ import androidx.fragment.app.Fragment;
 
 
 public class tabMainMenu extends Fragment {
-    @Nullable
+    static private ProjectStorage storage = App.getProjectStorage();
+    static private RecyclerView recyclerView;
+    static private List<ProjectSnapshot> projectsData = storage.getAllSnapshots();
+
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        return inflater.inflate(R.layout.fragment_tab_main_menu, container, false);
+        View view = inflater.inflate(R.layout.fragment_tab_main_menu, container, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.projectsView);
+
+        recyclerView = view.findViewById(R.id.projectsView);
+        recyclerView.setAdapter(new ProjectSnapshotAdapter(projectsData));
+        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        return view;
+    }
+
+    @SuppressLint("NotifyDataSetChanged")
+    public static void updateProjectListAndSendItToAdapter() {
+        ProjectSnapshotAdapter.projects = storage.getAllSnapshots();
+        assert recyclerView.getAdapter() != null;
+
+        recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        Button createButton = (Button) view.findViewById(R.id.button_create_new_project);
+        View.OnClickListener createButtonOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                App.getProjectStorage().createNewProject("Unnamed");
+            }
+        };
+        createButton.setOnClickListener(createButtonOnClickListener);
+
+        Button saveButton = (Button) view.findViewById(R.id.button_save_project);
+        View.OnClickListener saveButtonOnClickListener = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDialog();
+            }
+        };
+        saveButton.setOnClickListener(saveButtonOnClickListener);
+        scrollToPosition();
+    }
+
+    private void scrollToPosition() {
+        recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v,
+                                       int left,
+                                       int top,
+                                       int right,
+                                       int bottom,
+                                       int oldLeft,
+                                       int oldTop,
+                                       int oldRight,
+                                       int oldBottom) {
+                recyclerView.removeOnLayoutChangeListener(this);
+                final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
+                assert layoutManager != null;
+                View viewAtPosition = layoutManager.findViewByPosition(MainActivity.currentPosition);
+                // Scroll to position if the view for the current position is null (not currently part of
+                // layout manager children), or it's not completely visible.
+                if (viewAtPosition == null || layoutManager
+                        .isViewPartiallyVisible(viewAtPosition, false, true)) {
+                    recyclerView.post(() -> layoutManager.scrollToPosition(MainActivity.currentPosition));
+                }
+            }
+        });
+    }
+
+    private void showDialog() {
+        final Dialog dialog = new Dialog(this.getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_save_project);
+
+        final EditText projectName = dialog.findViewById(R.id.editTextProjectName);
+        Button submitButton = dialog.findViewById(R.id.save_submit);
+
+        submitButton.setOnClickListener((v) -> {
+            String name = projectName.getText().toString();
+            processSaving(name);
+            dialog.dismiss();
+        });
+
+        dialog.show();
+    }
+
+    private void processSaving(String name) {
+        try {
+            storage.renameCurrentProject(name);
+            storage.saveProject();
+        }
+        catch(ProjectException e) {
+            Toast.makeText(this.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }
