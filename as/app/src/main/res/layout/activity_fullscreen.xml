@@ -57,7 +57,8 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 android:nestedScrollingEnabled="true"
-                android:text="@string/dummy_button" />
+                android:text="@string/dummy_button"
+                android:focusable="true" />
 
             <Button
                 android:id="@+id/exit_button"
@@ -67,8 +68,8 @@
                 android:layout_weight="1"
                 android:clickable="true"
                 android:nestedScrollingEnabled="true"
-                android:onClick="exitVisualisation"
-                android:text="@string/exit" />
+                android:text="@string/exit"
+                android:focusable="true" />
         </LinearLayout>
     </FrameLayout>
 
