@@ -417,15 +417,16 @@ public class TabPhoto extends Fragment {
 
         String currentProjectName = storage.getCurrentProject().getProjectName();
 
-
+        File projectDirectoryForModels = new File(outputDirModels.resolve(currentProjectName).toString());
+        projectDirectoryForModels.mkdir();
 
         String generatedFileNameForMODEL;
         File resultFileFor3DModel;
 
         do {
             generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
-            resultFileFor3DModel = new File(outputDirModels.resolve(generatedFileNameForMODEL).toString());
-        } while (Files.exists(outputDirModels.resolve(generatedFileNameForMODEL)));
+            resultFileFor3DModel = new File(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL).toString());
+        } while (Files.exists(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL)));
 
 
         System.out.println("Result model file --  " + resultFileFor3DModel.toString());
