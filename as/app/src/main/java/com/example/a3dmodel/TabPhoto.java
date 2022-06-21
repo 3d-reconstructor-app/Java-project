@@ -26,6 +26,7 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -49,6 +50,7 @@ import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.exeption.AppException;
 import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.exeption.TabPhotoException;
+import com.example.a3dmodel.project.ProjectFileManager;
 import com.example.a3dmodel.project.ProjectStorage;
 
 import static com.example.a3dmodel.MainActivity.bitmapArrayList;
@@ -57,7 +59,6 @@ public class TabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
     private FrameLayout frameLayout;
-    private File directoryFor3DModels;
     private Path outputDirModels;
     private Path cacheTmpDirectory;
     public static final int PERMISSION_REQUEST_CODE = 100;
@@ -79,19 +80,47 @@ public class TabPhoto extends Fragment {
         }
     }
 
-    private void initializePathsForDirectory(){
-        Path cacheDirectory = App.getContext().getCacheDir().toPath(); // context being the Activity pointer
-        Path outputDir = App.getContext().getFilesDir().toPath(); // context being the Activity pointer
+    private void initializePathsForDirectory() {
+        Path dirPath = App.getContext().getFilesDir().toPath();
 
-        Path cacheTmpDirectory = cacheDirectory.resolve("tmp");
-        Path outputDirModels = outputDir.resolve("models");
+        this.cacheTmpDirectory = dirPath.resolve("tmp");
+        this.outputDirModels = dirPath.resolve("models");
+
+        System.out.println(cacheTmpDirectory.toString());
+        System.out.println(outputDirModels.toString());
+
+
+        File cacheTmpDirectoryFile = new File(cacheTmpDirectory.toString());
+        File outputDirModelsFile = new File(outputDirModels.toString());
+
+        System.out.println(cacheTmpDirectoryFile.isDirectory());
+        System.out.println(outputDirModelsFile.isDirectory());
 
         try {
-            this.cacheTmpDirectory = Files.createDirectory(cacheTmpDirectory);
-            this.outputDirModels = Files.createDirectory(outputDirModels);
-        } catch (IOException e) {
+            boolean res = true;
+            if (!cacheTmpDirectoryFile.isDirectory()) {
+                if (!cacheTmpDirectoryFile.mkdir()) {
+                    throw new TabPhotoException("could not create directory for cacheTmpDirectory");
+
+                }
+            }
+            if (!outputDirModelsFile.isDirectory()) {
+                if (!outputDirModelsFile.mkdir()) {
+                    throw new TabPhotoException("could not create directory for outputDirModels");
+                }
+            }
+
+        } catch (TabPhotoException e) {
             e.printStackTrace();
         }
+
+//        Path projectDataDirPath = App.getContext()
+//                .getFilesDir()
+//                .toPath()
+//                .resolve(ProjectFileManager.getProjectDataDirName(projectName));
+//        File projectDataDir = new File(projectDataDirPath.toString());
+//        projectDataDir.mkdir();
+
     }
 
     @Nullable
@@ -195,7 +224,7 @@ public class TabPhoto extends Fragment {
                                 if (checkPermission()) {
                                     try {
                                         sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, filesCount);
-                                    } catch (TabPhotoException | ProjectException | AppException | IOException e ) {
+                                    } catch (TabPhotoException | ProjectException | AppException | IOException e) {
                                         e.printStackTrace();
                                     }
                                 } else {
@@ -204,7 +233,7 @@ public class TabPhoto extends Fragment {
                             } else {
                                 try {
                                     sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, filesCount);
-                                } catch (TabPhotoException | ProjectException | AppException | IOException e ) {
+                                } catch (TabPhotoException | ProjectException | AppException | IOException e) {
                                     e.printStackTrace();
                                 }
                             }
@@ -350,7 +379,6 @@ public class TabPhoto extends Fragment {
         storage.saveProject();
 
 
-
         // TODO : store 3dModel in CURRENT_PROJECT_NAME/model/
 
 
@@ -367,13 +395,22 @@ public class TabPhoto extends Fragment {
 
         List<File> listOfJPEGFiles = new ArrayList<>();
 
-
+        if (this.cacheTmpDirectory == null || this.outputDirModels == null) {
+            initializePathsForDirectory();
+        }
+        System.out.println(cacheTmpDirectory);
+        System.out.println(outputDirModels);
         for (int i = 0; i < filesCount; i++) {
             String generatedFileNameForJPEGPhoto = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".jpg";
-            Path jpegFile = Files.createFile(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto));
+//            Path jpegFile = Files.createFile(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto));
+            File jpegFile = new File(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto).toString());
+//            FileOutputStream outputStream = App.getContext().openFileOutput(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto).toString(), 0);
+
+
+//            File jpegFile = App.getContext().getFileStreamPath(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto).toString());
             FileOutputStream outputStream = null;
             try {
-                outputStream = new FileOutputStream(jpegFile.toFile());
+                outputStream = new FileOutputStream(jpegFile);
                 assert bitmapListOfSelectedImages.get(i) != null;
 
                 if (bitmapListOfSelectedImages.get(i).compress(Bitmap.CompressFormat.JPEG, 100, outputStream)) {
@@ -386,20 +423,23 @@ public class TabPhoto extends Fragment {
                 throw new TabPhotoException("Caught exception in button build in checkPermission\\n", e);
             }
 
-            listOfJPEGFiles.add(jpegFile.toFile());
+            listOfJPEGFiles.add(jpegFile);
         }
 
 
+        for (File f : listOfJPEGFiles) {
+            System.out.println(f.getName().toString());
+        }
 
         String currentProjectName = storage.getCurrentProject().getProjectName();
         Path path = Paths.get(currentProjectName, "model");
-        if(!Files.exists(path)){
-            Files.createDirectory(path);
-        }
+//        if(!App.getContext().getFilesDir().exists(path.toFile())){
+        Files.createDirectory(path);
+//        }
 
 
         String generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
-        while(Files.exists(path.resolve(generatedFileNameForMODEL))){
+        while (Files.exists(path.resolve(generatedFileNameForMODEL))) {
             generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
         }
 
@@ -413,7 +453,7 @@ public class TabPhoto extends Fragment {
 
     }
 
-    private void clearDirectory(File fileOrDirectory){
+    private void clearDirectory(File fileOrDirectory) {
         if (fileOrDirectory.isDirectory())
             for (File child : fileOrDirectory.listFiles())
                 clearDirectory(child);
