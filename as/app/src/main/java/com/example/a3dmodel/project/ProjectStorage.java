@@ -24,6 +24,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import com.example.a3dmodel.tabMainMenu;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -137,6 +138,7 @@ public class ProjectStorage implements Serializable {
         }
         currentProject = nameToProject.get(projectName);
         tabPhoto.loadImagesFromCurrentProject();
+
     }
 
     public void saveProject() throws ProjectException {
@@ -164,6 +166,6 @@ public class ProjectStorage implements Serializable {
         projects.remove(projectToDelete);
         nameToProject.remove(projectToDelete.getProjectName());
         projectToDelete.clear();
-
+        tabMainMenu.updateProjectListAndSendItToAdapter();
     }
 }

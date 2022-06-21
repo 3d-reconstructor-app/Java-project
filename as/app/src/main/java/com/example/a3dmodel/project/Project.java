@@ -93,6 +93,7 @@ public class Project implements Comparable<Project>, Serializable {
             FileUtils.deleteDirectory(projectDataDir);
         }
         projectDataDir.mkdir();
+        System.out.println("images size = " + images.size());
         for (int i = 0; i < images.size(); i++) {
             try (FileOutputStream fout = new FileOutputStream(new File(projectDataDir, "img" + i + ".jpeg")); ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
                 images.get(i).compress(Bitmap.CompressFormat.JPEG, 100, stream);

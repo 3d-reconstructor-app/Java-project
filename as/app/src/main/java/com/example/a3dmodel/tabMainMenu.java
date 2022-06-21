@@ -97,7 +97,7 @@ public class tabMainMenu extends Fragment {
         View.OnClickListener createButtonOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                App.getProjectStorage().createNewProject("Unnamed");
+                showDialog();
             }
         };
         createButton.setOnClickListener(createButtonOnClickListener);
@@ -106,7 +106,13 @@ public class tabMainMenu extends Fragment {
         View.OnClickListener saveButtonOnClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDialog();
+                try {
+                    storage.saveProject();
+                    Toast.makeText(getContext(), "Saved project " + storage.getCurrentProject(), Toast.LENGTH_SHORT).show();
+                }
+                catch(ProjectException e) {
+                    Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                }
             }
         };
         saveButton.setOnClickListener(saveButtonOnClickListener);
@@ -152,16 +158,18 @@ public class tabMainMenu extends Fragment {
 
         submitButton.setOnClickListener((v) -> {
             String name = projectName.getText().toString();
-            processSaving(name);
+            createNewProjectAndSave(name);
             dialog.dismiss();
+            Toast.makeText(this.getContext(), "Project " + name + " is loaded", Toast.LENGTH_SHORT).show();
         });
 
         dialog.show();
     }
 
-    private void processSaving(String name) {
+    private void createNewProjectAndSave(String name) {
         try {
-            storage.renameCurrentProject(name);
+            storage.createNewProject(name);
+            storage.openExistingProject(name);
             storage.saveProject();
         }
         catch(ProjectException e) {
