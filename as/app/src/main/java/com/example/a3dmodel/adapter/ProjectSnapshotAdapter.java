@@ -2,7 +2,9 @@ package com.example.a3dmodel.adapter;
 
 import android.content.Context;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -27,6 +29,7 @@ import java.util.List;
 public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshotAdapter.SnapshotViewHolder> {
     public static List<ProjectSnapshot> projects = new ArrayList<>();
     public Context projectsContext;
+    private int position;
 
     public ProjectSnapshotAdapter(List<ProjectSnapshot> snapshotList) {
        projects = snapshotList;
@@ -43,6 +46,7 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
         return snapshotViewHolder;
     }
 
+
     @Override
     public void onBindViewHolder(@NonNull SnapshotViewHolder holder, int position) {
         ProjectSnapshot projectSnapshot = projects.get(position);
@@ -50,7 +54,22 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
         holder.projectIcon.setImageResource(projectSnapshot.getProjectIcon());
         holder.projectName.setText(projectSnapshot.getProjectName());
         holder.creationDate.setText(projectSnapshot.getModTime());
+
+        holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+            @Override
+            public boolean onLongClick(View v) {
+                setPosition(holder.getPosition());
+                return false;
+            }
+        });
     }
+
+    @Override
+    public void onViewRecycled(SnapshotViewHolder holder) {
+        holder.itemView.setOnLongClickListener(null);
+        super.onViewRecycled(holder);
+    }
+
 
     @Override
     public int getItemCount() {
@@ -58,7 +77,15 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
         return projects.size();
     }
 
-    public static class SnapshotViewHolder extends RecyclerView.ViewHolder {
+    public int getPosition() {
+        return position;
+    }
+
+    public void setPosition(int position) {
+        this.position = position;
+    }
+
+    public static class SnapshotViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
         public ImageView projectIcon;
         public TextView projectName;
         public TextView creationDate;
@@ -82,9 +109,21 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
                     catch(ProjectException e) {
                         Toast.makeText(itemView.getContext(), "Couldn't load the project", Toast.LENGTH_LONG).show();
                     }
-
                 }
             });
+            v.setOnCreateContextMenuListener(this);
+//            v.setOnLongClickListener(new View.OnLongClickListener() {
+//                @Override
+//                public boolean onLongClick(View view) {
+//                }
+//            });
+
+        }
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v,
+                                        ContextMenu.ContextMenuInfo menuInfo) {
+            menu.add(Menu.NONE, R.id.option_1,
+                    Menu.NONE, R.string.delete_option);
         }
     }
 }

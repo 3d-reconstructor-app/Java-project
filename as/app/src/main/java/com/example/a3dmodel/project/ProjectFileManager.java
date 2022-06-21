@@ -56,4 +56,16 @@ public class ProjectFileManager {
         }
         return true;
     }
+
+    @NonNull
+    @Contract(pure = true)
+    public static String getProjectDataDirName(String projectName) {
+        return projectName + "Data";
+    }
+
+    @NonNull
+    @Contract("_ -> new")
+    public static File getProjectDataFile(String projectName) {
+        return new File(App.getContext().getFilesDir(), ProjectFileManager.getProjectDataDirName(projectName));
+    }
 }

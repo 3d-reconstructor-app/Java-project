@@ -1,5 +1,7 @@
 package com.example.a3dmodel;
 
+import static android.content.ContentValues.TAG;
+
 import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
@@ -7,6 +9,7 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
@@ -29,6 +32,7 @@ import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.project.Project;
 import com.example.a3dmodel.project.ProjectStorage;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -61,9 +65,9 @@ import java.util.List;
 
 
 public class tabMainMenu extends Fragment {
-    static private ProjectStorage storage = App.getProjectStorage();
+    private ProjectStorage storage = App.getProjectStorage();
     static private RecyclerView recyclerView;
-    static private List<ProjectSnapshot> projectsData = storage.getAllSnapshots();
+    static private List<ProjectSnapshot> projectsData = App.getProjectStorage().getAllSnapshots();
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -79,7 +83,7 @@ public class tabMainMenu extends Fragment {
 
     @SuppressLint("NotifyDataSetChanged")
     public static void updateProjectListAndSendItToAdapter() {
-        ProjectSnapshotAdapter.projects = storage.getAllSnapshots();
+        ProjectSnapshotAdapter.projects = App.getProjectStorage().getAllSnapshots();
         assert recyclerView.getAdapter() != null;
 
         recyclerView.getAdapter().notifyDataSetChanged();
@@ -107,6 +111,8 @@ public class tabMainMenu extends Fragment {
         };
         saveButton.setOnClickListener(saveButtonOnClickListener);
         scrollToPosition();
+
+        registerForContextMenu(recyclerView);
     }
 
     private void scrollToPosition() {
@@ -162,4 +168,29 @@ public class tabMainMenu extends Fragment {
             Toast.makeText(this.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        int position = -1;
+        try {
+            position = ((ProjectSnapshotAdapter)recyclerView.getAdapter()).getPosition();
+        } catch (Exception e) {
+            Log.d(TAG, e.getLocalizedMessage(), e);
+            return super.onContextItemSelected(item);
+        }
+        switch (item.getItemId()) {
+            case R.id.option_1:
+                String selectedProjectName = projectsData.get(position).getProjectName();
+                try {
+                    storage.deleteProjectByName(selectedProjectName);
+                }
+                catch(IOException e) {
+                    Toast.makeText(this.getContext(), "Couldn't delete project " + selectedProjectName, Toast.LENGTH_LONG).show();
+                }
+                break;
+        }
+        return super.onContextItemSelected(item);
+    }
+
+
 }

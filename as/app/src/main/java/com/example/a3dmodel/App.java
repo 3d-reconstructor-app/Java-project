@@ -15,27 +15,23 @@ import java.io.IOException;
 import java.nio.file.Files;
 
 public class App extends android.app.Application {
-    static {
-////        System.out.println("Resources located : " + ProjectFileManager.getRootPath());
-//        System.out.println("StorageDir : " + Environment.getStorageDirectory());
-//        System.out.println("StorageDir is accessible : " + Environment.getStorageDirectory().exists());
-//        System.out.println("Creating resource dir...");
-//        ProjectFileManager.createRootPath();
-//        System.out.println("Resources folder exists : " + Files.exists(ProjectFileManager.getRootPath()));
-//        System.out.println("Application initialized");
-
-    }
     private static Application application;
-//    private Project currentProject;
-    private static ProjectStorage projectStorage;
-//    public Project getCurrentProject() {
-//        return currentProject;
-//    }
+    private static Context context;
+    private static ProjectStorage projectStorage = null;
 
-    public App() {
-
+    private void initializeProjectStorage() {
+        try {
+            projectStorage = ProjectStorage.build();
+        }
+        catch(ProjectException e) {
+            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
+
     public static ProjectStorage getProjectStorage() {
+        if (projectStorage == null) {
+
+        }
         return projectStorage;
     }
 
@@ -48,36 +44,15 @@ public class App extends android.app.Application {
     }
 
     public static Context getContext() {
-        return getApplication().getApplicationContext();
-    }
-
-    public static void clear() {
-        try {
-            Files.walk(getContext().getFilesDir().toPath()).forEach(f -> {try {
-                Files.delete(f);
-            }
-            catch(IOException e) {
-                Log.d("Cleaning", "IOException!");
-            }});
-        }
-        catch(IOException e) {
-            Log.d("Cleaning", "IOException!");
-        }
+        return context;
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
         application = this;
-        try {
-            projectStorage = ProjectStorage.build();
-        }
-        catch(ProjectException e) {
-            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+        context = getApplicationContext();
+        initializeProjectStorage();
     }
 
-//    public void setCurrentProject(Project currentProject) {
-//        this.currentProject = currentProject;
-//    }
 }
