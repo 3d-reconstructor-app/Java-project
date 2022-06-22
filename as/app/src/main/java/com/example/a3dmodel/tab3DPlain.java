@@ -16,6 +16,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.a3dmodel.visualisation.GLView;
@@ -92,16 +93,25 @@ public class tab3DPlain extends Fragment {
                 return;
             }
 
+//            fragment.getFragmentManager()
+//                    .beginTransaction()
+//                    .setReorderingAllowed(true) // Optimize for shared element transition
+//                    .addSharedElement(transitioningView, transitioningView.getTransitionName())
+//                    .replace(R.id.fragment_photo, new ImagePagerFragment(), ImagePagerFragment.class
+//                            .getSimpleName())
+//                    .addToBackStack(null)
+//                    .commit();
+
+
             assert getActivity() != null;
 //            getActivity().setContentView(R.layout.activity_fullscreen);
-
             assert getFragmentManager() != null;
             getFragmentManager()
                     .beginTransaction()
                     .setReorderingAllowed(true)
-                    .replace(R.id.fragment_3d, new tab3DPlain(), View3DFragment.class.getSimpleName())
+                    .replace(R.id.fragment_3d, new View3DFragment(getFragmentManager()), View3DFragment.class.getSimpleName())
                     .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                    .addToBackStack("changingToFragment_3D")
+                    .addToBackStack(null)
                     .commit();
 
 

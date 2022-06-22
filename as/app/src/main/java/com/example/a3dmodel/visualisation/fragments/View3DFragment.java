@@ -23,6 +23,11 @@ public class View3DFragment extends Fragment {
     private GLView glView;
     private ListView listView;
     private TextView selectedView = tab3DPlain.getSelectedView();
+    private FragmentManager fragmentManagerFrom3DPlainTab = null;
+
+    public View3DFragment(FragmentManager fragmentManager){
+        this.fragmentManagerFrom3DPlainTab = fragmentManager;
+    }
 
     @Nullable
     @Override
@@ -39,7 +44,6 @@ public class View3DFragment extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-
         setGlView(view.findViewById(R.id.gl_view));
         selectedView = null;
 
@@ -54,8 +58,12 @@ public class View3DFragment extends Fragment {
         View.OnClickListener getBackButtonClickListener = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                getActivity().onBackPressed();
-//                getActivity().getSupportFragmentManager().popBackStack("changingToFragment_3D", FragmentManager.POP_BACK_STACK_INCLUSIVE);
+//                getActivity().onBackPressed();
+
+                assert getFragmentManager() != null;
+
+                getFragmentManager()
+                        .popBackStackImmediate();
 //                assert getParentFragmentManager() != null;
 //                getParentFragmentManager()
 //                        .beginTransaction()
@@ -72,7 +80,6 @@ public class View3DFragment extends Fragment {
 
 
     }
-
 
 
     public void setGlView(GLView v) {
