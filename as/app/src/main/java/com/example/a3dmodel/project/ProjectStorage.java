@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.example.a3dmodel.App;
 import com.example.a3dmodel.TabPhoto;
+import com.example.a3dmodel.tab3DPlain;
 import com.example.a3dmodel.tabMainMenu;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.exeption.AmbiguousProjectNameException;
@@ -121,7 +122,7 @@ public class ProjectStorage implements Serializable {
     public void addProject(Project project) {
         projects.add(project);
         nameToProject.put(project.getProjectName(), project);
-        tabMainMenu.updateProjectListAndSendItToAdapter();
+        updateTabs();
     }
 
     public void renameCurrentProject(String name) throws AmbiguousProjectNameException {
@@ -143,7 +144,7 @@ public class ProjectStorage implements Serializable {
         projects.add(newProject);
         nameToProject.put(projectName, newProject);
         if (notifyAdapter) {
-            com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+            updateTabs();
         }
         return newProject;
     }
@@ -168,7 +169,7 @@ public class ProjectStorage implements Serializable {
             throw new ProjectException("Couldn't write project file for " + projectName);
         }
         if (notify) {
-            com.example.a3dmodel.tabMainMenu.updateProjectListAndSendItToAdapter();
+            updateTabs();
         }
     }
 
@@ -181,7 +182,7 @@ public class ProjectStorage implements Serializable {
         projects.remove(projectToDelete);
         nameToProject.remove(projectToDelete.getProjectName());
         projectToDelete.clear();
-        tabMainMenu.updateProjectListAndSendItToAdapter();
+        updateTabs();
         setCurrentProject(getLastOrCreate());
         TabPhoto.loadImagesFromCurrentProject();
         try {
@@ -189,5 +190,10 @@ public class ProjectStorage implements Serializable {
         } catch (ProjectException e) {
             Toast.makeText(App.getContext(), "Unable to save project", Toast.LENGTH_LONG).show();
         }
+    }
+
+    private void updateTabs() {
+        tabMainMenu.updateProjectListAndSendItToAdapter();
+        tab3DPlain.updateModelListAndSendItToAdapter();
     }
 }

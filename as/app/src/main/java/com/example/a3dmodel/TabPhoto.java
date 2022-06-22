@@ -44,6 +44,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.example.a3dmodel.adapter.GridAdapter;
 import com.example.a3dmodel.data.ImageData;
@@ -285,6 +286,7 @@ public class TabPhoto extends Fragment {
                         assert getActivity() != null;
                         getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "Deleted " + selectedImages + " images", Toast.LENGTH_SHORT).show());
                         GridAdapter.imageDataList.removeAll(selectedImages);
+                        App.getProjectStorage().getCurrentProject().deleteImages(selectedImages.stream().map(ImageData::getImageBitmap).collect(Collectors.toList()));
                         GridAdapter.selectedImageDataItems.clear();
                         GridAdapter.isSelectMode = false;
                         assert getActivity() != null;
