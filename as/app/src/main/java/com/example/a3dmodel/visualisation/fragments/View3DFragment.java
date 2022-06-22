@@ -16,17 +16,20 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.example.a3dmodel.R;
+import com.example.a3dmodel.data.ModelData;
 import com.example.a3dmodel.tab3DPlain;
 import com.example.a3dmodel.visualisation.GLView;
 
 public class View3DFragment extends Fragment {
     private GLView glView;
-    private ListView listView;
-    private TextView selectedView = tab3DPlain.getSelectedView();
+    String model;
+//    private ListView listView;
+//    private TextView selectedView = tab3DPlain.getSelectedView();
     private FragmentManager fragmentManagerFrom3DPlainTab = null;
 
-    public View3DFragment(FragmentManager fragmentManager){
+    public View3DFragment(FragmentManager fragmentManager, String model){
         this.fragmentManagerFrom3DPlainTab = fragmentManager;
+        this.model = model;
     }
 
     @Nullable
@@ -36,7 +39,7 @@ public class View3DFragment extends Fragment {
             container.removeAllViews();
         }
         View view = inflater.inflate(R.layout.activity_fullscreen, container, false);
-        listView = tab3DPlain.getListView();
+//        listView = tab3DPlain.getListView();
         return view;
     }
 
@@ -45,7 +48,7 @@ public class View3DFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         setGlView(view.findViewById(R.id.gl_view));
-        selectedView = null;
+//        selectedView = null;
 
 
         Button resetButton = (Button) view.findViewById(R.id.reset_button);
@@ -76,7 +79,7 @@ public class View3DFragment extends Fragment {
         getBackButton.setOnClickListener(getBackButtonClickListener);
 
 
-        listView.setItemChecked(-1, true);
+//        listView.setItemChecked(-1, true);
 
 
     }
@@ -84,7 +87,7 @@ public class View3DFragment extends Fragment {
 
     public void setGlView(GLView v) {
         glView = v;
-        glView.makeRenderer(selectedView.getText().toString());
+        glView.makeRenderer(model);
     }
 
     public void Reset(View v) {
