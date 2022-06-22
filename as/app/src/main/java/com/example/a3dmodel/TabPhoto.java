@@ -388,7 +388,7 @@ public class TabPhoto extends Fragment {
 
 
         for (File f : listOfJPEGFiles) {
-            System.out.println(f.getName().toString());
+            System.out.println(f.getName());
         }
 
         String currentProjectName = storage.getCurrentProject().getProjectName();
@@ -401,16 +401,10 @@ public class TabPhoto extends Fragment {
 
         do {
             generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
-            resultFileFor3DModel = new File(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL).toString());
         } while (Files.exists(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL)));
-
-
-        System.out.println("Result model file --  " + resultFileFor3DModel.toString());
-
-
+        resultFileFor3DModel = new File(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL).toString());
+        System.out.println("Result model file --  " + resultFileFor3DModel);
         Client.httpClientRequest(listOfJPEGFiles, resultFileFor3DModel);
-
-
         clearDirectory(cacheTmpDirectory.toFile());
 
     }

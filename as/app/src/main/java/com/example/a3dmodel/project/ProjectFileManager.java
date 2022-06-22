@@ -17,15 +17,18 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class ProjectFileManager {
-    public static final String STORAGE_FILE = "Storage.data";
-    public static final String MAIN_FOLDER = "3dModelApp";
+    public static final String MODELS = "models";
+    public static final File APP_ROOT_DIR = App.getContext().getFilesDir();
+    public static final Path APP_ROOT_PATH = App.getContext().getFilesDir().toPath();
+    public static final Path MODELS_PATH = APP_ROOT_PATH.resolve(MODELS);
+
     @NonNull
     public static Path getRootPath() {
-        return App.getContext().getFilesDir().toPath();
+        return APP_ROOT_PATH;
     }
 
     public static Path getProjectPath(String projectName) {
-        return getRootPath().resolve(projectName);
+        return APP_ROOT_PATH.resolve(projectName);
     }
 
     public static Path getImagesDirPath(String projectName) {
@@ -45,8 +48,8 @@ public class ProjectFileManager {
     public static boolean createRootPath() {
 //        File f = new File(getRootPath().toString());
         try {
-            System.out.println("Creating resource folder in : " + getRootPath());
-            Files.createDirectory(getRootPath());
+            System.out.println("Creating resource folder in : " + APP_ROOT_PATH);
+            Files.createDirectory(APP_ROOT_PATH);
             System.out.println("Checking if created : " + getRootPath().toFile().exists());
         }
         catch(IOException e) {
@@ -66,6 +69,16 @@ public class ProjectFileManager {
     @NonNull
     @Contract("_ -> new")
     public static File getProjectDataFile(String projectName) {
-        return new File(App.getContext().getFilesDir(), ProjectFileManager.getProjectDataDirName(projectName));
+        return new File(APP_ROOT_DIR, ProjectFileManager.getProjectDataDirName(projectName));
+    }
+
+    public static Path getModelsDirPath() {
+        return MODELS_PATH;
+    }
+
+    @NonNull
+    @Contract("_ -> new")
+    public static File getProjectModelsDir(String projectName) {
+        return new File(MODELS_PATH.resolve(projectName).toString());
     }
 }
