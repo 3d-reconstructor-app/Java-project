@@ -22,9 +22,9 @@ import android.widget.TextView;
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 //import com.example.a3dmodel.databinding.ActivityMainBinding;
 
-import static com.example.a3dmodel.tabPhoto.CAMERA_PIC_REQUEST;
-import static com.example.a3dmodel.tabPhoto.GALLERY_PIC_REQUEST;
-import static com.example.a3dmodel.tabPhoto.PERMISSION_REQUEST_CODE;
+import static com.example.a3dmodel.TabPhoto.CAMERA_PIC_REQUEST;
+import static com.example.a3dmodel.TabPhoto.GALLERY_PIC_REQUEST;
+import static com.example.a3dmodel.TabPhoto.PERMISSION_REQUEST_CODE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -38,11 +38,25 @@ public class MainActivity extends AppCompatActivity {
     public static List<Bitmap> bitmapArrayList = new ArrayList<>();
     private ActivityMainBinding binding;
     public static int currentPosition;
-    private static final String KEY_CURRENT_POSITION = "com.google.samples.gridtopager.key.currentPosition";
+    private static final String KEY_CURRENT_POSITION = "key.currentPosition";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        binding = ActivityMainBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
+
+        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
+        ViewPager viewPager = binding.viewPager;
+        viewPager.setAdapter(sectionsPagerAdapter);
+        TabLayout tabs = binding.tabs;
+        tabs.setupWithViewPager(viewPager);
+
+        start();
+    }
+
+    protected void start() {
         setContentView(R.layout.activity_main);
         SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
         ViewPager viewPager = findViewById(R.id.view_pager);
@@ -68,7 +82,7 @@ public class MainActivity extends AppCompatActivity {
             assert imageBitmap != null;
 
             bitmapArrayList.add(imageBitmap);
-            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+            TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
             TextView textView = findViewById(R.id.fragment_photo_empty_view);
             textView.setVisibility(View.GONE);
         }
@@ -77,7 +91,6 @@ public class MainActivity extends AppCompatActivity {
             assert data != null;
 
             Uri imageUri = data.getData(); // TODO SAVE IT
-
             Bitmap bitmap = null;
             try {
                 bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
@@ -86,17 +99,21 @@ public class MainActivity extends AppCompatActivity {
             }
             assert bitmap != null;
             bitmapArrayList.add(bitmap);
-            tabPhoto.updateImageBitmapListAndSendItToTheAdapter();
+            TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
             TextView textView = findViewById(R.id.fragment_photo_empty_view);
             textView.setVisibility(View.GONE);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
 
+
+    public void exitVisualisation(View v) {
+        start();
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         switch (requestCode) {
             case PERMISSION_REQUEST_CODE:
