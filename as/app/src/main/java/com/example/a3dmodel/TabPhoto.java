@@ -405,14 +405,33 @@ public class TabPhoto extends Fragment {
             generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
         } while (Files.exists(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL)));
         resultFileFor3DModel = new File(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL).toString());
+        System.out.println("Result model file --  " + resultFileFor3DModel);
+        Thread thread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Client.httpClientRequest(listOfJPEGFiles, resultFileFor3DModel);
+                } catch (AppException  | IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        thread.start();
+        try {
+            thread.join();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
         try {
             App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel);
         }
         catch(ProjectException e) {
             Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
-        System.out.println("Result model file --  " + resultFileFor3DModel);
-        Client.httpClientRequest(listOfJPEGFiles, resultFileFor3DModel);
+
+        tab3DPlain.updateModelListAndSendItToAdapter();
         clearDirectory(cacheTmpDirectory.toFile());
     }
 

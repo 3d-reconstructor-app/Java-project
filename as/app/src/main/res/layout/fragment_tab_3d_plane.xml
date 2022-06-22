@@ -14,18 +14,11 @@
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/modelsView"
             android:layout_width="413dp"
-            android:layout_height="686dp"
+            android:layout_height="729dp"
             app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent" />
-
-        <Button
-            android:id="@+id/draw_button"
-            android:layout_width="181dp"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="1dp"
-            android:text="@string/draw"
-            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

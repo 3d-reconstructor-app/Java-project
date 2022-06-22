@@ -14,6 +14,7 @@ import com.example.a3dmodel.data.ModelData;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.R;
 import com.example.a3dmodel.exeption.ProjectException;
+import com.google.android.material.tabs.TabLayout;
 
 import org.apache.commons.io.FileUtils;
 
@@ -42,7 +43,7 @@ public class Project implements Comparable<Project>, Serializable {
     private LocalDateTime modTime;
     private int projectIcon;
     private transient List<Bitmap> images;
-    private transient List<ModelData> models;
+    private transient List<ModelData> models = new ArrayList<>();
 
     private Project(String name) {
         projectName = name;
@@ -150,6 +151,9 @@ public class Project implements Comparable<Project>, Serializable {
         FileUtils.cleanDirectory(projectDataFile);
         Files.delete(projectDataFile.toPath());
         Files.delete(new File(App.getContext().getFilesDir(), getProjectName()).toPath());
+        images.clear();
+        //TODO clean models
+        TabPhoto.updateAllImagesAndSendItToAdapter();
     }
 
     public List<ModelData> getModels() {

@@ -27,10 +27,10 @@ public class Client {
 
     public static void httpClientRequest(List<File> files, File result) throws AppException, IOException {
         String token = UUID.randomUUID().toString();
-        String url = "https://c7df-78-140-249-142.eu.ngrok.io/";
+        String url = "https://d873-176-53-196-130.eu.ngrok.io/";
 //        String url = "http://127.0.0.1:8000/";
         System.out.println(token);
-        OkHttpClient client = new OkHttpClient.Builder().readTimeout(300, TimeUnit.MINUTES)
+        OkHttpClient client = new OkHttpClient.Builder().readTimeout(10, TimeUnit.MINUTES)
                 .addInterceptor(new Interceptor() {
                     @NotNull
                     @Override
