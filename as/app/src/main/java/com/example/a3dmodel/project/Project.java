@@ -113,6 +113,8 @@ public class Project implements Comparable<Project>, Serializable {
         ProjectFileManager.clearAndDeleteDir(projectModelsDir);
         projectDataDir.mkdir();
         projectModelsDir.mkdir();
+        images.clear();
+        images.addAll(TabPhoto.imageDataList.stream().map(ImageData::getImageBitmap).collect(Collectors.toList()));
         System.out.println("images size = " + images.size());
         for (int i = 0; i < images.size(); i++) {
             compressToJpegAndWrite(i, projectDataDir);
