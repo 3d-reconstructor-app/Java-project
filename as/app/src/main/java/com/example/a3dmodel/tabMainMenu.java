@@ -78,12 +78,22 @@ public class tabMainMenu extends Fragment {
         recyclerView.setAdapter(new ProjectSnapshotAdapter(projectsData));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
+        for (ProjectSnapshot snapshot : projectsData) {
+            String currentProjectName = storage.getCurrentProject().getProjectName();
+            if (snapshot.getProjectName().equals(currentProjectName)) {
+                ProjectSnapshotAdapter adapter = (ProjectSnapshotAdapter) recyclerView.getAdapter();
+                assert(adapter != null);
+                adapter.findItemAndHighlight(currentProjectName);
+            }
+        }
         return view;
     }
 
     @SuppressLint("NotifyDataSetChanged")
     public static void updateProjectListAndSendItToAdapter() {
-        ProjectSnapshotAdapter.projects = App.getProjectStorage().getAllSnapshots();
+        List<ProjectSnapshot> snapshotList = App.getProjectStorage().getAllSnapshots();
+        ProjectSnapshotAdapter.projects = snapshotList;
+        tabMainMenu.projectsData = snapshotList;
         assert recyclerView.getAdapter() != null;
 
         recyclerView.getAdapter().notifyDataSetChanged();
@@ -182,6 +192,7 @@ public class tabMainMenu extends Fragment {
         int position = -1;
         try {
             position = ((ProjectSnapshotAdapter)recyclerView.getAdapter()).getPosition();
+
         } catch (Exception e) {
             Log.d(TAG, e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);
@@ -189,6 +200,10 @@ public class tabMainMenu extends Fragment {
         switch (item.getItemId()) {
             case R.id.option_1:
                 String selectedProjectName = projectsData.get(position).getProjectName();
+//                projectsData.remove(position);
+//                ProjectSnapshotAdapter.projects.remove(position);
+//                ((ProjectSnapshotAdapter)recyclerView.getAdapter()).notifyItemRemoved(position);
+//                ((ProjectSnapshotAdapter)recyclerView.getAdapter()).notifyItemRangeChanged(position, projectsData.size());
                 try {
                     storage.deleteProjectByName(selectedProjectName);
                 }
@@ -200,5 +215,9 @@ public class tabMainMenu extends Fragment {
         return super.onContextItemSelected(item);
     }
 
-
+    public static void updateCurrentProject(@NonNull Project proj) {
+        ProjectSnapshotAdapter adapter = (ProjectSnapshotAdapter)recyclerView.getAdapter();
+        assert(adapter != null);
+        adapter.findItemAndHighlight(proj.getProjectName());
+    }
 }

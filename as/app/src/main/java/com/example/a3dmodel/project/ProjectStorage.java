@@ -4,6 +4,7 @@ import static android.content.ContentValues.TAG;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -45,6 +46,17 @@ public class ProjectStorage implements Serializable {
         projectList.forEach(p -> nameToProject.put(p.getProjectName(), p));
     }
 
+    private void setCurrentProject(Project proj) {
+        setCurrentProject(proj, true);
+    }
+
+    private void setCurrentProject(Project proj, boolean notify) {
+        currentProject = proj;
+        if (notify) {
+            tabMainMenu.updateCurrentProject(proj);
+        }
+    }
+
     @NonNull
     public static ProjectStorage build() throws ProjectException {
         File resources = App.getContext().getFilesDir();
@@ -72,7 +84,7 @@ public class ProjectStorage implements Serializable {
             }
         }
         ProjectStorage storage = new ProjectStorage(projects);
-        storage.currentProject = storage.getLastOrCreate();
+        storage.setCurrentProject(storage.getLastOrCreate(), false);
         return storage;
     }
 
@@ -139,8 +151,8 @@ public class ProjectStorage implements Serializable {
         if (!nameToProject.containsKey(projectName)) {
             throw new ProjectException("Project doesn't exist");
         }
-        currentProject = nameToProject.get(projectName);
-        TabPhoto.loadImagesFromCurrentProject();
+        setCurrentProject(nameToProject.get(projectName));
+        tabPhoto.loadImagesFromCurrentProject();
     }
 
     public void saveProject() throws ProjectException {
@@ -169,5 +181,12 @@ public class ProjectStorage implements Serializable {
         nameToProject.remove(projectToDelete.getProjectName());
         projectToDelete.clear();
         tabMainMenu.updateProjectListAndSendItToAdapter();
+        setCurrentProject(getLastOrCreate());
+        try {
+            saveProject();
+        }
+        catch (ProjectException e) {
+            Toast.makeText(App.getContext(), "Unable to save project", Toast.LENGTH_LONG).show();
+        }
     }
 }

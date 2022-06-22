@@ -1,6 +1,9 @@
 package com.example.a3dmodel.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Resources;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
@@ -30,9 +33,10 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
     public static List<ProjectSnapshot> projects = new ArrayList<>();
     public Context projectsContext;
     private int position;
-
+    private final ArrayList<Integer> highlightedRows;
     public ProjectSnapshotAdapter(List<ProjectSnapshot> snapshotList) {
        projects = snapshotList;
+       highlightedRows = new ArrayList<>();
     }
 
     @NonNull
@@ -62,6 +66,14 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
                 return false;
             }
         });
+
+        if (highlightedRows.contains(position)) {
+            Resources res = App.getContext().getResources();
+            holder.itemView.setBackgroundColor(Color.rgb(30,129,176));
+        }
+        else {
+            holder.itemView.setBackgroundColor(Color.parseColor("white"));
+        }
     }
 
     @Override
@@ -70,11 +82,27 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
         super.onViewRecycled(holder);
     }
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void highlightRow(int index) {
+        highlightedRows.clear();
+        highlightedRows.add(index);
+        notifyDataSetChanged();
+    }
+
 
     @Override
     public int getItemCount() {
         Log.d("SnapshotAdapter", "getItemSize returned " + projects.size());
         return projects.size();
+    }
+
+    public void findItemAndHighlight(String projectName) {
+        for (int i = 0; i < projects.size(); i++) {
+            if (projects.get(i).getProjectName().equals(projectName)) {
+                highlightRow(i);
+                return;
+            }
+        }
     }
 
     public int getPosition() {

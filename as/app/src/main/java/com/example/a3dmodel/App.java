@@ -29,9 +29,6 @@ public class App extends android.app.Application {
     }
 
     public static ProjectStorage getProjectStorage() {
-        if (projectStorage == null) {
-
-        }
         return projectStorage;
     }
 
