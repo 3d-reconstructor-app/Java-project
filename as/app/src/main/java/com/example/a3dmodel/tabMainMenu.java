@@ -54,9 +54,7 @@ import java.util.List;
     and displayed in the RecycleView
     .
     I would suggest to remember the date, time and maybe something else about every project and display it (this is easy part)
-
  */
-
 
 /*
     ADVICE
