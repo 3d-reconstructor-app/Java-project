@@ -81,6 +81,7 @@ public class ProjectStorage implements Serializable {
                 projects.add(proj);
             } catch (IOException | ClassNotFoundException e) {
                 System.out.println("Unable to load project : " + projectFile);
+                System.out.println(e.getMessage());
             }
         }
         ProjectStorage storage = new ProjectStorage(projects);

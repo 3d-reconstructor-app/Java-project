@@ -107,7 +107,7 @@ public class Project implements Comparable<Project>, Serializable {
         out.writeObject(this);
         Path projectDataDirPath = ProjectFileManager.getProjectDataDirPath(projectName);
         File projectDataDir = new File(projectDataDirPath.toString());
-        Path projectModelsDirPath = ProjectFileManager.getProjectDataDirPath(projectName);
+        Path projectModelsDirPath = ProjectFileManager.getProjectModelsDirPath(projectName);
         File projectModelsDir = new File(projectModelsDirPath.toString());
         ProjectFileManager.clearAndDeleteDir(projectDataDir);
         ProjectFileManager.clearAndDeleteDir(projectModelsDir);
