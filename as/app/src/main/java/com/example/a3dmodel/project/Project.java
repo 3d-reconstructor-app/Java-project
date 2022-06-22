@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.a3dmodel.App;
+import com.example.a3dmodel.TabPhoto;
 import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.R;
@@ -120,5 +121,6 @@ public class Project implements Comparable<Project>, Serializable {
         File projectDataFile = ProjectFileManager.getProjectDataFile(getProjectName());
         FileUtils.cleanDirectory(projectDataFile);
         Files.delete(projectDataFile.toPath());
+        Files.delete(new File(App.getContext().getFilesDir(), getProjectName()).toPath());
     }
 }

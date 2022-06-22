@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 
 import com.example.a3dmodel.App;
 import com.example.a3dmodel.TabPhoto;
+import com.example.a3dmodel.tabMainMenu;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.exeption.AmbiguousProjectNameException;
 import com.example.a3dmodel.exeption.ProjectException;
@@ -25,7 +26,6 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import com.example.a3dmodel.tabMainMenu;
 import java.util.Map;
 import java.util.TreeSet;
 import java.util.stream.Collectors;
@@ -97,7 +97,7 @@ public class ProjectStorage implements Serializable {
     }
 
     public Project getCurrentProject() {
-        assert(currentProject != null);
+        assert (currentProject != null);
         return currentProject;
     }
 
@@ -152,7 +152,7 @@ public class ProjectStorage implements Serializable {
             throw new ProjectException("Project doesn't exist");
         }
         setCurrentProject(nameToProject.get(projectName));
-        tabPhoto.loadImagesFromCurrentProject();
+        TabPhoto.loadImagesFromCurrentProject();
     }
 
     public void saveProject() throws ProjectException {
@@ -176,16 +176,16 @@ public class ProjectStorage implements Serializable {
         deleteProject(projectToDelete);
     }
 
-    public void deleteProject(Project projectToDelete) throws IOException {
+    private void deleteProject(Project projectToDelete) throws IOException {
         projects.remove(projectToDelete);
         nameToProject.remove(projectToDelete.getProjectName());
         projectToDelete.clear();
         tabMainMenu.updateProjectListAndSendItToAdapter();
         setCurrentProject(getLastOrCreate());
+        TabPhoto.loadImagesFromCurrentProject();
         try {
             saveProject();
-        }
-        catch (ProjectException e) {
+        } catch (ProjectException e) {
             Toast.makeText(App.getContext(), "Unable to save project", Toast.LENGTH_LONG).show();
         }
     }
