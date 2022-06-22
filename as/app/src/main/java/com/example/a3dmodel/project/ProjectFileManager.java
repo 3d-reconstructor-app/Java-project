@@ -9,6 +9,7 @@ import androidx.annotation.NonNull;
 
 import com.example.a3dmodel.App;
 
+import org.apache.commons.io.FileUtils;
 import org.jetbrains.annotations.Contract;
 
 import java.io.File;
@@ -66,6 +67,10 @@ public class ProjectFileManager {
         return projectName + "Data";
     }
 
+    public static Path getProjectDataDirPath(String projectName) {
+        return APP_ROOT_PATH.resolve(getProjectDataDirName(projectName));
+    }
+
     @NonNull
     @Contract("_ -> new")
     public static File getProjectDataFile(String projectName) {
@@ -80,5 +85,16 @@ public class ProjectFileManager {
     @Contract("_ -> new")
     public static File getProjectModelsDir(String projectName) {
         return new File(MODELS_PATH.resolve(projectName).toString());
+    }
+
+    public static Path getProjectModelsDirPath(String projectName) {
+        return MODELS_PATH.resolve(projectName);
+    }
+
+    public static void clearAndDeleteDir(File directory) throws IOException {
+        if (directory.exists()) {
+            FileUtils.cleanDirectory(directory);
+            FileUtils.deleteDirectory(directory);
+        }
     }
 }

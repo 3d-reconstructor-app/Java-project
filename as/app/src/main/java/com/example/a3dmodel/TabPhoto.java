@@ -403,10 +403,15 @@ public class TabPhoto extends Fragment {
             generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
         } while (Files.exists(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL)));
         resultFileFor3DModel = new File(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL).toString());
+        try {
+            App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel);
+        }
+        catch(ProjectException e) {
+            Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
         System.out.println("Result model file --  " + resultFileFor3DModel);
         Client.httpClientRequest(listOfJPEGFiles, resultFileFor3DModel);
         clearDirectory(cacheTmpDirectory.toFile());
-
     }
 
     private void clearDirectory(File fileOrDirectory) {

@@ -13,6 +13,7 @@ import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.data.ModelData;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.R;
+import com.example.a3dmodel.exeption.ProjectException;
 
 import org.apache.commons.io.FileUtils;
 
@@ -67,6 +68,17 @@ public class Project implements Comparable<Project>, Serializable {
         images.addAll(imgs);
     }
 
+    public void addAndSaveModel(@NonNull File model) throws ProjectException {
+        models.add(new ModelData(model.getName()));
+        File modelFile = new File(ProjectFileManager.getProjectModelsDirPath(projectName).toString());
+        try {
+            FileUtils.copyFile(model, modelFile);
+        }
+        catch (IOException e) {
+            throw new ProjectException("Couldn't write model for " + projectName);
+        }
+    }
+
     public void deleteImages(@NonNull List<Bitmap> imgs) {
         images.removeAll(imgs);
     }
@@ -91,22 +103,31 @@ public class Project implements Comparable<Project>, Serializable {
         return projectName.compareTo(other.projectName);
     }
 
-    public void serialize(@NonNull ObjectOutputStream out) throws IOException {
+    public void serialize(@NonNull ObjectOutputStream out) throws ProjectException, IOException {
         out.writeObject(this);
-        Path projectDataDirPath = App.getContext().getFilesDir().toPath().resolve(ProjectFileManager.getProjectDataDirName(projectName));
+        Path projectDataDirPath = ProjectFileManager.getProjectDataDirPath(projectName);
         File projectDataDir = new File(projectDataDirPath.toString());
-        if (projectDataDir.exists()) {
-            FileUtils.cleanDirectory(projectDataDir);
-            FileUtils.deleteDirectory(projectDataDir);
-        }
+        Path projectModelsDirPath = ProjectFileManager.getProjectDataDirPath(projectName);
+        File projectModelsDir = new File(projectModelsDirPath.toString());
+        ProjectFileManager.clearAndDeleteDir(projectDataDir);
+        ProjectFileManager.clearAndDeleteDir(projectModelsDir);
         projectDataDir.mkdir();
+        projectModelsDir.mkdir();
         System.out.println("images size = " + images.size());
         for (int i = 0; i < images.size(); i++) {
-            try (FileOutputStream fout = new FileOutputStream(new File(projectDataDir, "img" + i + ".jpeg")); ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
-                images.get(i).compress(Bitmap.CompressFormat.JPEG, 100, stream);
-                stream.flush();
-                fout.write(stream.toByteArray());
-            }
+            compressToJpegAndWrite(i, projectDataDir);
+        }
+    }
+
+    private void compressToJpegAndWrite(int imageIndex, File projectDataDir) throws ProjectException {
+        final String generatedImageName = "img" + imageIndex + ".jpeg";
+        try (FileOutputStream fout = new FileOutputStream(new File(projectDataDir, generatedImageName)); ByteArrayOutputStream stream = new ByteArrayOutputStream()) {
+            images.get(imageIndex).compress(Bitmap.CompressFormat.JPEG, 100, stream);
+            stream.flush();
+            fout.write(stream.toByteArray());
+        }
+        catch(IOException e) {
+            throw new ProjectException("Error while compressing image in " + projectName);
         }
     }
 
@@ -114,8 +135,11 @@ public class Project implements Comparable<Project>, Serializable {
     public static Project deserialize(@NonNull ObjectInputStream in) throws IOException, ClassNotFoundException {
         Project proj = (Project) in.readObject();
         File projectDataFile = ProjectFileManager.getProjectDataFile(proj.getProjectName());
+        File projectModelsFile = ProjectFileManager.getProjectModelsDir(proj.getProjectName());
         proj.images = new ArrayList<>();
         Files.list(projectDataFile.toPath()).forEach(imgFile -> proj.images.add(BitmapFactory.decodeFile(imgFile.toString())));
+        proj.models = new ArrayList<>();
+        proj.models = Files.list(projectModelsFile.toPath()).map(modelPath -> new ModelData(modelPath.getFileName().toString())).collect(Collectors.toList());
         return proj;
     }
 
