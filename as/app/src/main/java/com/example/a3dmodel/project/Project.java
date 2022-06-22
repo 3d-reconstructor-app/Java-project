@@ -10,6 +10,7 @@ import androidx.annotation.Nullable;
 import com.example.a3dmodel.App;
 import com.example.a3dmodel.TabPhoto;
 import com.example.a3dmodel.data.ImageData;
+import com.example.a3dmodel.data.ModelData;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.R;
 
@@ -40,6 +41,7 @@ public class Project implements Comparable<Project>, Serializable {
     private LocalDateTime modTime;
     private int projectIcon;
     private transient List<Bitmap> images;
+    private transient List<ModelData> models;
 
     private Project(String name) {
         projectName = name;
@@ -122,5 +124,9 @@ public class Project implements Comparable<Project>, Serializable {
         FileUtils.cleanDirectory(projectDataFile);
         Files.delete(projectDataFile.toPath());
         Files.delete(new File(App.getContext().getFilesDir(), getProjectName()).toPath());
+    }
+
+    public List<ModelData> getModels() {
+        return models;
     }
 }
