@@ -139,7 +139,7 @@ public class tab3DPlain extends Fragment {
         return super.onContextItemSelected(item);
     }
 
-    public static void loadImagesFromCurrentProject() {
+    public static void loadModelsFromCurrentProject() {
         modelsList.clear();
         modelsList.addAll(App.getProjectStorage().getCurrentProject().getModels());
         updateModelListAndSendItToAdapter();

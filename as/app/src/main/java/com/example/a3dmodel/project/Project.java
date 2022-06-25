@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.a3dmodel.App;
+import com.example.a3dmodel.MainActivity;
 import com.example.a3dmodel.TabPhoto;
 import com.example.a3dmodel.tab3DPlain;
 import com.example.a3dmodel.data.ImageData;

@@ -9,6 +9,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 
 import com.example.a3dmodel.App;
+import com.example.a3dmodel.MainActivity;
 import com.example.a3dmodel.TabPhoto;
 import com.example.a3dmodel.tab3DPlain;
 import com.example.a3dmodel.tabMainMenu;
@@ -23,12 +24,10 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.TreeSet;
 import java.util.stream.Collectors;
 
 public class ProjectStorage implements Serializable {
@@ -182,9 +181,12 @@ public class ProjectStorage implements Serializable {
         projects.remove(projectToDelete);
         nameToProject.remove(projectToDelete.getProjectName());
         projectToDelete.clear();
+        MainActivity.bitmapArrayList.clear();
         updateTabs();
         setCurrentProject(getLastOrCreate());
         TabPhoto.loadImagesFromCurrentProject();
+        tab3DPlain.loadModelsFromCurrentProject();
+        updateTabs();
         try {
             saveProject();
         } catch (ProjectException e) {
