@@ -119,6 +119,7 @@ public class tab3DPlain extends Fragment {
         }
         switch (item.getItemId()) {
             case R.id.model_option_1:
+                System.out.println("Model selected to draw");
                 String selectedModelName = modelsList.get(position).getModelName();
 //                projectsData.remove(position);
 //                ProjectSnapshotAdapter.projects.remove(position);

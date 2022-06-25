@@ -18,6 +18,10 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 
 
+import com.example.a3dmodel.App;
+import com.example.a3dmodel.project.ProjectFileManager;
+
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -113,9 +117,11 @@ public class GLView extends GLSurfaceView {
       // Just in case we don't use the PLY in the future,
       // we need to give the user the option of switching out.
       try {
-        System.out.println(model);
-        //TODO add real model
-        plyInput = context.getAssets().open("models/" + model);
+//        System.out.println(model);
+//        //TODO add real model
+        String modelPath = ProjectFileManager.getProjectModelsDirPath(App.getProjectStorage().getCurrentProject().getProjectName()).resolve(model).toString();
+        System.out.println("Model path: " + modelPath);
+        plyInput = new FileInputStream(modelPath);
       } catch (IOException e) {
         e.printStackTrace();
       }
