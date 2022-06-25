@@ -395,7 +395,7 @@ public class TabPhoto extends Fragment {
 
         String currentProjectName = storage.getCurrentProject().getProjectName();
 
-        File projectDirectoryForModels = new File(outputDirModels.resolve(currentProjectName).toString());
+        File projectDirectoryForModels = new File(outputDirModels.toString());
         projectDirectoryForModels.mkdir();
 
         String generatedFileNameForMODEL;
@@ -426,6 +426,7 @@ public class TabPhoto extends Fragment {
         Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
         try {
             App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel);
+            App.getProjectStorage().saveProject();
         }
         catch(ProjectException e) {
             Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();

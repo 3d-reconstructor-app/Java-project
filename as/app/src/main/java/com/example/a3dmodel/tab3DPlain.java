@@ -2,6 +2,8 @@ package com.example.a3dmodel;
 
 import static android.content.ContentValues.TAG;
 
+import static com.example.a3dmodel.MainActivity.bitmapArrayList;
+
 import android.annotation.SuppressLint;
 import android.os.Build;
 import android.os.Bundle;
@@ -135,6 +137,12 @@ public class tab3DPlain extends Fragment {
                 break;
         }
         return super.onContextItemSelected(item);
+    }
+
+    public static void loadImagesFromCurrentProject() {
+        modelsList.clear();
+        modelsList.addAll(App.getProjectStorage().getCurrentProject().getModels());
+        updateModelListAndSendItToAdapter();
     }
 
 

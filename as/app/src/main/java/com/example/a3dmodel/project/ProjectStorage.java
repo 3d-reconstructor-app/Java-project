@@ -195,5 +195,6 @@ public class ProjectStorage implements Serializable {
     private void updateTabs() {
         tabMainMenu.updateProjectListAndSendItToAdapter();
         tab3DPlain.updateModelListAndSendItToAdapter();
+        TabPhoto.updateAllImagesAndSendItToAdapter();
     }
 }

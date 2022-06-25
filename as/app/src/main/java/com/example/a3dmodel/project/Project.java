@@ -9,6 +9,7 @@ import androidx.annotation.Nullable;
 
 import com.example.a3dmodel.App;
 import com.example.a3dmodel.TabPhoto;
+import com.example.a3dmodel.tab3DPlain;
 import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.data.ModelData;
 import com.example.a3dmodel.data.ProjectSnapshot;
@@ -71,9 +72,12 @@ public class Project implements Comparable<Project>, Serializable {
 
     public void addAndSaveModel(@NonNull File model) throws ProjectException {
         models.add(new ModelData(model.getName()));
-        File modelFile = new File(ProjectFileManager.getProjectModelsDirPath(projectName).toString());
+//        System.out.println(ProjectFileManager.getProjectModelsDirPath(projectName).toString());
+//        System.out.println(models);
+        File modelFile = new File(ProjectFileManager.getProjectModelsDirPath(projectName).toString() + '/' + model.getName());
         try {
             FileUtils.copyFile(model, modelFile);
+            FileUtils.delete(model);
         }
         catch (IOException e) {
             throw new ProjectException("Couldn't write model for " + projectName);
@@ -111,9 +115,13 @@ public class Project implements Comparable<Project>, Serializable {
         Path projectModelsDirPath = ProjectFileManager.getProjectModelsDirPath(projectName);
         File projectModelsDir = new File(projectModelsDirPath.toString());
         ProjectFileManager.clearAndDeleteDir(projectDataDir);
-        ProjectFileManager.clearAndDeleteDir(projectModelsDir);
         projectDataDir.mkdir();
-        projectModelsDir.mkdir();
+        if (!ProjectFileManager.getModelsDirPath().toFile().exists()) {
+            ProjectFileManager.getModelsDirPath().toFile().mkdir();
+        }
+        if (!projectModelsDir.exists()) {
+            projectModelsDir.mkdir();
+        }
         images.clear();
         images.addAll(TabPhoto.imageDataList.stream().map(ImageData::getImageBitmap).collect(Collectors.toList()));
         System.out.println("images size = " + images.size());
@@ -143,17 +151,21 @@ public class Project implements Comparable<Project>, Serializable {
         Files.list(projectDataFile.toPath()).forEach(imgFile -> proj.images.add(BitmapFactory.decodeFile(imgFile.toString())));
         proj.models = new ArrayList<>();
         proj.models = Files.list(projectModelsFile.toPath()).map(modelPath -> new ModelData(modelPath.getFileName().toString())).collect(Collectors.toList());
+        //System.out.println("wtf" + proj.models);
+//        tab3DPlain.updateModelListAndSendItToAdapter();
         return proj;
     }
 
     public void clear() throws IOException {
         File projectDataFile = ProjectFileManager.getProjectDataFile(getProjectName());
-        FileUtils.cleanDirectory(projectDataFile);
-        Files.delete(projectDataFile.toPath());
+        System.out.println(projectDataFile);
+        FileUtils.deleteDirectory(projectDataFile);
         Files.delete(new File(App.getContext().getFilesDir(), getProjectName()).toPath());
+        FileUtils.deleteDirectory(ProjectFileManager.getProjectModelsDir(getProjectName()));
         images.clear();
-        //TODO clean models
+        models.clear();
         TabPhoto.updateAllImagesAndSendItToAdapter();
+        tab3DPlain.updateModelListAndSendItToAdapter();
     }
 
     public List<ModelData> getModels() {

@@ -27,10 +27,14 @@ public class Client {
 
     public static void httpClientRequest(List<File> files, File result) throws AppException, IOException {
         String token = UUID.randomUUID().toString();
-        String url = "https://d873-176-53-196-130.eu.ngrok.io/";
+        String url = "https://0a36-2a00-1fa0-8685-3dd7-85b0-15b6-b486-bafe.eu.ngrok.io/";
 //        String url = "http://127.0.0.1:8000/";
         System.out.println(token);
-        OkHttpClient client = new OkHttpClient.Builder().readTimeout(10, TimeUnit.MINUTES)
+        OkHttpClient client = new OkHttpClient.Builder()
+                .readTimeout(20, TimeUnit.MINUTES)
+                .writeTimeout(20, TimeUnit.MINUTES)
+                .connectTimeout(20, TimeUnit.MINUTES)
+//                .callTimeout(20, TimeUnit.MINUTES)
                 .addInterceptor(new Interceptor() {
                     @NotNull
                     @Override
@@ -112,8 +116,8 @@ public class Client {
 
     private static void getFileHTTPGETRequest(OkHttpClient client, String url, String token, File result) throws AppException {
         Request requestGet = new Request.Builder()
-//                .url(HttpUrl.get(url + "resources/" + token + "/res.png"))
-                .url(HttpUrl.get(url + "resources/" + token + "/reconstruction_sequential/PMVS/models/pmvs_options.txt.ply"))
+                .url(HttpUrl.get(url + "resources/" + token + "/res.ply"))
+//                .url(HttpUrl.get(url + "resources/" + token + "/reconstruction_sequential/PMVS/models/pmvs_options.txt.ply"))
                 .get()
                 .build();
         try (Response response = client.newCall(requestGet).execute()) {
