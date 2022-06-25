@@ -205,7 +205,7 @@ public class tabMainMenu extends Fragment {
                 try {
                     storage.deleteProjectByName(selectedProjectName);
                 }
-                catch(IOException e) {
+                catch(IOException | ProjectException e) {
                     Toast.makeText(this.getContext(), "Couldn't delete project " + selectedProjectName, Toast.LENGTH_LONG).show();
                 }
                 break;

@@ -106,7 +106,7 @@ public class ProjectStorage implements Serializable {
         return projects.stream().map(Project::makeSnapshot).collect(Collectors.toList());
     }
 
-    public Project getLastOrCreate() {
+    public Project getLastOrCreate() throws ProjectException {
         if (projects.isEmpty()) {
             Project sampleProject = createNewProject("Sample Project", false);
             try {
@@ -134,11 +134,15 @@ public class ProjectStorage implements Serializable {
         getCurrentProject().rename(name);
     }
 
-    public Project createNewProject(String projectName) {
+    public Project createNewProject(String projectName) throws ProjectException {
         return createNewProject(projectName, true);
     }
 
-    private Project createNewProject(String projectName, boolean notifyAdapter) {
+    private Project createNewProject(String projectName, boolean notifyAdapter) throws ProjectException {
+        if (nameToProject.containsKey(projectName)) {
+            Log.d("ProjectStorage", "Project with given name already exists");
+            throw new ProjectException("Project with given name already exists");
+        }
         Project newProject = Project.create(projectName);
         projects.add(newProject);
         nameToProject.put(projectName, newProject);
@@ -172,12 +176,12 @@ public class ProjectStorage implements Serializable {
         }
     }
 
-    public void deleteProjectByName(String projectName) throws IOException {
+    public void deleteProjectByName(String projectName) throws IOException, ProjectException {
         Project projectToDelete = App.getProjectStorage().nameToProject.get(projectName);
         deleteProject(projectToDelete);
     }
 
-    private void deleteProject(Project projectToDelete) throws IOException {
+    private void deleteProject(Project projectToDelete) throws IOException, ProjectException {
         projects.remove(projectToDelete);
         nameToProject.remove(projectToDelete.getProjectName());
         projectToDelete.clear();
