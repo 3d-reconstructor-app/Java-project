@@ -77,8 +77,9 @@ public class tab3DPlain extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        scrollToPosition();
         registerForContextMenu(recyclerView);
+
+        scrollToPosition();
     }
 
     private void scrollToPosition() {
@@ -107,8 +108,11 @@ public class tab3DPlain extends Fragment {
         });
     }
 
+    @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onContextItemSelected(MenuItem item) {
+        System.out.println("onContextItemSelected in tab3dPlain");
+
         int position = -1;
         try {
             position = ((ModelAdapter) recyclerView.getAdapter()).getPosition();
@@ -117,17 +121,25 @@ public class tab3DPlain extends Fragment {
             Log.d(TAG, e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);
         }
+
+        // TODO add case for model.delete.option
+
         switch (item.getItemId()) {
-            case R.id.model_option_1:
-                System.out.println("Model selected to draw");
+            case R.id.model_draw_option:
                 String selectedModelName = modelsList.get(position).getModelName();
+//                try {
+//                    selectedModelName = modelsList.get(position).getModelName();
+//                } catch (Exception e){
+//                    Log.d("tab3dPlain switch-case code", "could not get ModelName for selected Model");
+//
+//                }
 //                projectsData.remove(position);
 //                ProjectSnapshotAdapter.projects.remove(position);
 //                ((ProjectSnapshotAdapter)recyclerView.getAdapter()).notifyItemRemoved(position);
 //                ((ProjectSnapshotAdapter)recyclerView.getAdapter()).notifyItemRangeChanged(position, projectsData.size());
 
                 assert getFragmentManager() != null;
-                getFragmentManager()
+                getChildFragmentManager()
                         .beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.fragment_3d, new View3DFragment(getFragmentManager(), selectedModelName), View3DFragment.class.getSimpleName())

@@ -171,8 +171,9 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v,
                                         ContextMenu.ContextMenuInfo menuInfo) {
-            menu.add(Menu.NONE, R.id.option_1,
+            menu.add(Menu.NONE, R.id.model_draw_option,
                     Menu.NONE, R.string.draw_option);
+            // TODO add model.delete.option
         }
     }
 }

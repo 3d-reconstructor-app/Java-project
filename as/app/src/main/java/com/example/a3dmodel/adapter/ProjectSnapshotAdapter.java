@@ -150,7 +150,7 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v,
                                         ContextMenu.ContextMenuInfo menuInfo) {
-            menu.add(Menu.NONE, R.id.option_1,
+            menu.add(Menu.NONE, R.id.model_draw_option,
                     Menu.NONE, R.string.delete_option);
         }
     }

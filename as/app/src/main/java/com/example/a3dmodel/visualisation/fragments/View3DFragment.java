@@ -45,8 +45,8 @@ public class View3DFragment extends Fragment {
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+
         super.onViewCreated(view, savedInstanceState);
-        System.out.println("Fragment 3d on view created");
         setGlView(view.findViewById(R.id.gl_view));
 //        selectedView = null;
 

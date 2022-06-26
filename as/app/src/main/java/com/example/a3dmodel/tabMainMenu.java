@@ -196,7 +196,7 @@ public class tabMainMenu extends Fragment {
             return super.onContextItemSelected(item);
         }
         switch (item.getItemId()) {
-            case R.id.option_1:
+            case R.id.model_draw_option:
                 String selectedProjectName = projectsData.get(position).getProjectName();
 //                projectsData.remove(position);
 //                ProjectSnapshotAdapter.projects.remove(position);

@@ -27,7 +27,7 @@ public class Client {
 
     public static void httpClientRequest(List<File> files, File result) throws AppException, IOException {
         String token = UUID.randomUUID().toString();
-        String url = "https://0a36-2a00-1fa0-8685-3dd7-85b0-15b6-b486-bafe.eu.ngrok.io/";
+        String url = "https://ede5-5-18-248-247.eu.ngrok.io/";
 //        String url = "http://127.0.0.1:8000/";
         System.out.println(token);
         OkHttpClient client = new OkHttpClient.Builder()

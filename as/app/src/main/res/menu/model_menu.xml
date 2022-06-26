@@ -2,6 +2,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
 
     <item
-        android:id="@+id/model_option_1"
+        android:id="@+id/model_draw_option"
         android:title="@string/draw" />
 </menu>
