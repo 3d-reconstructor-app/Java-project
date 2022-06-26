@@ -37,6 +37,10 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
 //        highlightedRows = new ArrayList<>();
     }
 
+    public static List<ModelData> getModels() {
+        return models;
+    }
+
     @NonNull
     @Override
     public ModelViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

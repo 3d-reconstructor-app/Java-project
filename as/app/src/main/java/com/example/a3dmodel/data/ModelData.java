@@ -1,6 +1,8 @@
 package com.example.a3dmodel.data;
 
-public class ModelData {
+import java.io.Serializable;
+
+public class ModelData implements Serializable {
     private final String modelName;
 
     public ModelData(String modelName) {

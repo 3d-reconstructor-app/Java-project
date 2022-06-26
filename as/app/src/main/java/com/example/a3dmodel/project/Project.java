@@ -28,6 +28,7 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.io.UncheckedIOException;
+import java.nio.file.FileSystemNotFoundException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.FileTime;
@@ -151,9 +152,9 @@ public class Project implements Comparable<Project>, Serializable {
         proj.images = new ArrayList<>();
         Files.list(projectDataFile.toPath()).forEach(imgFile -> proj.images.add(BitmapFactory.decodeFile(imgFile.toString())));
         proj.models = new ArrayList<>();
-        proj.models = Files.list(projectModelsFile.toPath()).map(modelPath -> new ModelData(modelPath.getFileName().toString())).collect(Collectors.toList());
-        //System.out.println("wtf" + proj.models);
-//        tab3DPlain.updateModelListAndSendItToAdapter();
+        proj.models.addAll(Files.list(projectModelsFile.toPath()).map(modelPath -> new ModelData(modelPath.getFileName().toString())).collect(Collectors.toList()));
+//        System.out.println("Models number in deserialization " + proj.getProjectName() + " " + proj.models.size());
+        System.out.println("wtf " + proj.models);
         return proj;
     }
 

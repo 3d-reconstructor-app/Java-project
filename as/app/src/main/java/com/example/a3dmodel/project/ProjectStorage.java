@@ -53,6 +53,7 @@ public class ProjectStorage implements Serializable {
     private void setCurrentProject(Project proj, boolean notify) {
         currentProject = proj;
         if (notify) {
+            tab3DPlain.updateModelListAndSendItToAdapter();
             tabMainMenu.updateCurrentProject(proj);
         }
     }
@@ -118,11 +119,11 @@ public class ProjectStorage implements Serializable {
         return projects.get(projects.size() - 1);
     }
 
-    public void addProject(Project project) {
-        projects.add(project);
-        nameToProject.put(project.getProjectName(), project);
-        updateTabs();
-    }
+//    public void addProject(Project project) {
+//        projects.add(project);
+//        nameToProject.put(project.getProjectName(), project);
+//        updateTabs();
+//    }
 
     public void renameCurrentProject(String name) throws AmbiguousProjectNameException {
         if (nameToProject.containsKey(name)) {
@@ -158,6 +159,7 @@ public class ProjectStorage implements Serializable {
         }
         setCurrentProject(nameToProject.get(projectName));
         TabPhoto.loadImagesFromCurrentProject();
+        tab3DPlain.updateModelListAndSendItToAdapter();
     }
 
     public void saveProject() throws ProjectException {
@@ -189,7 +191,6 @@ public class ProjectStorage implements Serializable {
         updateTabs();
         setCurrentProject(getLastOrCreate());
         TabPhoto.loadImagesFromCurrentProject();
-        tab3DPlain.loadModelsFromCurrentProject();
         updateTabs();
         try {
             saveProject();

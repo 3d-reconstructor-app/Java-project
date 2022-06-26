@@ -43,14 +43,15 @@ import java.util.List;
 
 public class tab3DPlain extends Fragment {
     static private RecyclerView recyclerView;
-    static private List<ModelData> modelsList = App.getProjectStorage().getCurrentProject().getModels();
+    static private List<ModelData> modelsList = new ArrayList<>();
 
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_tab_3d_plane, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.modelsView);
-
+        modelsList.clear();
+        modelsList.addAll(App.getProjectStorage().getCurrentProject().getModels());
         recyclerView.setAdapter(new ModelAdapter(modelsList));
         recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
 
@@ -68,8 +69,10 @@ public class tab3DPlain extends Fragment {
     @SuppressLint("NotifyDataSetChanged")
     public static void updateModelListAndSendItToAdapter() {
         List<ModelData> modelList = App.getProjectStorage().getCurrentProject().getModels();
-        ModelAdapter.models = modelList;
-        modelsList = modelList;
+//        ModelAdapter.models = modelList;
+        modelsList.clear();
+        modelsList.addAll(modelList);
+//        modelsList = modelList;
         assert recyclerView.getAdapter() != null;
         recyclerView.getAdapter().notifyDataSetChanged();
     }
@@ -110,7 +113,7 @@ public class tab3DPlain extends Fragment {
 
     @SuppressLint("NonConstantResourceId")
     @Override
-    public boolean onContextItemSelected(MenuItem item) {
+    public boolean onContextItemSelected(@NonNull MenuItem item) {
         System.out.println("onContextItemSelected in tab3dPlain");
 
         int position = -1;
@@ -152,11 +155,11 @@ public class tab3DPlain extends Fragment {
         return super.onContextItemSelected(item);
     }
 
-    public static void loadModelsFromCurrentProject() {
-        modelsList.clear();
-        modelsList.addAll(App.getProjectStorage().getCurrentProject().getModels());
-        updateModelListAndSendItToAdapter();
-    }
+//    public static void loadModelsFromCurrentProject() {
+//        modelsList.clear();
+//        modelsList.addAll(App.getProjectStorage().getCurrentProject().getModels());
+//        updateModelListAndSendItToAdapter();
+//    }
 
 
 //    private final List<String> models = new ArrayList<>();
