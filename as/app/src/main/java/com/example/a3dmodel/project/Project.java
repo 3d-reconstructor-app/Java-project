@@ -74,14 +74,15 @@ public class Project implements Comparable<Project>, Serializable {
 
     public void addAndSaveModel(@NonNull File model) throws ProjectException {
         models.add(new ModelData(model.getName()));
-//        System.out.println(ProjectFileManager.getProjectModelsDirPath(projectName).toString());
-//        System.out.println(models);
+        System.out.println(ProjectFileManager.getProjectModelsDirPath(projectName).toString());
+        System.out.println(models);
         File modelFile = new File(ProjectFileManager.getProjectModelsDirPath(projectName).toString() + '/' + model.getName());
         try {
             FileUtils.copyFile(model, modelFile);
             FileUtils.delete(model);
         }
         catch (IOException e) {
+            e.printStackTrace();
             throw new ProjectException("Couldn't write model for " + projectName);
         }
     }

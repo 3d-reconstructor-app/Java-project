@@ -25,6 +25,7 @@ import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Environment;
+import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.transition.TransitionInflater;
@@ -40,6 +41,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
@@ -538,20 +540,19 @@ public class TabPhoto extends Fragment {
     private void showModelSaveDialog(File resultFile) {
         final Dialog dialog = new Dialog(this.getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
-        dialog.setCancelable(true);
+        dialog.setCancelable(false);
         dialog.setContentView(R.layout.dialog_save_model);
 
         final EditText projectName = dialog.findViewById(R.id.editTextModelName);
         Button submitButton = dialog.findViewById(R.id.save_model_submit);
 
-        submitButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String modelName = projectName.getText().toString();
-                boolean result = resultFile.renameTo(new File(cacheTmpDirectory.resolve(modelName).toString()));
-                assert(result);
-                saveModel(resultFile);
-            }
+        submitButton.setOnClickListener(view -> {
+            String modelName = projectName.getText().toString() + ".ply";
+            File wtf = new File(cacheTmpDirectory.resolve(modelName).toString());
+            boolean result = resultFile.renameTo(wtf);
+            assert(result);
+            saveModel(wtf);
+            dialog.dismiss();
         });
         dialog.show();
     }
