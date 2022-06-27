@@ -44,6 +44,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import com.example.a3dmodel.adapter.GridAdapter;
@@ -60,12 +61,18 @@ import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 public class TabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
+
     private FrameLayout frameLayout;
     private Path outputDirModels;
     private Path cacheTmpDirectory;
+
     public static final int CAMERA_PIC_REQUEST = 1888;
     public static final int GALLERY_PIC_REQUEST = 1777;
     private static final int lengthOfRandomFileJPEGName = 10;
+
+    public static void clearFieldsWhenUpdatingProjectInfo(){
+        ((GridAdapter) recyclerView.getAdapter()).clearFieldsWhenUpdatingProjectInfo();
+    }
 
     public final FrameLayout getFrameLayout() {
         return frameLayout;

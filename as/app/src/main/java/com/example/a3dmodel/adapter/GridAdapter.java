@@ -1,5 +1,6 @@
 package com.example.a3dmodel.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Color;
@@ -51,12 +52,26 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
     public static List<ImageData> selectedImageDataItems = new ArrayList<>();
     public static List<View> selectedImagesViewWithBackgroundColor = new ArrayList<>();
     public static boolean isSelectMode = false;
-    private Set<Integer> selectedPositionsOfImagesViews = new HashSet<>();
+    private final Set<Integer> selectedPositionsOfImagesViews = new HashSet<>();
     private final RequestManager requestManager;
     private final ViewHolderListener viewHolderListener;
 
+    @SuppressLint("NotifyDataSetChanged")
+    public void clearFieldsWhenUpdatingProjectInfo(){
+        selectedImageDataItems.clear();
+        selectedPositionsOfImagesViews.clear();
+        selectedImagesViewWithBackgroundColor.forEach(e -> e.setBackgroundColor(Color.TRANSPARENT));
+        selectedImagesViewWithBackgroundColor.clear();
+
+        isSelectMode = false;
+
+
+        checkButtonsVisibility();
+    }
+
+
 //    private Fragment tabPhotoFragment;
-    private FrameLayout frameLayout;
+    private final FrameLayout frameLayout;
 
     public Set<Integer> getSelectedPositionsOfImagesViews() {
         return selectedPositionsOfImagesViews;
