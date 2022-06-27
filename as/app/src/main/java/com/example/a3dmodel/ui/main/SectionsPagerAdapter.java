@@ -48,6 +48,7 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
                 fragment = new TabPhoto();
                 break;
         }
+
         assert fragment != null;
         return fragment;
     }

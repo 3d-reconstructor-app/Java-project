@@ -124,7 +124,6 @@ public class tab3DPlain extends Fragment {
             Log.d(TAG, e.getLocalizedMessage(), e);
             return super.onContextItemSelected(item);
         }
-
         // TODO add case for model.delete.option
 
         switch (item.getItemId()) {
@@ -141,14 +140,22 @@ public class tab3DPlain extends Fragment {
 //                ((ProjectSnapshotAdapter)recyclerView.getAdapter()).notifyItemRemoved(position);
 //                ((ProjectSnapshotAdapter)recyclerView.getAdapter()).notifyItemRangeChanged(position, projectsData.size());
 
+                assert getActivity()!= null;
                 assert getFragmentManager() != null;
-                getChildFragmentManager()
+                getActivity().getSupportFragmentManager()
                         .beginTransaction()
                         .setReorderingAllowed(true)
-                        .replace(R.id.fragment_3d, new View3DFragment(getFragmentManager(), selectedModelName), View3DFragment.class.getSimpleName())
-                        .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
-                        .addToBackStack(null)
+                        .replace(R.id.fragment_3d_constraint, new View3DFragment(selectedModelName), View3DFragment.class.getSimpleName())
+                        .addToBackStack(tab3DPlain.class.getSimpleName())
+//                        .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .commit();
+//                getActivity().getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .setReorderingAllowed(true)
+//                        .replace(R.id.fragment_3d, new View3DFragment(getFragmentManager(), selectedModelName), View3DFragment.class.getSimpleName())
+//                        .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+//                        .addToBackStack(null)
+//                        .commit();
 //                    storage.deleteProjectByName(selectedProjectName);
                 break;
         }

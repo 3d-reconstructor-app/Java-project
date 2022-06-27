@@ -1,5 +1,6 @@
 package com.example.a3dmodel.visualisation.fragments;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,12 +26,16 @@ public class View3DFragment extends Fragment {
     String model;
 //    private ListView listView;
 //    private TextView selectedView = tab3DPlain.getSelectedView();
-    private FragmentManager fragmentManagerFrom3DPlainTab = null;
 
-    public View3DFragment(FragmentManager fragmentManager, String model){
-        this.fragmentManagerFrom3DPlainTab = fragmentManager;
+    @SuppressLint("ValidFragment")
+    public  View3DFragment(String model){
         this.model = model;
     }
+
+    public  View3DFragment(){}
+
+
+
 
     @Nullable
     @Override
@@ -63,26 +68,38 @@ public class View3DFragment extends Fragment {
             public void onClick(View v) {
 //                getActivity().onBackPressed();
 
+                System.out.println("getBackButton clicked");
                 assert getFragmentManager() != null;
+                assert getActivity().getFragmentManager() != null;
 
-                getFragmentManager()
-                        .popBackStackImmediate();
+//                System.out.println(getActivity().getSupportFragmentManager()
+//                        .popBackStackImmediate(null, 1));
+
+//                System.out.println("getBackButton clicked after popBack");
+
+//                getActivity().getSupportFragmentManager()
+//                        .beginTransaction()
+//                        .setReorderingAllowed(true)
+//                        .replace(R.id.view_3d, new tab3DPlain(), null)
+//                        .addToBackStack(null)
+//                        .commit();
+//
+//                System.out.println("getBackButton clicked after replace and new view3d");
+
 //                assert getParentFragmentManager() != null;
 //                getParentFragmentManager()
 //                        .beginTransaction()
 //                        .replace(R.id.view_3d, new tab3DPlain(), tab3DPlain.class.getSimpleName())
 //                        .commit();
 //                Toast.makeText(getContext(), "Clicked BACK", Toast.LENGTH_SHORT).show();
-//                getActivity().onBackPressed();
+                getActivity().onBackPressed();
             }
         };
         getBackButton.setOnClickListener(getBackButtonClickListener);
 
-
 //        listView.setItemChecked(-1, true);
-
-
     }
+
 
 
     public void setGlView(GLView v) {

@@ -51,6 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import com.example.a3dmodel.adapter.GridAdapter;
@@ -58,6 +59,7 @@ import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.exeption.AppException;
 import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.exeption.TabPhotoException;
+import com.example.a3dmodel.helperclass.CheckerForPermissions;
 import com.example.a3dmodel.project.ProjectFileManager;
 import com.example.a3dmodel.project.ProjectStorage;
 
@@ -66,13 +68,18 @@ import static com.example.a3dmodel.MainActivity.bitmapArrayList;
 public class TabPhoto extends Fragment {
     static public RecyclerView recyclerView;
     static public List<ImageData> imageDataList = new ArrayList<>();
+
     private FrameLayout frameLayout;
     private Path outputDirModels;
     private Path cacheTmpDirectory;
-    public static final int PERMISSION_REQUEST_CODE = 100;
+
     public static final int CAMERA_PIC_REQUEST = 1888;
     public static final int GALLERY_PIC_REQUEST = 1777;
     private static final int lengthOfRandomFileJPEGName = 10;
+
+    public static void clearFieldsWhenUpdatingProjectInfo(){
+        ((GridAdapter) recyclerView.getAdapter()).clearFieldsWhenUpdatingProjectInfo();
+    }
 
     public final FrameLayout getFrameLayout() {
         return frameLayout;
@@ -229,10 +236,11 @@ public class TabPhoto extends Fragment {
                         try {
                             if (Environment.MEDIA_MOUNTED.equals(state)) {
                                 if (Build.VERSION.SDK_INT >= 23) {
-                                    if (checkPermission()) {
+                                    CheckerForPermissions checker = new CheckerForPermissions(getActivity(), getContext());
+                                    if (checker.checkPermission()) {
                                         sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, filesCount);
                                     } else {
-                                        requestPermission();
+                                        checker.requestPermission();
                                     }
                                 } else {
                                     sendSelectedPhotosToServerToBuild3DModel(bitmapListOfSelectedImages, filesCount);
@@ -443,25 +451,7 @@ public class TabPhoto extends Fragment {
         fileOrDirectory.delete();
     }
 
-    private boolean checkPermission() {
-        assert getActivity() != null;
-        int result = ContextCompat.checkSelfPermission(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
-        return result == PackageManager.PERMISSION_GRANTED;
-    }
 
-    private void requestPermission() {
-        assert getActivity() != null;
-        if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Toast.makeText(
-                            getActivity(),
-                            "Write External Storage permission allows us to create files. Please allow this permission in App Settings.",
-                            Toast.LENGTH_LONG
-                    )
-                    .show();
-        } else {
-            ActivityCompat.requestPermissions(getActivity(), new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
-        }
-    }
 
     public static void makeTwoButtonsHide(Button button1, Button button2) {
         button1.setVisibility(View.GONE);

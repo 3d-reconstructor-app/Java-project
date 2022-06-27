@@ -25,6 +25,7 @@ import com.example.a3dmodel.App;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.R;
 import com.example.a3dmodel.exeption.ProjectException;
+import com.example.a3dmodel.helperclass.UpdaterOfFragmentsData;
 
 import org.w3c.dom.Text;
 
@@ -147,6 +148,7 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
                     try {
                         String projectName = ProjectSnapshotAdapter.projects.get(getAdapterPosition()).getProjectName();
                         App.getProjectStorage().openExistingProject(projectName);
+                        UpdaterOfFragmentsData.updateTabPhotoInformationOnLoading();
                         Toast.makeText(itemView.getContext(), projectName + " successfully loaded", Toast.LENGTH_SHORT).show();
                     }
                     catch(ProjectException e) {
