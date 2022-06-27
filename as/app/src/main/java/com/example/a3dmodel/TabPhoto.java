@@ -430,9 +430,7 @@ public class TabPhoto extends Fragment {
 
 
         Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
-        saveModel(resultFileFor3DModel);
-        tab3DPlain.updateModelListAndSendItToAdapter();
-        clearDirectory(cacheTmpDirectory.toFile());
+        showModelSaveDialog(resultFileFor3DModel);
     }
 
     private void clearDirectory(File fileOrDirectory) {
@@ -537,7 +535,7 @@ public class TabPhoto extends Fragment {
 
     @NonNull
     @Contract(" -> new")
-    private void createResultFile(File resultFile) {
+    private void showModelSaveDialog(File resultFile) {
         final Dialog dialog = new Dialog(this.getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -552,7 +550,7 @@ public class TabPhoto extends Fragment {
                 String modelName = projectName.getText().toString();
                 boolean result = resultFile.renameTo(new File(cacheTmpDirectory.resolve(modelName).toString()));
                 assert(result);
-
+                saveModel(resultFile);
             }
         });
         dialog.show();
@@ -562,6 +560,8 @@ public class TabPhoto extends Fragment {
         try {
             App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel);
             App.getProjectStorage().saveProject();
+            tab3DPlain.updateModelListAndSendItToAdapter();
+            clearDirectory(cacheTmpDirectory.toFile());
         }
         catch(ProjectException e) {
             Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
