@@ -1,6 +1,7 @@
 package com.example.a3dmodel;
 
 import org.apache.commons.lang3.RandomStringUtils;
+import org.jetbrains.annotations.Contract;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -30,7 +32,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -44,6 +48,7 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.example.a3dmodel.adapter.GridAdapter;
@@ -401,17 +406,14 @@ public class TabPhoto extends Fragment {
         String generatedFileNameForMODEL;
         File resultFileFor3DModel;
 
-        do {
-            generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
-        } while (Files.exists(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL)));
-        resultFileFor3DModel = new File(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL).toString());
+        resultFileFor3DModel = createResultFile();
         System.out.println("Result model file --  " + resultFileFor3DModel);
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     Client.httpClientRequest(listOfJPEGFiles, resultFileFor3DModel);
-                } catch (AppException  | IOException e) {
+                } catch (AppException | IOException e) {
                     e.printStackTrace();
                 }
             }
@@ -423,7 +425,6 @@ public class TabPhoto extends Fragment {
             e.printStackTrace();
         }
 
-        Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
         try {
             App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel);
             App.getProjectStorage().saveProject();
@@ -431,7 +432,7 @@ public class TabPhoto extends Fragment {
         catch(ProjectException e) {
             Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
-
+        Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
         tab3DPlain.updateModelListAndSendItToAdapter();
         clearDirectory(cacheTmpDirectory.toFile());
     }
@@ -534,5 +535,27 @@ public class TabPhoto extends Fragment {
         bitmapArrayList.clear();
         bitmapArrayList.addAll(App.getProjectStorage().getCurrentProject().getImages());
         updateAllImagesAndSendItToAdapter();
+    }
+
+    @NonNull
+    @Contract(" -> new")
+    private File createResultFile() {
+        final Dialog dialog = new Dialog(this.getActivity());
+        dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        dialog.setCancelable(true);
+        dialog.setContentView(R.layout.dialog_save_model);
+
+        final EditText projectName = dialog.findViewById(R.id.editTextModelName);
+        Button submitButton = dialog.findViewById(R.id.save_model_submit);
+
+        List<String> nameList = new ArrayList<>();
+        submitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                nameList.add(projectName.getText().toString());
+            }
+        });
+
+        return new File(cacheTmpDirectory.resolve(nameList.get(0)).toString());
     }
 }
