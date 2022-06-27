@@ -548,14 +548,16 @@ public class TabPhoto extends Fragment {
         final EditText projectName = dialog.findViewById(R.id.editTextModelName);
         Button submitButton = dialog.findViewById(R.id.save_model_submit);
 
-        List<String> nameList = new ArrayList<>();
+        File resultFile = new File("NewModel");
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                nameList.add(projectName.getText().toString());
+                String modelName = projectName.getText().toString();
+                boolean result = resultFile.renameTo(new File(cacheTmpDirectory.resolve(modelName).toString()));
+                assert(result);
             }
         });
 
-        return new File(cacheTmpDirectory.resolve(nameList.get(0)).toString());
+        return resultFile;
     }
 }
