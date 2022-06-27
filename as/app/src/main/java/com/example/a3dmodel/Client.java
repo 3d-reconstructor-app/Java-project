@@ -5,6 +5,7 @@ import java.io.*;
 import okhttp3.*;
 
 import java.nio.file.Files;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -27,7 +28,7 @@ public class Client {
 
     public static void httpClientRequest(List<File> files, File result) throws AppException, IOException {
         String token = UUID.randomUUID().toString();
-        String url = "https://7d23-176-53-196-130.eu.ngrok.io/";
+        String url = "https://faa3-176-53-196-130.eu.ngrok.io/";
 //        String url = "http://127.0.0.1:8000/";
         System.out.println(token);
         OkHttpClient client = new OkHttpClient.Builder()
@@ -46,8 +47,8 @@ public class Client {
                         return chain.proceed(authenticatedRequest);
                     }
                 })
+//                .protocols(List.of(Protocol.HTTP_1_1))
                 .build();
-
         File zipFile = Files.createTempFile(null, ".zip").toFile();
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
         for (File file : files) {
@@ -116,8 +117,8 @@ public class Client {
 
     private static void getFileHTTPGETRequest(OkHttpClient client, String url, String token, File result) throws AppException {
         Request requestGet = new Request.Builder()
-                .url(HttpUrl.get(url + "resources/" + token + "/res.ply"))
-//                .url(HttpUrl.get(url + "resources/" + token + "/reconstruction_sequential/PMVS/models/pmvs_options.txt.ply"))
+//                .url(HttpUrl.get(url + "resources/" + token + "/res.ply"))
+                .url(HttpUrl.get(url + "resources/" + token + "/reconstruction_sequential/PMVS/models/pmvs_options.txt.ply"))
                 .get()
                 .build();
         try (Response response = client.newCall(requestGet).execute()) {

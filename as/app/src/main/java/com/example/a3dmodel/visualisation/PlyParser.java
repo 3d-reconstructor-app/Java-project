@@ -52,6 +52,8 @@ public class PlyParser {
     // Counter for header
     private int elementCount = 0;
 
+    private static final int DOT_FREQUENCY = 2;
+
     public PlyParser(InputStream plyFile) {
         bufferedReader = new BufferedReader(new InputStreamReader(plyFile));
     }
@@ -237,43 +239,67 @@ public class PlyParser {
 //        );
 
         static final List<List<Double>> shifts = new ArrayList<>(8);
+
         static {
             List<Double> lst0 = new ArrayList<>(3);
-            lst0.add(-1.0); lst0.add(-1.0); lst0.add(-1.0);
+            lst0.add(-1.0);
+            lst0.add(-1.0);
+            lst0.add(-1.0);
             shifts.add(lst0);
             List<Double> lst1 = new ArrayList<>(3);
-            lst1.add(-1.0); lst1.add(-1.0); lst1.add(1.0);
+            lst1.add(-1.0);
+            lst1.add(-1.0);
+            lst1.add(1.0);
             shifts.add(lst1);
             List<Double> lst2 = new ArrayList<>(3);
-            lst2.add(-1.0); lst2.add(1.0); lst2.add(-1.0);
+            lst2.add(-1.0);
+            lst2.add(1.0);
+            lst2.add(-1.0);
             shifts.add(lst2);
             List<Double> lst3 = new ArrayList<>(3);
-            lst3.add(-1.0); lst3.add(1.0); lst3.add(1.0);
+            lst3.add(-1.0);
+            lst3.add(1.0);
+            lst3.add(1.0);
             shifts.add(lst3);
             List<Double> lst4 = new ArrayList<>(3);
-            lst4.add(1.0); lst4.add(-1.0); lst4.add(-1.0);
+            lst4.add(1.0);
+            lst4.add(-1.0);
+            lst4.add(-1.0);
             shifts.add(lst4);
             List<Double> lst5 = new ArrayList<>(3);
-            lst5.add(1.0); lst5.add(-1.0); lst5.add(1.0);
+            lst5.add(1.0);
+            lst5.add(-1.0);
+            lst5.add(1.0);
             shifts.add(lst5);
             List<Double> lst6 = new ArrayList<>(3);
-            lst6.add(1.0); lst6.add(1.0); lst6.add(-1.0);
+            lst6.add(1.0);
+            lst6.add(1.0);
+            lst6.add(-1.0);
             shifts.add(lst6);
             List<Double> lst7 = new ArrayList<>(3);
-            lst7.add(1.0); lst7.add(1.0); lst7.add(1.0);
+            lst7.add(1.0);
+            lst7.add(1.0);
+            lst7.add(1.0);
             shifts.add(lst7);
         }
 
-        static final int scale = 1;
+        static final int scale = 1000;
         static final double delta = 0.0003 * scale;
 
         Point(String[] features) {
             x = Double.parseDouble(features[0]) * scale;
+//            x = Math.round(x * 10000);
+//            x = x / 10000f;
             y = Double.parseDouble(features[1]) * scale;
+//            y = Math.round(y * 10000) / 10000f;
             z = Double.parseDouble(features[2]) * scale;
+//            z = Math.round(z * 10000) / 10000f;
             nx = Double.parseDouble(features[3]);
+            nx = 0;
             ny = Double.parseDouble(features[4]);
+            ny = 0;
             nz = Double.parseDouble(features[5]);
+            nz = 0;
             red = features[6];
             green = features[7];
             blue = features[8];
@@ -305,9 +331,15 @@ public class PlyParser {
         private String getVertexes() {
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < 8; i++) {
-                stringBuilder.append((x + delta * shifts.get(i).get(0))).append(" ")
-                        .append(y + delta * shifts.get(i).get(1)).append(" ")
-                        .append(z + delta * shifts.get(i).get(2)).append(" ")
+                double new_x = Math.round((x + delta * shifts.get(i).get(0)) * 10000);
+                new_x /= 10000;
+                double new_y = Math.round((y + delta * shifts.get(i).get(1)) * 10000);
+                new_y /= 10000;
+                double new_z = Math.round((z + delta * shifts.get(i).get(2)) * 10000);
+                new_z /= 10000;
+                stringBuilder.append(new_x).append(" ")
+                        .append(new_y).append(" ")
+                        .append(new_z).append(" ")
                         .append(nx).append(" ")
                         .append(ny).append(" ")
                         .append(nz).append(" ")
@@ -329,7 +361,7 @@ public class PlyParser {
         writeLine(writer, reader.readLine()); // format
         String str = reader.readLine();
         String[] words = str.split(" ");
-        int vertex_count = Integer.parseInt(words[2]) / 5;
+        int vertex_count = Integer.parseInt(words[2]) / DOT_FREQUENCY;
         writeLine(writer, words[0] + ' ' + words[1] + ' ' + vertex_count * 8); //vertex count
         writeLine(writer, reader.readLine()); // x
         writeLine(writer, reader.readLine()); // y
@@ -346,7 +378,7 @@ public class PlyParser {
         writeLine(writer, reader.readLine()); // end
         List<Point> vertexes = new ArrayList<>(vertex_count);
         for (int i = 0; i < vertex_count; i++) {
-            for (int j = 0; j < 5; j++) {
+            for (int j = 0; j < DOT_FREQUENCY; j++) {
                 str = reader.readLine();
             }
             words = str.split(" ");
@@ -355,9 +387,9 @@ public class PlyParser {
         double x = vertexes.get(0).x;
         double y = vertexes.get(0).y;
         double z = vertexes.get(0).z;
-        System.out.println(x);
-        System.out.println(y);
-        System.out.println(z);
+//        System.out.println(x);
+//        System.out.println(y);
+//        System.out.println(z);
 
 
         for (int i = 0; i < vertex_count; i++) {
