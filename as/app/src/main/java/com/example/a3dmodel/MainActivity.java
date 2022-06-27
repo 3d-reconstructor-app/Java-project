@@ -13,6 +13,8 @@ import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
@@ -23,13 +25,14 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 //import com.example.a3dmodel.databinding.ActivityMainBinding;
 
 import static com.example.a3dmodel.TabPhoto.CAMERA_PIC_REQUEST;
 import static com.example.a3dmodel.TabPhoto.GALLERY_PIC_REQUEST;
-import static com.example.a3dmodel.TabPhoto.PERMISSION_REQUEST_CODE;
+import static com.example.a3dmodel.helperclass.CheckerForPermissions.PERMISSION_REQUEST_CODE;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -59,9 +62,31 @@ public class MainActivity extends AppCompatActivity {
         viewPager.setCurrentItem(1);
         tabs.setupWithViewPager(viewPager);
 
+        if (!checkPermission()) {
+            requestPermission();
+        }
 
 //        start();
     }
+
+    private boolean checkPermission() {
+        int result = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        return result == PackageManager.PERMISSION_GRANTED;
+    }
+
+    private void requestPermission() {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+            Toast.makeText(
+                            this,
+                            "Write External Storage permission allows us to create files. Please allow this permission in App Settings.",
+                            Toast.LENGTH_LONG
+                    )
+                    .show();
+        } else {
+            ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
+        }
+    }
+
 
 //    protected void start() {
 ////        setContentView(R.layout.activity_main);
