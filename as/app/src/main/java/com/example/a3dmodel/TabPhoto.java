@@ -557,7 +557,7 @@ public class TabPhoto extends Fragment {
                 assert(result);
             }
         });
-
+        dialog.show();
         return resultFile;
     }
 }
