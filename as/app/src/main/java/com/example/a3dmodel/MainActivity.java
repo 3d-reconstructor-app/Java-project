@@ -133,30 +133,10 @@ public class MainActivity extends AppCompatActivity {
             textView.setVisibility(View.GONE);
         }
 
-//        if (data.getClipData() != null) {
-//            ClipData mClipData = data.getClipData();
-//            int cout = data.getClipData().getItemCount();
-//            for (int i = 0; i < cout; i++) {
-//                // adding imageuri in array
-//                Uri imageurl = data.getClipData().getItemAt(i).getUri();
-//                mArrayUri.add(imageurl);
-//            }
-//            // setting 1st selected image into image switcher
-//            imageView.setImageURI(mArrayUri.get(0));
-//            position = 0;
-//        } else {
-//            Uri imageurl = data.getData();
-//            mArrayUri.add(imageurl);
-//            imageView.setImageURI(mArrayUri.get(0));
-//            position = 0;
-//        }
-
         if (requestCode == GALLERY_PIC_REQUEST && resultCode == RESULT_OK) {
             assert data != null;
-            System.out.println(-1);
 
             if (data.getClipData() != null) {
-                System.out.println(-2);
                 int count = data.getClipData().getItemCount();
                 for (int i = 0; i < count; i++) {
                     System.out.println(i);
@@ -176,9 +156,6 @@ public class MainActivity extends AppCompatActivity {
                     textView.setVisibility(View.GONE);
 
                 }
-                // setting 1st selected image into image switcher
-//                imageView.setImageURI(mArrayUri.get(0));
-//                position = 0;
             } else {
                 System.out.println("uno");
 
@@ -196,18 +173,6 @@ public class MainActivity extends AppCompatActivity {
                 textView.setVisibility(View.GONE);
             }
 
-//            Uri imageUri = data.getData(); // TODO SAVE IT
-//            Bitmap bitmap = null;
-//            try {
-//                bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//            assert bitmap != null;
-//            bitmapArrayList.add(bitmap);
-//            TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
-//            TextView textView = findViewById(R.id.fragment_photo_empty_view);
-//            textView.setVisibility(View.GONE);
         }
 
         super.onActivityResult(requestCode, resultCode, data);
