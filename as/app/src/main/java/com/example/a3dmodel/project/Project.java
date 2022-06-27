@@ -144,9 +144,14 @@ public class Project implements Comparable<Project>, Serializable {
         }
     }
 
-    @NonNull
+
     public static Project deserialize(@NonNull ObjectInputStream in) throws IOException, ClassNotFoundException {
-        Project proj = (Project) in.readObject();
+        Project proj;
+        try {
+            proj = (Project) in.readObject();
+        } catch (ClassCastException e) {
+            return null;
+        }
         File projectDataFile = ProjectFileManager.getProjectDataFile(proj.getProjectName());
         File projectModelsFile = ProjectFileManager.getProjectModelsDir(proj.getProjectName());
         proj.images = new ArrayList<>();

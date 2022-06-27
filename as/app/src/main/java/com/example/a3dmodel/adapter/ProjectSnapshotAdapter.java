@@ -2,9 +2,11 @@ package com.example.a3dmodel.adapter;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -16,6 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.ThemeUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.a3dmodel.App;
@@ -51,6 +54,7 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
     }
 
 
+    @SuppressLint("RestrictedApi")
     @Override
     public void onBindViewHolder(@NonNull SnapshotViewHolder holder, int position) {
         ProjectSnapshot projectSnapshot = projects.get(position);
@@ -72,7 +76,18 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
             holder.itemView.setBackgroundColor(Color.rgb(30,129,176));
         }
         else {
-            holder.itemView.setBackgroundColor(Color.parseColor("white"));
+            int nightModeFlags =  App.getContext().getResources().getConfiguration().uiMode & Configuration.UI_MODE_NIGHT_MASK;
+
+            switch (nightModeFlags) {
+                case Configuration.UI_MODE_NIGHT_YES:
+                    holder.itemView.setBackgroundColor(Color.BLACK);
+                    break;
+                case Configuration.UI_MODE_NIGHT_NO:
+                case Configuration.UI_MODE_NIGHT_UNDEFINED:
+                    holder.itemView.setBackgroundColor(Color.WHITE);
+                    break;
+            }
+
         }
     }
 
@@ -150,7 +165,7 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v,
                                         ContextMenu.ContextMenuInfo menuInfo) {
-            menu.add(Menu.NONE, R.id.model_draw_option,
+            menu.add(Menu.NONE, R.id.project_delete_option,
                     Menu.NONE, R.string.delete_option);
         }
     }
