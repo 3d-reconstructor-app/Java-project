@@ -406,7 +406,10 @@ public class TabPhoto extends Fragment {
         String generatedFileNameForMODEL;
         File resultFileFor3DModel;
 
-        resultFileFor3DModel = createResultFile();
+        do {
+            generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
+        } while (Files.exists(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL)));
+        resultFileFor3DModel = new File(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL).toString());
         System.out.println("Result model file --  " + resultFileFor3DModel);
         Thread thread = new Thread(new Runnable() {
             @Override
@@ -425,14 +428,9 @@ public class TabPhoto extends Fragment {
             e.printStackTrace();
         }
 
-        try {
-            App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel);
-            App.getProjectStorage().saveProject();
-        }
-        catch(ProjectException e) {
-            Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
-        }
+
         Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
+        saveModel(resultFileFor3DModel);
         tab3DPlain.updateModelListAndSendItToAdapter();
         clearDirectory(cacheTmpDirectory.toFile());
     }
@@ -539,7 +537,7 @@ public class TabPhoto extends Fragment {
 
     @NonNull
     @Contract(" -> new")
-    private File createResultFile() {
+    private void createResultFile(File resultFile) {
         final Dialog dialog = new Dialog(this.getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(true);
@@ -548,16 +546,25 @@ public class TabPhoto extends Fragment {
         final EditText projectName = dialog.findViewById(R.id.editTextModelName);
         Button submitButton = dialog.findViewById(R.id.save_model_submit);
 
-        File resultFile = new File("NewModel");
         submitButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 String modelName = projectName.getText().toString();
                 boolean result = resultFile.renameTo(new File(cacheTmpDirectory.resolve(modelName).toString()));
                 assert(result);
+
             }
         });
         dialog.show();
-        return resultFile;
+    }
+
+    private void saveModel(File resultFileFor3DModel) {
+        try {
+            App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel);
+            App.getProjectStorage().saveProject();
+        }
+        catch(ProjectException e) {
+            Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+        }
     }
 }
