@@ -77,7 +77,7 @@ public class TabPhoto extends Fragment {
     public static final int GALLERY_PIC_REQUEST = 1777;
     private static final int lengthOfRandomFileJPEGName = 10;
 
-    public static void clearFieldsWhenUpdatingProjectInfo(){
+    public static void clearFieldsWhenUpdatingProjectInfo() {
         ((GridAdapter) recyclerView.getAdapter()).clearFieldsWhenUpdatingProjectInfo();
     }
 
@@ -180,7 +180,6 @@ public class TabPhoto extends Fragment {
             Button deleteButton = (Button) view.findViewById(R.id.button_delete);
             Button buildButton = (Button) view.findViewById(R.id.button_build);
 
-
             try {
                 App.getProjectStorage().loadProject();
             } catch (ProjectException e) {
@@ -207,10 +206,17 @@ public class TabPhoto extends Fragment {
                 @Override
                 public void onClick(View v) {
                     new Thread(() -> {
-                        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-                        galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-                        assert getActivity() != null;
-                        getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
+//                        Intent intent = new Intent();
+                        Intent intent = new Intent(Intent.ACTION_PICK);
+
+                        intent.setType("image/*");
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        intent.setAction(Intent.ACTION_GET_CONTENT);
+                        getActivity().startActivityForResult(intent, GALLERY_PIC_REQUEST);
+//                        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
+//                        galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+//                        assert getActivity() != null;
+//                        getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
 
                     }).start();
                 }
@@ -452,7 +458,6 @@ public class TabPhoto extends Fragment {
     }
 
 
-
     public static void makeTwoButtonsHide(Button button1, Button button2) {
         button1.setVisibility(View.GONE);
         button2.setVisibility(View.GONE);
@@ -540,7 +545,7 @@ public class TabPhoto extends Fragment {
             String modelName = projectName.getText().toString() + ".ply";
             File wtf = new File(cacheTmpDirectory.resolve(modelName).toString());
             boolean result = resultFile.renameTo(wtf);
-            assert(result);
+            assert (result);
             saveModel(wtf);
             dialog.dismiss();
         });
@@ -553,8 +558,7 @@ public class TabPhoto extends Fragment {
             App.getProjectStorage().saveProject();
             tab3DPlain.updateModelListAndSendItToAdapter();
             clearDirectory(cacheTmpDirectory.toFile());
-        }
-        catch(ProjectException e) {
+        } catch (ProjectException e) {
             Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
