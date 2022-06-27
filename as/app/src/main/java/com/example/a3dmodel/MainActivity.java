@@ -4,14 +4,17 @@ import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.net.Uri;
-import android.app.FragmentManager;
 import android.os.Bundle;
+import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 
 import com.example.a3dmodel.databinding.ActivityMainBinding;
+import com.example.a3dmodel.visualisation.fragments.View3DFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
@@ -41,7 +44,6 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "key.currentPosition";
-
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,7 +55,10 @@ public class MainActivity extends AppCompatActivity {
         ViewPager viewPager = binding.viewPager;
         viewPager.setAdapter(sectionsPagerAdapter);
         TabLayout tabs = binding.tabs;
+
+        viewPager.setCurrentItem(1);
         tabs.setupWithViewPager(viewPager);
+
 
 //        start();
     }
@@ -138,14 +143,37 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-    public void onBackPressed() {
-        FragmentManager fm = getFragmentManager();
-        if (fm.getBackStackEntryCount() > 0) {
-            Log.i("MainActivity", "popping backstack");
-            fm.popBackStackImmediate();
-//            fm.popBackStack();
-        } else {
-            Log.i("MainActivity", "nothing on backstack, calling super");
-            super.onBackPressed();
-        }    }
+//    public void onBackPressed() {
+//        FragmentManager fm = getFragmentManager();
+//        if (fm.getBackStackEntryCount() > 0) {
+//            Log.i("MainActivity", "popping backstack");
+//            fm.popBackStackImmediate();
+////            fm.popBackStack();
+//        } else {
+//            Log.i("MainActivity", "nothing on backstack, calling super");
+//            super.onBackPressed();
+//        }
+
+
+
+        @Override
+        public void onBackPressed() {
+            FragmentManager manager = getSupportFragmentManager();
+            Fragment fragment = manager.findFragmentById(R.id.view_3d);
+            // If there is something in the back stack AND the current fragment is the LoggedInFragment
+            System.out.println("manager.getBackStackEntryCount() = " +  manager.getBackStackEntryCount());
+            System.out.println("fragment instanceof View3DFragment " +  (fragment instanceof View3DFragment));
+            System.out.println("fragment instanceof tab3DPlain " +  (fragment instanceof tab3DPlain));
+//            if (manager.getBackStackEntryCount() > 0
+//                    && fragment instanceof View3DFragment) {
+
+            if (manager.getBackStackEntryCount() > 0) {
+                manager.popBackStack(tab3DPlain.class.getSimpleName(), 1);
+            } else {
+                Log.i("MainActivity", "nothing on backstack, calling super");
+                super.onBackPressed();
+
+        }
+
+        }
 }
