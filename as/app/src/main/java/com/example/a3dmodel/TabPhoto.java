@@ -1,5 +1,7 @@
 package com.example.a3dmodel;
 
+import static android.content.ContentValues.TAG;
+
 import org.apache.commons.lang3.RandomStringUtils;
 import org.jetbrains.annotations.Contract;
 
@@ -22,6 +24,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.transition.TransitionInflater;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -45,6 +48,7 @@ import java.util.stream.Collectors;
 import com.example.a3dmodel.adapter.GridAdapter;
 import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.exeption.AppException;
+import com.example.a3dmodel.exeption.IncorrectDataSetException;
 import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.exeption.TabPhotoException;
 import com.example.a3dmodel.helperclass.CheckerForPermissions;
@@ -233,12 +237,17 @@ public class TabPhoto extends Fragment {
 
                                 }
                             }
-                        } catch (TabPhotoException | ProjectException | AppException | IOException e) {
+                        } catch (TabPhotoException | AppException | IOException e) {
                             e.printStackTrace();
+                        } catch (IncorrectDataSetException e) {
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        } catch (ProjectException e) {
+                            Toast.makeText(getContext(), "Error while saving current project", Toast.LENGTH_LONG).show();
                         }
 
-
-                        assert getActivity() != null;
+                        if (getActivity() == null) {
+                            throw new RuntimeException("Couldn't get current activity");
+                        }
                         getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show());
 
                     } finally {
@@ -314,8 +323,6 @@ public class TabPhoto extends Fragment {
                             }
 
                         });
-
-
                     }).start();
                 }
             };
@@ -330,15 +337,15 @@ public class TabPhoto extends Fragment {
 
     private void sendSelectedPhotosToServerToBuild3DModel(List<Bitmap> bitmapListOfSelectedImages,
                                                           int filesCount)
-            throws TabPhotoException, ProjectException, AppException, IOException {
+            throws TabPhotoException, ProjectException, AppException, IOException, IncorrectDataSetException {
         ProjectStorage storage = App.getProjectStorage();
         storage.saveProject();
         List<File> listOfJPEGFiles = new ArrayList<>();
         if (this.cacheTmpDirectory == null || this.outputDirModels == null) {
             initializePathsForDirectory();
         }
-        System.out.println(cacheTmpDirectory);
-        System.out.println(outputDirModels);
+        Log.d(TAG, cacheTmpDirectory.toString());
+        Log.d(TAG, outputDirModels.toString());
         for (int i = 0; i < filesCount; i++) {
             String generatedFileNameForJPEGPhoto = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".jpg";
             File jpegFile = new File(cacheTmpDirectory.resolve(generatedFileNameForJPEGPhoto).toString());
@@ -360,9 +367,12 @@ public class TabPhoto extends Fragment {
             listOfJPEGFiles.add(jpegFile);
         }
 
+        if (listOfJPEGFiles.size() < 6) {
+            throw new IncorrectDataSetException("Too few images to build model");
+        }
 
         for (File f : listOfJPEGFiles) {
-            System.out.println(f.getName());
+            Log.d(TAG, f.getName());
         }
 
         File projectDirectoryForModels = new File(outputDirModels.toString());
@@ -375,7 +385,7 @@ public class TabPhoto extends Fragment {
             generatedFileNameForMODEL = RandomStringUtils.random(lengthOfRandomFileJPEGName, true, false) + ".ply";
         } while (Files.exists(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL)));
         resultFileFor3DModel = new File(projectDirectoryForModels.toPath().resolve(generatedFileNameForMODEL).toString());
-        System.out.println("Result model file --  " + resultFileFor3DModel);
+        Log.d(TAG, "Result model file --  " + resultFileFor3DModel);
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -393,9 +403,7 @@ public class TabPhoto extends Fragment {
             e.printStackTrace();
         }
 
-
         Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
-        assert (!bitmapListOfSelectedImages.isEmpty());
         showModelSaveDialog(resultFileFor3DModel, bitmapListOfSelectedImages.get(0));
     }
 
@@ -468,8 +476,6 @@ public class TabPhoto extends Fragment {
         updateAllImagesAndSendItToAdapter();
     }
 
-    @NonNull
-    @Contract(" -> new")
     private void showModelSaveDialog(File resultFile, Bitmap icon) {
         final Dialog dialog = new Dialog(this.getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -494,7 +500,7 @@ public class TabPhoto extends Fragment {
         try {
             App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel, icon);
             App.getProjectStorage().saveProject();
-            tab3DPlain.updateModelListAndSendItToAdapter();
+            Tab3DPlain.updateModelListAndSendItToAdapter();
             clearDirectory(cacheTmpDirectory.toFile());
         } catch (ProjectException e) {
             Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();

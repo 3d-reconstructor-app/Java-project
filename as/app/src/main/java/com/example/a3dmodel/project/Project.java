@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 
 import com.example.a3dmodel.App;
 import com.example.a3dmodel.TabPhoto;
-import com.example.a3dmodel.tab3DPlain;
+import com.example.a3dmodel.Tab3DPlain;
 import com.example.a3dmodel.data.ImageData;
 import com.example.a3dmodel.data.ModelData;
 import com.example.a3dmodel.data.ProjectSnapshot;
@@ -156,7 +156,7 @@ public class Project implements Comparable<Project>, Serializable {
         images.clear();
         models.clear();
         TabPhoto.updateAllImagesAndSendItToAdapter();
-        tab3DPlain.updateModelListAndSendItToAdapter();
+        Tab3DPlain.updateModelListAndSendItToAdapter();
     }
 
     public List<ModelData> getModels() {

@@ -30,7 +30,7 @@ import com.example.a3dmodel.project.ProjectStorage;
 import java.io.IOException;
 import java.util.List;
 
-public class tabMainMenu extends Fragment {
+public class TabMainMenu extends Fragment {
     private ProjectStorage storage = App.getProjectStorage();
     static private RecyclerView recyclerView;
     static private List<ProjectSnapshot> projectsData = App.getProjectStorage().getAllSnapshots();
@@ -59,7 +59,7 @@ public class tabMainMenu extends Fragment {
     public static void updateProjectListAndSendItToAdapter() {
         List<ProjectSnapshot> snapshotList = App.getProjectStorage().getAllSnapshots();
         ProjectSnapshotAdapter.projects = snapshotList;
-        tabMainMenu.projectsData = snapshotList;
+        TabMainMenu.projectsData = snapshotList;
         assert recyclerView.getAdapter() != null;
 
         recyclerView.getAdapter().notifyDataSetChanged();

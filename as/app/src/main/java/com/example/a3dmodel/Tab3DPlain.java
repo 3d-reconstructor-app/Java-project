@@ -23,7 +23,7 @@ import com.example.a3dmodel.visualisation.fragments.View3DFragment;
 import java.util.ArrayList;
 import java.util.List;
 
-public class tab3DPlain extends Fragment {
+public class Tab3DPlain extends Fragment {
     static private RecyclerView recyclerView;
     static private List<ModelData> modelsList = new ArrayList<>();
 
@@ -104,7 +104,7 @@ public class tab3DPlain extends Fragment {
                         .beginTransaction()
                         .setReorderingAllowed(true)
                         .replace(R.id.fragment_3d_constraint, new View3DFragment(selectedModelName), View3DFragment.class.getSimpleName())
-                        .addToBackStack(tab3DPlain.class.getSimpleName())
+                        .addToBackStack(Tab3DPlain.class.getSimpleName())
                         .commit();
                 break;
         }

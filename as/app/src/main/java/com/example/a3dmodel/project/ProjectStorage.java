@@ -11,8 +11,8 @@ import androidx.annotation.NonNull;
 import com.example.a3dmodel.App;
 import com.example.a3dmodel.MainActivity;
 import com.example.a3dmodel.TabPhoto;
-import com.example.a3dmodel.tab3DPlain;
-import com.example.a3dmodel.tabMainMenu;
+import com.example.a3dmodel.Tab3DPlain;
+import com.example.a3dmodel.TabMainMenu;
 import com.example.a3dmodel.data.ProjectSnapshot;
 import com.example.a3dmodel.exeption.AmbiguousProjectNameException;
 import com.example.a3dmodel.exeption.ProjectException;
@@ -53,8 +53,8 @@ public class ProjectStorage implements Serializable {
     private void setCurrentProject(Project proj, boolean notify) {
         currentProject = proj;
         if (notify) {
-            tab3DPlain.updateModelListAndSendItToAdapter();
-            tabMainMenu.updateCurrentProject(proj);
+            Tab3DPlain.updateModelListAndSendItToAdapter();
+            TabMainMenu.updateCurrentProject(proj);
         }
     }
 
@@ -145,7 +145,7 @@ public class ProjectStorage implements Serializable {
         }
         setCurrentProject(nameToProject.get(projectName));
         TabPhoto.loadImagesFromCurrentProject();
-        tab3DPlain.updateModelListAndSendItToAdapter();
+        Tab3DPlain.updateModelListAndSendItToAdapter();
     }
 
     public void saveProject() throws ProjectException {
@@ -186,8 +186,8 @@ public class ProjectStorage implements Serializable {
     }
 
     private void updateTabs() {
-        tabMainMenu.updateProjectListAndSendItToAdapter();
-        tab3DPlain.updateModelListAndSendItToAdapter();
+        TabMainMenu.updateProjectListAndSendItToAdapter();
+        Tab3DPlain.updateModelListAndSendItToAdapter();
         TabPhoto.updateAllImagesAndSendItToAdapter();
     }
 }

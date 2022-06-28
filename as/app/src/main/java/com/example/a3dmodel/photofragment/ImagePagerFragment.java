@@ -1,5 +1,3 @@
-//TODO @@@SHER
-
 package com.example.a3dmodel.photofragment;
 
 import android.os.Bundle;
@@ -22,9 +20,6 @@ import com.example.a3dmodel.R;
 import java.util.List;
 import java.util.Map;
 
-/**
- * A fragment for displaying a pager of images.
- */
 public class ImagePagerFragment extends Fragment {
 
     private ViewPager viewPager;
@@ -54,9 +49,6 @@ public class ImagePagerFragment extends Fragment {
         return viewPager;
     }
 
-    /**
-     * Prepares the shared element transition from and back to the grid fragment.
-     */
     private void prepareSharedElementTransition() {
         Transition transition =
                 TransitionInflater.from(getContext())

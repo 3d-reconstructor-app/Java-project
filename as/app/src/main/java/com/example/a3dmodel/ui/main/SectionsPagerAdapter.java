@@ -11,8 +11,8 @@ import androidx.fragment.app.FragmentPagerAdapter;
 
 import com.example.a3dmodel.R;
 import com.example.a3dmodel.TabPhoto;
-import com.example.a3dmodel.tab3DPlain;
-import com.example.a3dmodel.tabMainMenu;
+import com.example.a3dmodel.Tab3DPlain;
+import com.example.a3dmodel.TabMainMenu;
 
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
@@ -35,10 +35,10 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
         Fragment fragment = null;
         switch (position) {
             case 0:
-                fragment = new tab3DPlain();
+                fragment = new Tab3DPlain();
                 break;
             case 1:
-                fragment = new tabMainMenu();
+                fragment = new TabMainMenu();
                 break;
             case 2:
                 fragment = new TabPhoto();
