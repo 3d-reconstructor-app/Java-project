@@ -42,10 +42,6 @@ import java.util.concurrent.atomic.AtomicBoolean;
 import com.example.a3dmodel.photofragment.ImagePagerFragment;
 import com.example.a3dmodel.TabPhoto;
 
-/**
- * A fragment for displaying a grid of images.
- */
-
 public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolder> {
 
     public static List<ImageData> imageDataList;
@@ -57,7 +53,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
     private final ViewHolderListener viewHolderListener;
 
     @SuppressLint("NotifyDataSetChanged")
-    public void clearFieldsWhenUpdatingProjectInfo(){
+    public void clearFieldsWhenUpdatingProjectInfo() {
         selectedImageDataItems.clear();
         selectedPositionsOfImagesViews.clear();
         selectedImagesViewWithBackgroundColor.forEach(e -> e.setBackgroundColor(Color.TRANSPARENT));
@@ -69,31 +65,14 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
         checkButtonsVisibility();
     }
 
-
-//    private Fragment tabPhotoFragment;
     private final FrameLayout frameLayout;
 
-    public Set<Integer> getSelectedPositionsOfImagesViews() {
-        return selectedPositionsOfImagesViews;
-    }
-
-    public GridAdapter(List<ImageData> imageDataList, TabPhoto fragment) {
+    public GridAdapter(List<ImageData> imageDataList, @NonNull TabPhoto fragment) {
         frameLayout = fragment.getFrameLayout();
         assert frameLayout != null;
         GridAdapter.imageDataList = imageDataList;
         this.requestManager = Glide.with(fragment);
         this.viewHolderListener = new ViewHolderListenerImpl(fragment);
-    }
-
-    public GridAdapter(TabPhoto fragment) {
-        frameLayout = fragment.getFrameLayout();
-        assert frameLayout != null;
-        this.requestManager = Glide.with(fragment);
-        this.viewHolderListener = new ViewHolderListenerImpl(fragment);
-    }
-
-    public static void addBitmapToImageDataList(Bitmap bitmap) {
-        imageDataList.add(new ImageData(bitmap));
     }
 
     @NonNull
@@ -150,25 +129,17 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
     }
 
     public class ImageViewHolder extends RecyclerView.ViewHolder {
-        // holder should contain a member variable for any view
-        // that will be set as you render a row
         private final ImageView image;
         private final RequestManager requestManager;
         private final ViewHolderListener viewHolderListener;
 
-        // create a constructor that accepts the entire item row
-        // and does the view lookups to find each subview
         public ImageViewHolder(View itemView,
                                RequestManager requestManager,
                                ViewHolderListener viewHolderListener) {
-            // stores the itemView in a public final member variable that can be used
-            // to access the context from any ViewHolder instance.
             super(itemView);
             this.image = (ImageView) itemView.findViewById(R.id.card_image);
             this.requestManager = requestManager;
             this.viewHolderListener = viewHolderListener;
-//            itemView.findViewById(R.id.card_view).setOnClickListener(this);
-
             itemView.setOnLongClickListener(view -> {
                 isSelectMode = true;
                 if (selectedImageDataItems.contains(imageDataList.get(getAdapterPosition()))) {
@@ -210,9 +181,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                         isSelectMode = false;
                     }
                 } else {
-                    // TODO @@@SHER
-                    //  what to do when just click on it -- open in another window
-
                     viewHolderListener.onItemClicked(view, getAdapterPosition());
                 }
             });
@@ -223,12 +191,10 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
         void onBind() {
             int adapterPosition = getAdapterPosition();
             setImage(adapterPosition);
-            // Set the string value of the image resource as the unique transition name for the view.
             image.setTransitionName(String.valueOf(imageDataList.get(adapterPosition).getImageBitmap()));
         }
 
         void setImage(final int adapterPosition) {
-            // Load the image with Glide to prevent OOM error when the image drawables are very large.
             Bitmap bitmap = imageDataList.get(adapterPosition).getImageBitmap();
             Drawable bitmapDrawable = new BitmapDrawable(bitmap);
             requestManager
@@ -257,14 +223,7 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
         }
     }
 
-
-    /// ---------------- HolderListener
-
-    /**
-     * A listener that is attached to all ViewHolders to handle image loading events and clicks.
-     */
     private interface ViewHolderListener {
-
         void onLoadCompleted(ImageView view, int adapterPosition);
 
         void onItemClicked(View view, int adapterPosition);
@@ -283,7 +242,6 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
 
         @Override
         public void onLoadCompleted(ImageView view, int position) {
-            // Call startPostponedEnterTransition only when the 'selected' image loading is completed.
             if (MainActivity.currentPosition != position) {
                 return;
             }
@@ -293,21 +251,9 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
             fragment.startPostponedEnterTransition();
         }
 
-        /**
-         * Handles a view click by setting the current position to the given {@code position} and
-         * starting a {@link  ImagePagerFragment} which displays the image at the position.
-         *
-         * @param view     the clicked {@link ImageView} (the shared element view will be re-mapped at the
-         *                 GridFragment's SharedElementCallback)
-         * @param position the selected view position
-         */
         @Override
         public void onItemClicked(View view, int position) {
-            // Update the position.
             MainActivity.currentPosition = position;
-
-            // Exclude the clicked card from the exit transition (e.g. the card will disappear immediately
-            // instead of fading out with the rest to prevent an overlapping animation of fade and move).
             assert fragment.getExitTransition() != null;
             ((TransitionSet) fragment.getExitTransition()).excludeTarget(view, true);
 
@@ -323,7 +269,5 @@ public class GridAdapter extends RecyclerView.Adapter<GridAdapter.ImageViewHolde
                     .commit();
         }
     }
-
-
 }
 

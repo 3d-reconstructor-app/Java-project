@@ -1,9 +1,7 @@
 package com.example.a3dmodel.project;
 
-import android.app.Application;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.os.Environment;
 
 import androidx.annotation.NonNull;
 
@@ -47,15 +45,10 @@ public class ProjectFileManager {
     }
 
     public static boolean createRootPath() {
-//        File f = new File(getRootPath().toString());
         try {
-            System.out.println("Creating resource folder in : " + APP_ROOT_PATH);
             Files.createDirectory(APP_ROOT_PATH);
-            System.out.println("Checking if created : " + getRootPath().toFile().exists());
         }
         catch(IOException e) {
-            System.out.println("Error while creating directory");
-            System.out.println(e.getMessage());
             return false;
         }
         return true;
@@ -91,7 +84,7 @@ public class ProjectFileManager {
         return MODELS_PATH.resolve(projectName);
     }
 
-    public static void clearAndDeleteDir(File directory) throws IOException {
+    public static void clearAndDeleteDir(@NonNull File directory) throws IOException {
         if (directory.exists()) {
             FileUtils.cleanDirectory(directory);
             FileUtils.deleteDirectory(directory);

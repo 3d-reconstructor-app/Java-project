@@ -6,30 +6,22 @@ import org.jetbrains.annotations.Contract;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
-import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
-import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.GridLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.annotation.SuppressLint;
-import android.app.Application;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 
 import android.os.Environment;
-import android.os.FileUtils;
 import android.provider.MediaStore;
 import android.transition.TransitionInflater;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -41,17 +33,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-import java.util.function.ObjLongConsumer;
 import java.util.stream.Collectors;
 
 import com.example.a3dmodel.adapter.GridAdapter;
@@ -60,7 +48,6 @@ import com.example.a3dmodel.exeption.AppException;
 import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.exeption.TabPhotoException;
 import com.example.a3dmodel.helperclass.CheckerForPermissions;
-import com.example.a3dmodel.project.ProjectFileManager;
 import com.example.a3dmodel.project.ProjectStorage;
 
 import static com.example.a3dmodel.MainActivity.bitmapArrayList;
@@ -186,7 +173,6 @@ public class TabPhoto extends Fragment {
                 Toast.makeText(this.getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
             }
 
-            // TODO need to store photo directly in the system and save path for them
             View.OnClickListener cameraButtonOnClickListener = new View.OnClickListener() {
                 @SuppressLint("NotifyDataSetChanged")
                 @Override
@@ -206,18 +192,12 @@ public class TabPhoto extends Fragment {
                 @Override
                 public void onClick(View v) {
                     new Thread(() -> {
-//                        Intent intent = new Intent();
                         Intent intent = new Intent(Intent.ACTION_PICK);
 
                         intent.setType("image/*");
                         intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
                         intent.setAction(Intent.ACTION_GET_CONTENT);
                         getActivity().startActivityForResult(intent, GALLERY_PIC_REQUEST);
-//                        Intent galleryIntent = new Intent(Intent.ACTION_PICK);
-//                        galleryIntent.setData(MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                        assert getActivity() != null;
-//                        getActivity().startActivityForResult(galleryIntent, GALLERY_PIC_REQUEST);
-
                     }).start();
                 }
 
@@ -262,9 +242,6 @@ public class TabPhoto extends Fragment {
                         getActivity().runOnUiThread(() -> Toast.makeText(getContext(), "The construction of the 3D model has begun", Toast.LENGTH_SHORT).show());
 
                     } finally {
-                        /*
-                         * stop highlight selected photos
-                         */
                         GridAdapter.selectedImageDataItems.clear();
                         GridAdapter.isSelectMode = false;
                         for (View imageView : GridAdapter.selectedImagesViewWithBackgroundColor) {
@@ -326,18 +303,8 @@ public class TabPhoto extends Fragment {
 
                         getActivity().runOnUiThread(() -> {
                             ((GridAdapter) recyclerView.getAdapter()).checkButtonsVisibility();
-
-
                             recyclerView.getAdapter().notifyDataSetChanged();
-
-                            // TODO
-//                                    for (Integer i : ((GridAdapter) recyclerView.getAdapter()).getSelectedPositionsOfImagesViews()) {
-//                                        recyclerView.getAdapter().notifyItemRemoved(i);
-//                                        ((GridAdapter) recyclerView.getAdapter()).getSelectedPositionsOfImagesViews().remove(i);
-//                                    }
-
                             makeTwoButtonsHide(buildButton, deleteButton);
-
                             if (TabPhoto.imageDataList.size() != 0) {
                                 TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
                                 textView.setVisibility(View.GONE);
@@ -352,33 +319,21 @@ public class TabPhoto extends Fragment {
                     }).start();
                 }
             };
-
             deleteButton.setOnClickListener(deleteButtonOnClickListener);
-
-
             makeTwoButtonsHide(buildButton, deleteButton);
-
             makeTwoButtonsVisible(cameraButton, galleryButton);
-
-
             scrollToPosition();
-
-
         } catch (Exception | AssertionError e) {
             e.printStackTrace();
         }
-
     }
 
     private void sendSelectedPhotosToServerToBuild3DModel(List<Bitmap> bitmapListOfSelectedImages,
                                                           int filesCount)
             throws TabPhotoException, ProjectException, AppException, IOException {
         ProjectStorage storage = App.getProjectStorage();
-//        storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
         storage.saveProject();
-
         List<File> listOfJPEGFiles = new ArrayList<>();
-
         if (this.cacheTmpDirectory == null || this.outputDirModels == null) {
             initializePathsForDirectory();
         }
@@ -410,8 +365,6 @@ public class TabPhoto extends Fragment {
             System.out.println(f.getName());
         }
 
-        String currentProjectName = storage.getCurrentProject().getProjectName();
-
         File projectDirectoryForModels = new File(outputDirModels.toString());
         projectDirectoryForModels.mkdir();
 
@@ -442,11 +395,11 @@ public class TabPhoto extends Fragment {
 
 
         Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
-        assert(!bitmapListOfSelectedImages.isEmpty());
+        assert (!bitmapListOfSelectedImages.isEmpty());
         showModelSaveDialog(resultFileFor3DModel, bitmapListOfSelectedImages.get(0));
     }
 
-    private void clearDirectory(File fileOrDirectory) {
+    private void clearDirectory(@NonNull File fileOrDirectory) {
         if (fileOrDirectory.isDirectory())
             for (File child : fileOrDirectory.listFiles())
                 clearDirectory(child);
@@ -455,16 +408,15 @@ public class TabPhoto extends Fragment {
     }
 
 
-    public static void makeTwoButtonsHide(Button button1, Button button2) {
+    public static void makeTwoButtonsHide(@NonNull Button button1, @NonNull Button button2) {
         button1.setVisibility(View.GONE);
         button2.setVisibility(View.GONE);
     }
 
-    public static void makeTwoButtonsVisible(Button button1, Button button2) {
+    public static void makeTwoButtonsVisible(@NonNull Button button1, @NonNull Button button2) {
         button1.setVisibility(View.VISIBLE);
         button2.setVisibility(View.VISIBLE);
     }
-
 
     private void scrollToPosition() {
         recyclerView.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
@@ -482,8 +434,6 @@ public class TabPhoto extends Fragment {
                 final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                 assert layoutManager != null;
                 View viewAtPosition = layoutManager.findViewByPosition(MainActivity.currentPosition);
-                // Scroll to position if the view for the current position is null (not currently part of
-                // layout manager children), or it's not completely visible.
                 if (viewAtPosition == null || layoutManager
                         .isViewPartiallyVisible(viewAtPosition, false, true)) {
                     recyclerView.post(() -> layoutManager.scrollToPosition(MainActivity.currentPosition));
@@ -497,28 +447,19 @@ public class TabPhoto extends Fragment {
         setExitTransition(TransitionInflater.from(getContext())
                 .inflateTransition(R.transition.grid_exit_transition));
 
-        // A similar mapping is set at the ImagePagerFragment with a setEnterSharedElementCallback.
         setExitSharedElementCallback(
                 new SharedElementCallback() {
                     @Override
                     public void onMapSharedElements(List<String> names, Map<String, View> sharedElements) {
-                        // Locate the ViewHolder for the clicked position.
                         RecyclerView.ViewHolder selectedViewHolder = recyclerView
                                 .findViewHolderForAdapterPosition(MainActivity.currentPosition);
                         if (selectedViewHolder == null) {
                             return;
                         }
-
-                        // Map the first shared element name to the child ImageView.
                         sharedElements
                                 .put(names.get(0), selectedViewHolder.itemView.findViewById(R.id.card_image));
                     }
                 });
-    }
-
-    public static void addImage(Bitmap bitmap) {
-        bitmapArrayList.add(bitmap);
-        updateImageBitmapListAndSendItToTheAdapter();
     }
 
     public static void loadImagesFromCurrentProject() {
@@ -542,7 +483,7 @@ public class TabPhoto extends Fragment {
             String modelName = projectName.getText().toString() + ".ply";
             File wtf = new File(cacheTmpDirectory.resolve(modelName).toString());
             boolean result = resultFile.renameTo(wtf);
-            assert(result);
+            assert (result);
             saveModel(wtf, icon);
             dialog.dismiss();
         });

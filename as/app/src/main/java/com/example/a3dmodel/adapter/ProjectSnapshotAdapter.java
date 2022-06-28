@@ -6,19 +6,16 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.Log;
-import android.util.TypedValue;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.appcompat.widget.ThemeUtils;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.a3dmodel.App;
@@ -27,15 +24,11 @@ import com.example.a3dmodel.R;
 import com.example.a3dmodel.exeption.ProjectException;
 import com.example.a3dmodel.helperclass.UpdaterOfFragmentsData;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
 import java.util.List;
 
-// TODO @@@ANDREY
 public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshotAdapter.SnapshotViewHolder> {
     public static List<ProjectSnapshot> projects = new ArrayList<>();
-    public Context projectsContext;
     private int position;
     private final ArrayList<Integer> highlightedRows;
     public ProjectSnapshotAdapter(List<ProjectSnapshot> snapshotList) {
@@ -140,7 +133,6 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
             projectIcon = (ImageView) v.findViewById(R.id.snapshotImageView);
             creationDate = (TextView) v.findViewById(R.id.snapshotDateView);
 
-            // Define click listener for the ViewHolder's View.
             v.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -157,12 +149,6 @@ public class ProjectSnapshotAdapter extends RecyclerView.Adapter<ProjectSnapshot
                 }
             });
             v.setOnCreateContextMenuListener(this);
-//            v.setOnLongClickListener(new View.OnLongClickListener() {
-//                @Override
-//                public boolean onLongClick(View view) {
-//                }
-//            });
-
         }
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v,

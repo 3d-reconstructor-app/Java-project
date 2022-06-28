@@ -14,10 +14,6 @@ import com.example.a3dmodel.TabPhoto;
 import com.example.a3dmodel.tab3DPlain;
 import com.example.a3dmodel.tabMainMenu;
 
-/**
- * A [FragmentPagerAdapter] that returns a fragment corresponding to
- * one of the sections/tabs/pages.
- */
 public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @StringRes
@@ -61,7 +57,6 @@ public class SectionsPagerAdapter extends FragmentPagerAdapter {
 
     @Override
     public int getCount() {
-        // Show 3 total pages.
         return TAB_TITLES.length;
     }
 }

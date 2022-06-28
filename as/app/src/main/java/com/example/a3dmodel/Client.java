@@ -5,7 +5,6 @@ import java.io.*;
 import okhttp3.*;
 
 import java.nio.file.Files;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 import java.util.concurrent.TimeUnit;
@@ -15,6 +14,7 @@ import java.util.zip.ZipOutputStream;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import com.example.a3dmodel.exeption.AppException;
 import com.example.a3dmodel.visualisation.PlyParser;
 
@@ -29,13 +29,11 @@ public class Client {
     public static void httpClientRequest(List<File> files, File result) throws AppException, IOException {
         String token = UUID.randomUUID().toString();
         String url = "https://fc61-176-53-196-130.eu.ngrok.io/";
-//        String url = "http://127.0.0.1:8000/";
         System.out.println(token);
         OkHttpClient client = new OkHttpClient.Builder()
                 .readTimeout(20, TimeUnit.MINUTES)
                 .writeTimeout(20, TimeUnit.MINUTES)
                 .connectTimeout(20, TimeUnit.MINUTES)
-//                .callTimeout(20, TimeUnit.MINUTES)
                 .addInterceptor(new Interceptor() {
                     @NotNull
                     @Override
@@ -47,7 +45,6 @@ public class Client {
                         return chain.proceed(authenticatedRequest);
                     }
                 })
-//                .protocols(List.of(Protocol.HTTP_1_1))
                 .build();
         File zipFile = Files.createTempFile(null, ".zip").toFile();
         ZipOutputStream out = new ZipOutputStream(new FileOutputStream(zipFile));
@@ -118,7 +115,6 @@ public class Client {
     private static void getFileHTTPGETRequest(OkHttpClient client, String url, String token, File result) throws AppException {
         Request requestGet = new Request.Builder()
                 .url(HttpUrl.get(url + "resources/" + token + "/res.ply"))
-//                .url(HttpUrl.get(url + "resources/" + token + "/reconstruction_sequential/PMVS/models/pmvs_options.txt.ply"))
                 .get()
                 .build();
         try (Response response = client.newCall(requestGet).execute()) {
@@ -137,30 +133,4 @@ public class Client {
             throw new AppException("Can't get result", e);
         }
     }
-
-//    public static void main(String[] args) throws InterruptedException {
-//        File res = new File("test/res.png");
-//        List<File> files = new ArrayList<>();
-//        files.add(new File("test/im1.png"));
-//        files.add(new File("test/im2.png"));
-//        ArrayList<Thread> lst = new ArrayList<>();
-//        long start = System.currentTimeMillis();
-//        for (int i = 0; i < 1; i++) {
-//            Thread.sleep(1000);
-//            Thread thr = new Thread(() -> {
-//                try {
-//                    httpClientRequest(files, res);
-//                } catch (AppException | IOException e) {
-//                    e.printStackTrace();
-//                }
-//            });
-//            lst.add(thr);
-//            thr.start();
-//        }
-//        for (int i = 0; i < 1; i++) {
-//            lst.get(i).join();
-//        }
-//        long end = System.currentTimeMillis();
-//        System.out.println((end - start));
-//    }
 }

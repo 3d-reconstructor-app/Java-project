@@ -2,17 +2,10 @@ package com.example.a3dmodel;
 
 import android.app.Application;
 import android.content.Context;
-import android.os.Environment;
-import android.util.Log;
 import android.widget.Toast;
 
 import com.example.a3dmodel.exeption.ProjectException;
-import com.example.a3dmodel.project.Project;
-import com.example.a3dmodel.project.ProjectFileManager;
 import com.example.a3dmodel.project.ProjectStorage;
-
-import java.io.IOException;
-import java.nio.file.Files;
 
 public class App extends android.app.Application {
     private static Application application;
@@ -22,8 +15,7 @@ public class App extends android.app.Application {
     private void initializeProjectStorage() {
         try {
             projectStorage = ProjectStorage.build();
-        }
-        catch(ProjectException e) {
+        } catch (ProjectException e) {
             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }

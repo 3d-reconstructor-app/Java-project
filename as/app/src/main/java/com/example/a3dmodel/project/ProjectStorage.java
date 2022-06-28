@@ -62,17 +62,6 @@ public class ProjectStorage implements Serializable {
     public static ProjectStorage build() throws ProjectException {
         File resources = App.getContext().getFilesDir();
         List<Project> projects = new ArrayList<>();
-//        try {
-//            Files.walk(resources.toPath()).forEach(f -> {
-//                try {
-//                    Files.delete(f.toAbsolutePath());
-//                } catch (IOException e) {
-//                    Log.d(TAG, "Unable to delete file " + f);
-//                }
-//            });
-//        } catch (IOException e) {
-//            Log.d(TAG, "Error while cleaning resource folder");
-//        }
         for (File projectFile : resources.listFiles()) {
             if (projectFile.isDirectory()) {
                 continue;
@@ -96,7 +85,7 @@ public class ProjectStorage implements Serializable {
         loadProject(getCurrentProject());
     }
 
-    private void loadProject(Project project) throws ProjectException {
+    private void loadProject(@NonNull Project project) throws ProjectException {
         openExistingProject(project.getProjectName());
     }
 
@@ -121,12 +110,6 @@ public class ProjectStorage implements Serializable {
         return projects.get(projects.size() - 1);
     }
 
-//    public void addProject(Project project) {
-//        projects.add(project);
-//        nameToProject.put(project.getProjectName(), project);
-//        updateTabs();
-//    }
-
     public void renameCurrentProject(String name) throws AmbiguousProjectNameException {
         if (nameToProject.containsKey(name)) {
             Log.d("ProjectStorage", "Project with given name already exists");
@@ -141,6 +124,7 @@ public class ProjectStorage implements Serializable {
         return createNewProject(projectName, true);
     }
 
+    @NonNull
     private Project createNewProject(String projectName, boolean notifyAdapter) throws ProjectException {
         if (nameToProject.containsKey(projectName)) {
             Log.d("ProjectStorage", "Project with given name already exists");

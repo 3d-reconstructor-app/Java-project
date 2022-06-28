@@ -3,9 +3,7 @@ package com.example.a3dmodel;
 import static android.content.ContentValues.TAG;
 
 import android.annotation.SuppressLint;
-import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -13,11 +11,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.LinearLayout;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -33,34 +28,7 @@ import com.example.a3dmodel.project.Project;
 import com.example.a3dmodel.project.ProjectStorage;
 
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-
-
-/* TODO @@@ANDREY
-    this is main place, where you will write your code to tell AS what to do with this tab
-    -- first of all you should decide the xml file structure for this tab -- "fragment_tab_main.xml"
-    I've already made some structure there
-    .
-   TODO but not sure, that "View" button is necessary, so remove it if it is not needed
-    .
-    Recycle View is a place were all lines with projects will be shown
-    for Recycle View you should create an Adapter class, to handle the information that lays inside it
-    .
-    I suggest this plan --- when user creates his first project, you should show a window, where he will type this project name
-    and then save it and continue work as it should be
-    .
-    and then he will be able to click on "new project" and create a new one, and the previous will be saved somehow
-    and displayed in the RecycleView
-    .
-    I would suggest to remember the date, time and maybe something else about every project and display it (this is easy part)
- */
-
-/*
-    ADVICE
-    you can see the "TabPhoto.java", "GridAdapter" and "ImageData" as examples
- */
-
 
 public class tabMainMenu extends Fragment {
     private ProjectStorage storage = App.getProjectStorage();
@@ -80,7 +48,7 @@ public class tabMainMenu extends Fragment {
             String currentProjectName = storage.getCurrentProject().getProjectName();
             if (snapshot.getProjectName().equals(currentProjectName)) {
                 ProjectSnapshotAdapter adapter = (ProjectSnapshotAdapter) recyclerView.getAdapter();
-                assert(adapter != null);
+                assert (adapter != null);
                 adapter.findItemAndHighlight(currentProjectName);
             }
         }
@@ -117,8 +85,7 @@ public class tabMainMenu extends Fragment {
                 try {
                     storage.saveProject();
                     Toast.makeText(getContext(), "Saved project " + storage.getCurrentProject().getProjectName(), Toast.LENGTH_SHORT).show();
-                }
-                catch(ProjectException e) {
+                } catch (ProjectException e) {
                     Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             }
@@ -145,8 +112,6 @@ public class tabMainMenu extends Fragment {
                 final RecyclerView.LayoutManager layoutManager = recyclerView.getLayoutManager();
                 assert layoutManager != null;
                 View viewAtPosition = layoutManager.findViewByPosition(MainActivity.currentPosition);
-                // Scroll to position if the view for the current position is null (not currently part of
-                // layout manager children), or it's not completely visible.
                 if (viewAtPosition == null || layoutManager
                         .isViewPartiallyVisible(viewAtPosition, false, true)) {
                     recyclerView.post(() -> layoutManager.scrollToPosition(MainActivity.currentPosition));
@@ -179,8 +144,7 @@ public class tabMainMenu extends Fragment {
             storage.createNewProject(name);
             storage.openExistingProject(name);
             storage.saveProject();
-        }
-        catch(ProjectException e) {
+        } catch (ProjectException e) {
             Toast.makeText(this.getActivity(), e.getMessage(), Toast.LENGTH_LONG).show();
         }
     }
@@ -189,7 +153,7 @@ public class tabMainMenu extends Fragment {
     public boolean onContextItemSelected(MenuItem item) {
         int position = -1;
         try {
-            position = ((ProjectSnapshotAdapter)recyclerView.getAdapter()).getPosition();
+            position = ((ProjectSnapshotAdapter) recyclerView.getAdapter()).getPosition();
 
         } catch (Exception e) {
             Log.d(TAG, e.getLocalizedMessage(), e);
@@ -198,14 +162,9 @@ public class tabMainMenu extends Fragment {
         switch (item.getItemId()) {
             case R.id.project_delete_option:
                 String selectedProjectName = projectsData.get(position).getProjectName();
-//                projectsData.remove(position);
-//                ProjectSnapshotAdapter.projects.remove(position);
-//                ((ProjectSnapshotAdapter)recyclerView.getAdapter()).notifyItemRemoved(position);
-//                ((ProjectSnapshotAdapter)recyclerView.getAdapter()).notifyItemRangeChanged(position, projectsData.size());
                 try {
                     storage.deleteProjectByName(selectedProjectName);
-                }
-                catch(IOException | ProjectException e) {
+                } catch (IOException | ProjectException e) {
                     Toast.makeText(this.getContext(), "Couldn't delete project " + selectedProjectName, Toast.LENGTH_LONG).show();
                 }
                 break;
@@ -214,8 +173,8 @@ public class tabMainMenu extends Fragment {
     }
 
     public static void updateCurrentProject(@NonNull Project proj) {
-        ProjectSnapshotAdapter adapter = (ProjectSnapshotAdapter)recyclerView.getAdapter();
-        assert(adapter != null);
+        ProjectSnapshotAdapter adapter = (ProjectSnapshotAdapter) recyclerView.getAdapter();
+        assert (adapter != null);
         adapter.findItemAndHighlight(proj.getProjectName());
     }
 }

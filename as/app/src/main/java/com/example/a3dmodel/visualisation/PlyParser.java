@@ -1,15 +1,11 @@
-/*
-  PLYParser: A reader for .ply files
-  See the below links for info:
-  http://paulbourke.net/dataformats/ply/
-  http://stackoverflow.com/questions/6420293/reading-android-raw-text-file
- */
 
 package com.example.a3dmodel.visualisation;
 
 import android.util.Log;
 
 //import androidx.lifecycle.ViewModelProvider;
+
+import androidx.annotation.NonNull;
 
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -24,7 +20,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class PlyParser {
-    // Parser mechanisms
     private final BufferedReader bufferedReader;
     private final int NO_INDEX = 100;
     private int vertexIndex = NO_INDEX;
@@ -33,23 +28,18 @@ public class PlyParser {
     private boolean inHeader = true;
     public int currentElement = 0;
     public int currentFace = 0;
-    /* data fields to store points, colors, faces information read from PLY file */
     public float[] vertices = null;
     public float[] colors = null;
     public float[] normals = null;
     public int[] faces = null;
-    // Size of an individual element, in floats
     public int vertexSize = 0;
     public int colorSize = 0;
     public int normalSize = 0;
     public int faceSize = 3;
-    // Normalizing constants
     public float vertexMax = 0;
     public float colorMax = 0;
-    // Number of elements in the entire PLY
     public int vertexCount = 0;
     public int faceCount = 0;
-    // Counter for header
     private int elementCount = 0;
 
     private static final int DOT_FREQUENCY = 2;
@@ -59,14 +49,12 @@ public class PlyParser {
     }
 
     boolean ParsePly() throws IOException {
-        // Check if this is even a PLY file.
         String line = bufferedReader.readLine();
         if (!line.equals("ply")) {
             Log.e("ReadHeader", "File is not a PLY! Leave us.");
             return false;
         }
 
-        // Check for ASCII format
         line = bufferedReader.readLine();
         String[] words = line.split(" ");
         if (!words[1].equals("ascii")) {
@@ -74,14 +62,12 @@ public class PlyParser {
             return false;
         }
 
-        // Read the header
         line = bufferedReader.readLine();
         while (line != null && inHeader) {
             ReadHeader(line);
             line = bufferedReader.readLine();
         }
 
-        // Populate the data
         if (vertexSize != 3) {
             Log.e("ParsePly", "Incorrect count of vertices! Expected 3.");
             return false;
@@ -94,24 +80,19 @@ public class PlyParser {
         if (normalSize != 0) {
             normals = new float[vertexCount * normalSize];
         }
-        //line = bufferedReader.readLine();
         while (line != null) {
             ReadData(line);
             line = bufferedReader.readLine();
         }
-        //System.out.println(Arrays.toString(faces));
         ScaleData();
-        //System.out.println(Arrays.toString(vertices));
         return true;
     }
 
     void ReadHeader(String line) {
-        // Make into a list of words, yo.
         String[] words = line.split(" ");
         if (words[0].equals("comment")) {
             return;
         }
-        // Check if element or property
         if (words[0].equals("element")) {
             if (words[1].equals("vertex")) {
                 vertexCount = Integer.parseInt(words[2]);
@@ -157,7 +138,6 @@ public class PlyParser {
 
     void ReadData(String line) {
         String[] words = line.split(" ");
-        // Compensate for extra line read with (vertexCount - 1)
         if (currentElement < vertexCount) {
             for (int i = 0; i < vertexSize; i++) {
                 vertices[currentElement * vertexSize + i] = Float.parseFloat(words[vertexIndex + i]);
@@ -193,7 +173,6 @@ public class PlyParser {
         }
     }
 
-    // Getters
     public float[] getVertices() {
         return vertices;
     }
@@ -218,7 +197,7 @@ public class PlyParser {
         return faces;
     }
 
-    private static void writeLine(BufferedWriter writer, String line) throws IOException {
+    private static void writeLine(@NonNull BufferedWriter writer, String line) throws IOException {
         writer.write(line);
         writer.newLine();
     }
@@ -227,16 +206,6 @@ public class PlyParser {
         double x, y, z;
         double nx, ny, nz;
         String red, green, blue, alpha = "255";
-//        static final List<List<Double>> shifts = List.of(
-//                List.of(-1.0, -1.0, -1.0), // 0
-//                List.of(-1.0, -1.0, 1.0), // 1
-//                List.of(-1.0, 1.0, -1.0), // 2
-//                List.of(-1.0, 1.0, 1.0), // 3
-//                List.of(1.0, -1.0, -1.0), // 4
-//                List.of(1.0, -1.0, 1.0), // 5
-//                List.of(1.0, 1.0, -1.0), // 6
-//                List.of(1.0, 1.0, 1.0)  // 7
-//        );
 
         static final List<List<Double>> shifts = new ArrayList<>(8);
 
@@ -288,12 +257,8 @@ public class PlyParser {
 
         Point(String[] features) {
             x = Double.parseDouble(features[0]) * scale;
-//            x = Math.round(x * 10000);
-//            x = x / 10000f;
             y = Double.parseDouble(features[1]) * scale;
-//            y = Math.round(y * 10000) / 10000f;
             z = Double.parseDouble(features[2]) * scale;
-//            z = Math.round(z * 10000) / 10000f;
             nx = Double.parseDouble(features[3]);
             nx = 0;
             ny = Double.parseDouble(features[4]);
@@ -328,6 +293,7 @@ public class PlyParser {
                     "3 " + shift + " " + shift + " " + shift;
         }
 
+        @NonNull
         private String getVertexes() {
             StringBuilder stringBuilder = new StringBuilder();
             for (int i = 0; i < 8; i++) {
@@ -387,10 +353,6 @@ public class PlyParser {
         double x = vertexes.get(0).x;
         double y = vertexes.get(0).y;
         double z = vertexes.get(0).z;
-//        System.out.println(x);
-//        System.out.println(y);
-//        System.out.println(z);
-
 
         for (int i = 0; i < vertex_count; i++) {
             vertexes.get(i).x -= x;

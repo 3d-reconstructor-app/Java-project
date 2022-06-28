@@ -1,6 +1,5 @@
 package com.example.a3dmodel;
 
-import android.content.ClipData;
 import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -9,37 +8,29 @@ import android.graphics.Matrix;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
-import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 
+import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
 import com.example.a3dmodel.databinding.ActivityMainBinding;
-import com.example.a3dmodel.visualisation.fragments.View3DFragment;
 import com.google.android.material.tabs.TabLayout;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.provider.MediaStore;
-
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
-//import com.example.a3dmodel.databinding.ActivityMainBinding;
-
 import static com.example.a3dmodel.TabPhoto.CAMERA_PIC_REQUEST;
 import static com.example.a3dmodel.TabPhoto.GALLERY_PIC_REQUEST;
 import static com.example.a3dmodel.helperclass.CheckerForPermissions.PERMISSION_REQUEST_CODE;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -52,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
     private ActivityMainBinding binding;
     public static int currentPosition;
     private static final String KEY_CURRENT_POSITION = "key.currentPosition";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,7 +63,6 @@ public class MainActivity extends AppCompatActivity {
             requestPermission();
         }
 
-//        start();
     }
 
     private boolean checkPermission() {
@@ -91,27 +82,6 @@ public class MainActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{android.Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST_CODE);
         }
     }
-
-
-//    protected void start() {
-////        setContentView(R.layout.activity_main);
-////        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-////        ViewPager viewPager = findViewById(R.id.view_pager);
-////        viewPager.setAdapter(sectionsPagerAdapter);
-////        TabLayout tabs = findViewById(R.id.tabs);
-////        tabs.setupWithViewPager(viewPager);
-//    }
-
-//    @Override
-//    protected void onCreate(@Nullable Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        setContentView(R.layout.activity_main);
-//        SectionsPagerAdapter sectionsPagerAdapter = new SectionsPagerAdapter(this, getSupportFragmentManager());
-//        ViewPager viewPager = findViewById(R.id.view_pager);
-//        viewPager.setAdapter(sectionsPagerAdapter);
-//        TabLayout tabs = findViewById(R.id.tabs);
-//        tabs.setupWithViewPager(viewPager);
-//    }
 
     @Override
     protected void onSaveInstanceState(@NonNull Bundle outState) {
@@ -161,7 +131,7 @@ public class MainActivity extends AppCompatActivity {
 
                     Bitmap rotatedBitmap = null;
 
-                    switch(orientation) {
+                    switch (orientation) {
 
                         case ExifInterface.ORIENTATION_ROTATE_90:
                             rotatedBitmap = rotateImage(bitmap, 90);
@@ -210,7 +180,7 @@ public class MainActivity extends AppCompatActivity {
 
                 Bitmap rotatedBitmap = null;
 
-                switch(orientation) {
+                switch (orientation) {
 
                     case ExifInterface.ORIENTATION_ROTATE_90:
                         rotatedBitmap = rotateImage(bitmap, 90);
@@ -240,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
     }
 
-    private static final  Bitmap rotateImage(Bitmap source, float angle) {
+    private static final Bitmap rotateImage(Bitmap source, float angle) {
         Matrix matrix = new Matrix();
         matrix.postRotate(angle);
         return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
@@ -264,44 +234,15 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-//    @Override
-//    public void onBackPressed() {
-//        super.onBackPressed();
-//    }
-
-
-        public void onBackPressed() {
-            FragmentManager fm = getFragmentManager();
-            if (fm.getBackStackEntryCount() > 0) {
-                Log.i("MainActivity", "popping backstack");
-                fm.popBackStackImmediate();
+    public void onBackPressed() {
+        FragmentManager fm = getFragmentManager();
+        if (fm.getBackStackEntryCount() > 0) {
+            Log.i("MainActivity", "popping backstack");
+            fm.popBackStackImmediate();
 //            fm.popBackStack();
-            } else {
-                Log.i("MainActivity", "nothing on backstack, calling super");
-                super.onBackPressed();
-            }
+        } else {
+            Log.i("MainActivity", "nothing on backstack, calling super");
+            super.onBackPressed();
         }
-
-
-
-//        @Override
-//        public void onBackPressed() {
-//            FragmentManager manager = getSupportFragmentManager();
-//            Fragment fragment = manager.findFragmentById(R.id.view_3d);
-//            // If there is something in the back stack AND the current fragment is the LoggedInFragment
-//            System.out.println("manager.getBackStackEntryCount() = " +  manager.getBackStackEntryCount());
-//            System.out.println("fragment instanceof View3DFragment " +  (fragment instanceof View3DFragment));
-//            System.out.println("fragment instanceof tab3DPlain " +  (fragment instanceof tab3DPlain));
-////            if (manager.getBackStackEntryCount() > 0
-////                    && fragment instanceof View3DFragment) {
-//
-//            if (manager.getBackStackEntryCount() > 0) {
-//                manager.popBackStack(tab3DPlain.class.getSimpleName(), 1);
-//            } else {
-//                Log.i("MainActivity", "nothing on backstack, calling super");
-//                super.onBackPressed();
-//
-//        }
-//
-//        }
+    }
 }

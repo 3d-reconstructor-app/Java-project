@@ -15,9 +15,6 @@ import androidx.lifecycle.ViewModelProvider;
 import com.example.a3dmodel.R;
 import com.example.a3dmodel.databinding.FragmentMainBinding;
 
-/**
- * A placeholder fragment containing a simple view.
- */
 public class PlaceholderFragment extends Fragment {
 
     private static final String ARG_SECTION_NUMBER = "section_number";
@@ -25,6 +22,7 @@ public class PlaceholderFragment extends Fragment {
     private PageViewModel pageViewModel;
     private FragmentMainBinding binding;
 
+    @NonNull
     public static PlaceholderFragment newInstance(int index) {
         PlaceholderFragment fragment = new PlaceholderFragment();
         Bundle bundle = new Bundle();
