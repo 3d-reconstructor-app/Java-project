@@ -5,6 +5,7 @@ import org.jetbrains.annotations.Contract;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.SharedElementCallback;
 import androidx.core.content.ContextCompat;
@@ -27,7 +28,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.os.FileUtils;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
