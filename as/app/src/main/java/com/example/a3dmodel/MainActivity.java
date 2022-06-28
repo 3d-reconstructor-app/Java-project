@@ -124,9 +124,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == CAMERA_PIC_REQUEST && resultCode == RESULT_OK) {
             assert data != null;
-//            if(data.getClipData() != null){
-//
-//            }
             Bundle extras = data.getExtras();
             Bitmap imageBitmap = (Bitmap) extras.get("data");
             assert imageBitmap != null;
@@ -139,8 +136,6 @@ public class MainActivity extends AppCompatActivity {
 
         if (requestCode == GALLERY_PIC_REQUEST && resultCode == RESULT_OK) {
             assert data != null;
-
-
 
             if (data.getClipData() != null) {
                 int count = data.getClipData().getItemCount();
@@ -202,7 +197,39 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
                 assert bitmap != null;
-                bitmapArrayList.add(bitmap);
+
+                ExifInterface ei = null;
+                try {
+                    ei = new ExifInterface(this.getBaseContext().getContentResolver().openInputStream(imageUri));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                assert ei != null;
+                int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                        ExifInterface.ORIENTATION_UNDEFINED);
+
+                Bitmap rotatedBitmap = null;
+
+                switch(orientation) {
+
+                    case ExifInterface.ORIENTATION_ROTATE_90:
+                        rotatedBitmap = rotateImage(bitmap, 90);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_180:
+                        rotatedBitmap = rotateImage(bitmap, 180);
+                        break;
+
+                    case ExifInterface.ORIENTATION_ROTATE_270:
+                        rotatedBitmap = rotateImage(bitmap, 270);
+                        break;
+
+                    case ExifInterface.ORIENTATION_NORMAL:
+                    default:
+                        rotatedBitmap = bitmap;
+                }
+
+                bitmapArrayList.add(rotatedBitmap);
                 TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
                 TextView textView = findViewById(R.id.fragment_photo_empty_view);
                 textView.setVisibility(View.GONE);
