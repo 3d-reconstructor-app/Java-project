@@ -5,6 +5,8 @@ import android.app.FragmentManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import com.example.a3dmodel.ui.main.SectionsPagerAdapter;
@@ -35,7 +37,9 @@ import static com.example.a3dmodel.TabPhoto.CAMERA_PIC_REQUEST;
 import static com.example.a3dmodel.TabPhoto.GALLERY_PIC_REQUEST;
 import static com.example.a3dmodel.helperclass.CheckerForPermissions.PERMISSION_REQUEST_CODE;
 
+import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -136,21 +140,52 @@ public class MainActivity extends AppCompatActivity {
         if (requestCode == GALLERY_PIC_REQUEST && resultCode == RESULT_OK) {
             assert data != null;
 
+
+
             if (data.getClipData() != null) {
                 int count = data.getClipData().getItemCount();
                 for (int i = 0; i < count; i++) {
                     System.out.println(i);
-                    // adding imageuri in array
                     Uri imageUri = data.getClipData().getItemAt(i).getUri();
-//                    mArrayUri.add(imageurl);
                     Bitmap bitmap = null;
                     try {
                         bitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), imageUri);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                    assert bitmap != null;
-                    bitmapArrayList.add(bitmap);
+
+                    ExifInterface ei = null;
+                    try {
+                        ei = new ExifInterface(this.getBaseContext().getContentResolver().openInputStream(imageUri));
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                    assert ei != null;
+                    int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
+                            ExifInterface.ORIENTATION_UNDEFINED);
+
+                    Bitmap rotatedBitmap = null;
+
+                    switch(orientation) {
+
+                        case ExifInterface.ORIENTATION_ROTATE_90:
+                            rotatedBitmap = rotateImage(bitmap, 90);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_180:
+                            rotatedBitmap = rotateImage(bitmap, 180);
+                            break;
+
+                        case ExifInterface.ORIENTATION_ROTATE_270:
+                            rotatedBitmap = rotateImage(bitmap, 270);
+                            break;
+
+                        case ExifInterface.ORIENTATION_NORMAL:
+                        default:
+                            rotatedBitmap = bitmap;
+                    }
+                    assert rotatedBitmap != null;
+                    bitmapArrayList.add(rotatedBitmap);
                     TabPhoto.updateImageBitmapListAndSendItToTheAdapter();
                     TextView textView = findViewById(R.id.fragment_photo_empty_view);
                     textView.setVisibility(View.GONE);
@@ -176,6 +211,13 @@ public class MainActivity extends AppCompatActivity {
         }
 
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    private static final  Bitmap rotateImage(Bitmap source, float angle) {
+        Matrix matrix = new Matrix();
+        matrix.postRotate(angle);
+        return Bitmap.createBitmap(source, 0, 0, source.getWidth(), source.getHeight(),
+                matrix, true);
     }
 
 
