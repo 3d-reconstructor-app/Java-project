@@ -371,10 +371,6 @@ public class TabPhoto extends Fragment {
 //        storage.getCurrentProject().addImages(bitmapListOfSelectedImages);
         storage.saveProject();
 
-
-        // TODO : store 3dModel in CURRENT_PROJECT_NAME/model/
-
-
         List<File> listOfJPEGFiles = new ArrayList<>();
 
         if (this.cacheTmpDirectory == null || this.outputDirModels == null) {
@@ -440,7 +436,8 @@ public class TabPhoto extends Fragment {
 
 
         Toast.makeText(getContext(), "Build of 3DModel has finished", Toast.LENGTH_LONG).show();
-        showModelSaveDialog(resultFileFor3DModel);
+        assert(!bitmapListOfSelectedImages.isEmpty());
+        showModelSaveDialog(resultFileFor3DModel, bitmapListOfSelectedImages.get(0));
     }
 
     private void clearDirectory(File fileOrDirectory) {
@@ -527,7 +524,7 @@ public class TabPhoto extends Fragment {
 
     @NonNull
     @Contract(" -> new")
-    private void showModelSaveDialog(File resultFile) {
+    private void showModelSaveDialog(File resultFile, Bitmap icon) {
         final Dialog dialog = new Dialog(this.getActivity());
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
         dialog.setCancelable(false);
@@ -541,15 +538,15 @@ public class TabPhoto extends Fragment {
             File wtf = new File(cacheTmpDirectory.resolve(modelName).toString());
             boolean result = resultFile.renameTo(wtf);
             assert(result);
-            saveModel(wtf);
+            saveModel(wtf, icon);
             dialog.dismiss();
         });
         dialog.show();
     }
 
-    private void saveModel(File resultFileFor3DModel) {
+    private void saveModel(File resultFileFor3DModel, Bitmap icon) {
         try {
-            App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel);
+            App.getProjectStorage().getCurrentProject().addAndSaveModel(resultFileFor3DModel, icon);
             App.getProjectStorage().saveProject();
             tab3DPlain.updateModelListAndSendItToAdapter();
             clearDirectory(cacheTmpDirectory.toFile());
