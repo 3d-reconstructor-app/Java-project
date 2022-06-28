@@ -25,7 +25,6 @@ import android.os.Bundle;
 
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.support.annotation.RequiresApi;
 import android.transition.TransitionInflater;
 import android.util.Log;
 import android.view.LayoutInflater;
