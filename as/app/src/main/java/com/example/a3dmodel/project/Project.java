@@ -45,8 +45,8 @@ public class Project implements Comparable<Project>, Serializable {
     private String projectName;
     private LocalDateTime modTime;
     private int projectIcon;
+    private List<ModelData> models = new ArrayList<>();
     private transient List<Bitmap> images;
-    private transient List<ModelData> models = new ArrayList<>();
 
     private Project(String name) {
         projectName = name;
@@ -72,10 +72,10 @@ public class Project implements Comparable<Project>, Serializable {
         images.addAll(imgs);
     }
 
-    public void addAndSaveModel(@NonNull File model) throws ProjectException {
-        models.add(new ModelData(model.getName()));
-        System.out.println(ProjectFileManager.getProjectModelsDirPath(projectName).toString());
-        System.out.println(models);
+    public void addAndSaveModel(@NonNull File model, Bitmap modelIcon) throws ProjectException {
+        models.add(new ModelData(model.getName(), modelIcon));
+//        System.out.println(ProjectFileManager.getProjectModelsDirPath(projectName).toString());
+//        System.out.println(models);
         File modelFile = new File(ProjectFileManager.getProjectModelsDirPath(projectName).toString() + '/' + model.getName());
         try {
             FileUtils.copyFile(model, modelFile);
@@ -154,11 +154,11 @@ public class Project implements Comparable<Project>, Serializable {
             return null;
         }
         File projectDataFile = ProjectFileManager.getProjectDataFile(proj.getProjectName());
-        File projectModelsFile = ProjectFileManager.getProjectModelsDir(proj.getProjectName());
+//        File projectModelsFile = ProjectFileManager.getProjectModelsDir(proj.getProjectName());
         proj.images = new ArrayList<>();
         Files.list(projectDataFile.toPath()).forEach(imgFile -> proj.images.add(BitmapFactory.decodeFile(imgFile.toString())));
-        proj.models = new ArrayList<>();
-        proj.models.addAll(Files.list(projectModelsFile.toPath()).map(modelPath -> new ModelData(modelPath.getFileName().toString())).collect(Collectors.toList()));
+//        proj.models = new ArrayList<>();
+//        proj.models.addAll(Files.list(projectModelsFile.toPath()).map(modelPath -> new ModelData(modelPath.getFileName().toString())).collect(Collectors.toList()));
 //        System.out.println("Models number in deserialization " + proj.getProjectName() + " " + proj.models.size());
         System.out.println("wtf " + proj.models);
         return proj;

@@ -57,6 +57,7 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
 
 //        holder.projectIcon.setImageResource(projectSnapshot.getProjectIcon());
         holder.modelName.setText(model.getModelName());
+        holder.modelIcon.setImageBitmap(model.getModelIcon());
 //        holder.creationDate.setText(projectSnapshot.getModTime());
 
         holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -141,11 +142,13 @@ public class ModelAdapter extends RecyclerView.Adapter<ModelAdapter.ModelViewHol
     public static class ModelViewHolder extends RecyclerView.ViewHolder implements View.OnCreateContextMenuListener {
 //        public ImageView projectIcon;
         public TextView modelName;
+        public ImageView modelIcon;
 //        public TextView creationDate;
 
         public ModelViewHolder(View v) {
             super(v);
             modelName = (TextView) v.findViewById(R.id.modelTextView);
+            modelIcon = (ImageView) v.findViewById(R.id.modelIcon);
 //            projectIcon = (ImageView) v.findViewById(R.id.snapshotImageView);
 //            creationDate = (TextView) v.findViewById(R.id.snapshotDateView);
 

@@ -11,7 +11,7 @@ public class SerialBitmap implements Serializable {
     private Bitmap bitmap;
 
     // TODO: Finish this constructor
-    SerialBitmap(Bitmap bmap) {
+    public SerialBitmap(Bitmap bmap) {
         // Take your existing call to BitmapFactory and put it here
         bitmap = bmap;
     }
