@@ -147,7 +147,7 @@ public class tab3DPlain extends Fragment {
                         .setReorderingAllowed(true)
                         .replace(R.id.fragment_3d_constraint, new View3DFragment(selectedModelName), View3DFragment.class.getSimpleName())
                         .addToBackStack(tab3DPlain.class.getSimpleName())
-//                        .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+                        .setTransitionStyle(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
                         .commit();
 //                getActivity().getSupportFragmentManager()
 //                        .beginTransaction()

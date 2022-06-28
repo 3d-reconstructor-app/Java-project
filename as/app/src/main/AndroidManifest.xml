@@ -4,7 +4,6 @@
     package="com.example.a3dmodel"
     tools:ignore="ExtraText"
     android:installLocation="preferExternal">
-    >
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -30,6 +29,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.3dModel">
+
+
         <activity
             android:name=".TabPhoto"
             android:exported="false"
@@ -46,7 +47,19 @@
             </intent-filter>
         </activity>
 
-<!--        <provider-->
+        <provider
+            android:name="androidx.work.impl.WorkManagerInitializer"
+            android:authorities="${applicationId}.workmanager-init"
+            tools:node="remove" />
+
+        <service
+            android:name="androidx.work.impl.foreground.SystemForegroundService"
+            android:foregroundServiceType="location|microphone"
+            tools:node="merge" />
+
+
+
+        <!--        <provider-->
 <!--            android:name="androidx.startup.InitializationProvider"-->
 <!--            android:authorities="${applicationId}.androidx-startup"-->
 <!--            android:exported="false"-->
