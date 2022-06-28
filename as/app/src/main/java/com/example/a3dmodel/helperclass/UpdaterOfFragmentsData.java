@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UpdaterOfFragmentsData {
-    static public void updateTabPhotoInformationOnLoading(){
+    public static void updateTabPhotoInformationOnLoading(){
         TabPhoto.clearFieldsWhenUpdatingProjectInfo();
     }
 }

@@ -30,6 +30,7 @@ import android.provider.MediaStore;
 import android.support.annotation.RequiresApi;
 import android.transition.TransitionInflater;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -78,14 +79,23 @@ public class TabPhoto extends Fragment {
     private static final int lengthOfRandomFileJPEGName = 10;
 
     public static void clearFieldsWhenUpdatingProjectInfo() {
-        ((GridAdapter) recyclerView.getAdapter()).clearFieldsWhenUpdatingProjectInfo();
+        try {
+            assert recyclerView.getAdapter() != null;
+            ((GridAdapter) recyclerView.getAdapter()).clearFieldsWhenUpdatingProjectInfo();
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+//        checkTextSeenStatus(getActivity().findViewById(R.id.fragment_photo));
+//        TabPhoto tabPhoto = new TabPhoto();
+//        tabPhoto.checkTextSeenStatus(tabPhoto.getView());
     }
+
 
     public final FrameLayout getFrameLayout() {
         return frameLayout;
     }
 
-    private void checkTextSeenStatus(View view) {
+    public  void checkTextSeenStatus(View view) {
         if (TabPhoto.imageDataList.size() != 0) {
             TextView textView = view.findViewById(R.id.fragment_photo_empty_view);
             textView.setVisibility(View.GONE);
@@ -167,6 +177,12 @@ public class TabPhoto extends Fragment {
         bitmapArrayList.forEach(i -> imageDataList.add(new ImageData(i)));
         assert recyclerView.getAdapter() != null;
         recyclerView.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        checkTextSeenStatus(getView());
     }
 
     @Override
